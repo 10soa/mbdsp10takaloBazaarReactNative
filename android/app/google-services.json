@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "687285776333",
+    "project_id": "lecteur-journal",
+    "storage_bucket": "lecteur-journal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:687285776333:android:bf3dcae4c9c17834749e84",
+        "android_client_info": {
+          "package_name": "com.mbdsp10takaloBazaarReactNative"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1v3IZ-HtEPhtvypeQngr_BXRKeoRYAu8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
