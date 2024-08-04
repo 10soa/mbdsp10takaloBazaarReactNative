@@ -1,10 +1,18 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 import HomeHeader from './components/HomeHeader';
 import Container from '../../components/Container';
 import SearchBar from '../../components/SeachBar';
 import Banner from './components/Banner';
 import colors from '../../constants/color';
 import ProductCard from '../../components/ProductCard';
+import {getObjects} from '../../service/ObjectService';
+import React, {useEffect, useState} from 'react';
 
 const Home = props => {
   const products = {
@@ -14,9 +22,45 @@ const Home = props => {
     },
     user: {
       username: 'Bjones',
-      profile_picture: '',
+      profile_picture:
+        'https://www.jusprofi.at/wp-content/uploads/2020/05/nat%C3%BCrliche-person.jpg',
     },
   };
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchData = async () => {
+      try {
+        const filters = {
+          name: '',
+          description: '',
+          category_id: '',
+          created_at_start: '',
+          created_at_end: '',
+        };
+        const result = await getObjects(1, 20, 'desc', filters);
+        setData(result.objects);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+  if (loading) {
+    return (
+      <View
+        style={{
+          top: '47%',
+        }}>
+        <ActivityIndicator size="large" color={colors.secondary} />
+      </View>
+    );
+  }
   return (
     <Container isScrollable paddingVerticalDisabled>
       <HomeHeader style={styles.HomeHeader} />
@@ -26,36 +70,9 @@ const Home = props => {
         <Text style={styles.TitleContent}> Les 20 objets les plus récents</Text>
       </View>
       <View style={styles.Products}>
-        <ProductCard
-          product={products}
-          badgeText={'Récent'}
-          user={products.user}
-        />
-        <ProductCard
-          product={products}
-          badgeText={'Récent'}
-          user={products.user}
-        />
-        <ProductCard
-          product={products}
-          badgeText={'Récent'}
-          user={products.user}
-        />
-        <ProductCard
-          product={products}
-          badgeText={'Récent'}
-          user={products.user}
-        />
-        <ProductCard
-          product={products}
-          badgeText={'Récent'}
-          user={products.user}
-        />
-        <ProductCard
-          product={products}
-          badgeText={'Récent'}
-          user={products.user}
-        />
+        {data.map((item, index) => (
+          <ProductCard product={item} badgeText={'Récent'} user={item.user} />
+        ))}
       </View>
     </Container>
   );
@@ -75,7 +92,7 @@ const styles = StyleSheet.create({
   TitleContent: {
     fontSize: 15,
     fontWeight: 500,
-    color: colors.textPrimary,
+    color: colors.white,
   },
   Products: {
     marginVertical: 20,

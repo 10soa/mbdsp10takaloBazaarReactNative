@@ -2,8 +2,6 @@ import React from 'react';
 import {View, TextInput, StyleSheet, Image} from 'react-native';
 
 const SearchBar = () => {
-  console.log('search');
-
   return (
     <View style={styles.container}>
       <Image

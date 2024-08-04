@@ -16,16 +16,25 @@ const ProductCard = ({product, badgeText, disableShared, onPress, user}) => {
             uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2zg4P0yONxa_94bdBnjpIydiiZ5cu2aLvuoTRj8zdraqnx5iglMGl1ZMgIIKbk3cxqYg&usqp=CAU',
           }}
           style={styles.image}
+          resizeMode="cover"
         />
       </View>
       <View style={styles.details}>
         <View style={styles.detailsContent}>
           {user && (
             <View style={styles.userContainer}>
-              <Image
-                source={{uri: user.profile_picture}}
-                style={styles.userImage}
-              />
+              {user.profile_picture && (
+                <Image
+                  source={{uri: user.profile_picture}}
+                  style={styles.userImage}
+                />
+              )}
+              {!user.profile_picture && (
+                <Image
+                  source={require('../assets/img/user.png')}
+                  style={styles.userImage}
+                />
+              )}
               <Text style={styles.userName}>{user.username}</Text>
             </View>
           )}
@@ -127,6 +136,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 14,
     color: colors.textPrimary,
+    textDecorationLine: 'underline',
   },
 });
 

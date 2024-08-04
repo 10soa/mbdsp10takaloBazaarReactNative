@@ -14,19 +14,19 @@ const {width: viewportWidth} = Dimensions.get('window');
 
 const data = [
   {
-    title: 'Pegasus Trail Gortex',
-    subtitle: 'Just Do it',
-    image: 'https://image.png',
+    title: 'Échangez vos objets',
+    subtitle: 'Découvrez des Objets',
+    image: require('../../../assets/img/banner3.png'),
   },
   {
-    title: 'Air Max',
-    subtitle: 'Feel the comfort',
-    image: 'https://image.png',
+    title: 'Trouvez de nouveaux trésors',
+    subtitle: 'Commencez votre Recherche',
+    image: require('../../../assets/img/banner.png'),
   },
   {
-    title: 'Revolution 5',
-    subtitle: 'Everyday comfort',
-    image: 'https://image.png',
+    title: 'Transformez vos objets en nouvelles opportunités',
+    subtitle: 'Explorez Maintenant',
+    image: require('../../../assets/img/banner2.png'),
   },
 ];
 
@@ -39,9 +39,11 @@ const Banner = () => {
       <View style={styles.card}>
         <View style={styles.textContainer}>
           <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.subtitle}>{item.subtitle}</Text>
+          <TouchableOpacity style={styles.ObjectButton}>
+            <Text style={styles.subtitle}>{item.subtitle}</Text>
+          </TouchableOpacity>
         </View>
-        <Image source={{uri: item.image}} style={styles.image} />
+        <Image source={item.image} style={styles.image} />
       </View>
     );
   };
@@ -94,13 +96,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    color: '#FFF',
+    color: colors.textPrimary,
     fontSize: 18,
     fontWeight: 'bold',
   },
   subtitle: {
     color: '#FFF',
     fontSize: 14,
+    fontWeight: 500,
   },
   image: {
     width: 100,
@@ -124,7 +127,14 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     marginHorizontal: 8,
-    backgroundColor: '#C4C4C4',
+    backgroundColor: colors.grey,
+  },
+  ObjectButton: {
+    marginTop: 10,
+    backgroundColor: colors.primary,
+    padding: 10,
+    alignSelf: 'flex-start',
+    borderRadius: 10,
   },
 });
 
