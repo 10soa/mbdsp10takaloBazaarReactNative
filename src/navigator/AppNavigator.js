@@ -3,6 +3,7 @@ import {style} from './Style';
 import Home from '../screens/Home';
 import colors from '../constants/color';
 import {TouchableOpacity, View, Image} from 'react-native';
+import AddObject from '../screens/Object/AddObject';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,9 +33,10 @@ const AppNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Annonce"
-        component={Home}
+        name="AjouterObjet"
+        component={AddObject}
         options={{
+          tabBarStyle: { display: 'none' },
           tabBarIcon: () => {
             return (
               <View style={style.navView}>
