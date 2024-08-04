@@ -1,15 +1,17 @@
 import {StyleSheet} from 'react-native';
+import colors from '../constants/color';
 export const style = StyleSheet.create({
   navigator: {
     position: 'absolute',
     bottom: 0,
+    borderRadius: 15,
     backgroundColor: '#fff',
     elevation: 0,
     height: 60,
   },
   navImage: {
-    width: 60,
-    height: 60,
+    width: 30,
+    height: 30,
   },
   searchImage: {
     width: 33,
@@ -28,7 +30,7 @@ export const style = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: '#1A428A',
+    backgroundColor: colors.primary,
   },
   centerIcon: {
     width: 30,

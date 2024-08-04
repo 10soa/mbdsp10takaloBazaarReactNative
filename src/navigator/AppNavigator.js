@@ -1,11 +1,87 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {style} from './Style';
 import Home from '../screens/Home';
-const Stack = createStackNavigator();
+import colors from '../constants/color';
+import {TouchableOpacity, View, Image} from 'react-native';
+
+const Tab = createBottomTabNavigator();
+
 const AppNavigator = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home} />
-    </Stack.Navigator>
+    <Tab.Navigator
+      screenOptions={{tabBarStyle: style.navigator, headerShown: false}}
+      tabBarOptions={{showIcon: true, showLabel: false}}>
+      <Tab.Screen
+        name="Accueil"
+        component={Home}
+        options={{
+          tabBarIcon: ({focused}) => {
+            return (
+              <View style={style.navView}>
+                <Image
+                  source={require('../assets/icons/home.png')}
+                  resizeMode="contain"
+                  style={{
+                    tintColor: focused ? colors.primary : colors.grey,
+                    ...style.navImage,
+                  }}
+                />
+              </View>
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Annonce"
+        component={Home}
+        options={{
+          tabBarIcon: () => {
+            return (
+              <View style={style.navView}>
+                <Image
+                  source={require('../assets/icons/plus.png')}
+                  resizeMode="contain"
+                  style={{
+                    tintColor: '#fff',
+                    ...style.centerIcon,
+                  }}
+                />
+              </View>
+            );
+          },
+          tabBarButton: ({children, onPress}) => {
+            return (
+              <TouchableOpacity
+                style={style.centerButtonContainer}
+                onPress={onPress}>
+                <View style={style.centerButton}>{children}</View>
+              </TouchableOpacity>
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Recherche"
+        component={Home}
+        options={{
+          tabBarIcon: ({focused}) => {
+            return (
+              <View style={style.navView}>
+                <Image
+                  source={require('../assets/icons/home.png')}
+                  resizeMode="contain"
+                  style={{
+                    tintColor: focused ? colors.primary : colors.grey,
+                    ...style.navImage,
+                  }}
+                />
+              </View>
+            );
+          },
+        }}
+      />
+    </Tab.Navigator>
   );
 };
+
 export default AppNavigator;

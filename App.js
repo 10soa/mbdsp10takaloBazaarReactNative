@@ -4,15 +4,18 @@ import {StyleSheet} from 'react-native';
 import AppNavigator from './src/navigator/AppNavigator';
 import {NavigationContainer} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 export default function App() {
   console.log('App is rendering');
   useEffect(() => {
     SplashScreen.hide();
   }, []);
   return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
 
