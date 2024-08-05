@@ -4,6 +4,7 @@ import Home from '../screens/Home';
 import colors from '../constants/color';
 import {TouchableOpacity, View, Image} from 'react-native';
 import AddObject from '../screens/Object/AddObject';
+import Details from '../screens/Details';
 
 const Tab = createBottomTabNavigator();
 
@@ -36,7 +37,7 @@ const AppNavigator = () => {
         name="AjouterObjet"
         component={AddObject}
         options={{
-          tabBarStyle: { display: 'none' },
+          tabBarStyle: {display: 'none'},
           tabBarIcon: () => {
             return (
               <View style={style.navView}>
@@ -80,6 +81,17 @@ const AppNavigator = () => {
               </View>
             );
           },
+        }}
+      />
+      <Tab.Screen
+        key={'Details'}
+        name={'Details'}
+        component={Details}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'Filter',
+          tabBarStyle: {display: 'none'},
         }}
       />
     </Tab.Navigator>

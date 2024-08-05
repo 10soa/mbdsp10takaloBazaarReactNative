@@ -1,4 +1,4 @@
-import {API_URL,TOKEN} from '../constants/config';
+import {API_URL, TOKEN} from '../constants/config';
 
 export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
   try {
@@ -14,7 +14,7 @@ export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
     if (filters.category_id) params.category_id = filters.category_id;
     if (filters.created_at_start)
       params.created_at_start = filters.created_at_start;
-    if (filters.created_at_end) params.created_at_end = filters.created_at_end;;
+    if (filters.created_at_end) params.created_at_end = filters.created_at_end;
     const response = await fetch(`${API_URL}/objects?${params.toString()}`);
 
     if (!response.ok) {
@@ -34,23 +34,40 @@ export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
 };
 
 // Create Object
-export const createObject = async (objectData) => {
+export const createObject = async objectData => {
   try {
     const response = await fetch(`${API_URL}/objects`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${TOKEN}`,
+        Authorization: `Bearer ${TOKEN}`,
       },
       body: JSON.stringify(objectData),
     });
     if (!response.ok) {
-      throw new Error('Network issue : '+response.status);
+      throw new Error('Network issue : ' + response.status);
     }
     const result = await response.json();
     return result;
   } catch (error) {
     console.error('Error creating object:', error.message);
+    throw error;
+  }
+};
+
+export const getObject = async id => {
+  try {
+    const response = await fetch(`${API_URL}/object/${id}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok' + response.statusText);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(
+      'There was a problem with the fetch operation:',
+      error.message,
+    );
     throw error;
   }
 };
