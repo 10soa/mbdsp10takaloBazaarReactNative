@@ -13,6 +13,7 @@ import colors from '../../constants/color';
 import ProductCard from '../../components/ProductCard';
 import {getObjects} from '../../service/ObjectService';
 import React, {useEffect, useState} from 'react';
+import IsLoading from '../../components/IsLoading';
 
 const Home = props => {
   const products = {
@@ -52,14 +53,7 @@ const Home = props => {
     fetchData();
   }, []);
   if (loading) {
-    return (
-      <View
-        style={{
-          top: '47%',
-        }}>
-        <ActivityIndicator size="large" color={colors.secondary} />
-      </View>
-    );
+    return <IsLoading />;
   }
   return (
     <Container isScrollable paddingVerticalDisabled>
