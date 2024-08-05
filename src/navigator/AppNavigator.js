@@ -3,6 +3,7 @@ import {style} from './Style';
 import Home from '../screens/Home';
 import colors from '../constants/color';
 import {TouchableOpacity, View, Image} from 'react-native';
+import Details from '../screens/Details';
 
 const Tab = createBottomTabNavigator();
 
@@ -78,6 +79,17 @@ const AppNavigator = () => {
               </View>
             );
           },
+        }}
+      />
+      <Tab.Screen
+        key={'Details'}
+        name={'Details'}
+        component={Details}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'Filter',
+          tabBarStyle: {display: 'none'},
         }}
       />
     </Tab.Navigator>

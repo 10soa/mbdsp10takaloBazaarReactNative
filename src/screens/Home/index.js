@@ -15,7 +15,7 @@ import {getObjects} from '../../service/ObjectService';
 import React, {useEffect, useState} from 'react';
 import IsLoading from '../../components/IsLoading';
 
-const Home = props => {
+const Home = ({navigation}) => {
   const products = {
     name: 'Smartphone',
     category: {
@@ -65,7 +65,16 @@ const Home = props => {
       </View>
       <View style={styles.Products}>
         {data.map((item, index) => (
-          <ProductCard product={item} badgeText={'Récent'} user={item.user} />
+          <ProductCard
+            product={item}
+            badgeText={'Récent'}
+            user={item.user}
+            onPress={() => {
+              navigation.navigate('Details', {
+                objectId: item.id,
+              });
+            }}
+          />
         ))}
       </View>
     </Container>
