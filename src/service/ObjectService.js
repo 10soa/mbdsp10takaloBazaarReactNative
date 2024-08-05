@@ -1,4 +1,5 @@
-import {API_URL} from '../constants/config';
+import {API_URL,TOKEN} from '../constants/config';
+
 export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
   try {
     let params = {
@@ -28,6 +29,28 @@ export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
     };
   } catch (error) {
     console.error('Error fetching objects:', error.message);
+    throw error;
+  }
+};
+
+// Create Object
+export const createObject = async (objectData) => {
+  try {
+    const response = await fetch(`${API_URL}/objects`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${TOKEN}`,
+      },
+      body: JSON.stringify(objectData),
+    });
+    if (!response.ok) {
+      throw new Error('Network issue : '+response.status);
+    }
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('Error creating object:', error.message);
     throw error;
   }
 };
