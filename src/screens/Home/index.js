@@ -5,6 +5,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import HomeHeader from './components/HomeHeader';
 import Container from '../../components/Container';
 import SearchBar from '../../components/SeachBar';
@@ -19,28 +20,32 @@ const Home = ({navigation}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    setLoading(true);
-    const fetchData = async () => {
-      try {
-        const filters = {
-          name: '',
-          description: '',
-          category_id: '',
-          created_at_start: '',
-          created_at_end: '',
-        };
-        const result = await getObjects(1, 20, 'desc', filters);
-        setData(result.objects);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+    if (isFocused) {
+      setLoading(true);
+      const fetchData = async () => {
+        try {
+          const filters = {
+            name: '',
+            description: '',
+            category_id: '',
+            created_at_start: '',
+            created_at_end: '',
+          };
+          const result = await getObjects(1, 20, 'desc', filters);
+          setData(result.objects);
+        } catch (error) {
+          setError(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    }
+  }, [isFocused]);
+  
   if (loading) {
     return <IsLoading />;
   }

@@ -71,3 +71,25 @@ export const getObject = async id => {
     throw error;
   }
 };
+
+// Update Ibject
+export const updateObject = async (id, objectData) => {
+  try {
+    const response = await fetch(`${API_URL}/objects/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${TOKEN}`,
+      },
+      body: JSON.stringify(objectData),
+    });
+    if (!response.ok) {
+      throw new Error('Network issue : ' + response.status);
+    }
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('Error updating object:', error.message);
+    throw error;
+  }
+};
