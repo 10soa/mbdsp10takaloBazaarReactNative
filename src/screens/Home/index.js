@@ -16,17 +16,6 @@ import React, {useEffect, useState} from 'react';
 import IsLoading from '../../components/IsLoading';
 
 const Home = ({navigation}) => {
-  const products = {
-    name: 'Smartphone',
-    category: {
-      name: 'Television',
-    },
-    user: {
-      username: 'Bjones',
-      profile_picture:
-        'https://www.jusprofi.at/wp-content/uploads/2020/05/nat%C3%BCrliche-person.jpg',
-    },
-  };
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

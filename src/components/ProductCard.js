@@ -13,7 +13,7 @@ const ProductCard = ({product, badgeText, disableShared, onPress, user}) => {
       <View style={styles.imageContainer}>
         <Image
           source={{
-            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2zg4P0yONxa_94bdBnjpIydiiZ5cu2aLvuoTRj8zdraqnx5iglMGl1ZMgIIKbk3cxqYg&usqp=CAU',
+            uri: product.image,
           }}
           style={styles.image}
           resizeMode="cover"

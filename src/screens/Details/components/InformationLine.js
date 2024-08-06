@@ -2,6 +2,17 @@ import React from 'react';
 import {View, StyleSheet, Text, Image} from 'react-native';
 import colors from '../../../constants/color';
 
+const formatDate = isoString => {
+  const date = new Date(isoString);
+  const options = {year: 'numeric', month: 'long', day: 'numeric'};
+  const formattedDate = date.toLocaleDateString('fr-FR', options);
+  const formattedTime = date.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  return `publié le ${formattedDate} à ${formattedTime}`;
+};
 const InformationLine = ({title, description, date, cat}) => {
   return (
     <View style={styles.Content}>
@@ -14,7 +25,7 @@ const InformationLine = ({title, description, date, cat}) => {
           resizeMode="contain"
           style={{width: 17, height: 17, marginRight: 5, alignSelf: 'center'}}
         />
-        <Text style={styles.date}>publié le {date}</Text>
+        <Text style={styles.date}>{formatDate(date)}</Text>
       </View>
     </View>
   );

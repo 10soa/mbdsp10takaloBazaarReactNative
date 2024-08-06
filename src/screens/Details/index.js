@@ -17,6 +17,7 @@ const Details = ({navigation, route}) => {
   const {objectId} = route.params;
   useEffect(() => {
     const fetchObject = async () => {
+      setLoading(true);
       try {
         const data = await getObject(objectId);
         setObject(data);
