@@ -55,6 +55,7 @@ const Home = ({navigation}) => {
       <View style={styles.Products}>
         {data.map((item, index) => (
           <ProductCard
+            key={index}
             product={item}
             badgeText={'Récent'}
             user={item.user}
