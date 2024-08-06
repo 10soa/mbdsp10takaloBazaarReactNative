@@ -65,7 +65,7 @@ const Home = props => {
       </View>
       <View style={styles.Products}>
         {data.map((item, index) => (
-          <ProductCard product={item} badgeText={'Récent'} user={item.user} />
+          <ProductCard key={index} product={item} badgeText={'Récent'} user={item.user} />
         ))}
       </View>
     </Container>
