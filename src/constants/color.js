@@ -6,6 +6,7 @@ const colors = {
   black: '#383838',
   error: '#e74c3c',
   grey: '#DFDFDF',
+  darkGrey: '#545454',
   success: '#376e37',
 };
 

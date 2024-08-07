@@ -1,4 +1,6 @@
+import {Easing, Notifier} from 'react-native-notifier';
 import {API_URL, TOKEN} from '../constants/config';
+import {fetchWithAuth} from './ApiService';
 
 export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
   try {
@@ -34,23 +36,36 @@ export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
 };
 
 // Create Object
-export const createObject = async objectData => {
+export const createObject = async (objectData, navigation) => {
   try {
-    const response = await fetch(`${API_URL}/objects`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${TOKEN}`,
+    const data = await fetchWithAuth(
+      `${API_URL}/objects`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(objectData),
       },
-      body: JSON.stringify(objectData),
+      navigation,
+    );
+    Notifier.clearQueue(true);
+    Notifier.showNotification({
+      title: 'Succès ',
+      description:
+        'Votre objet a bien été enregistré. Veuillez cliquer ici pour le consulter.',
+      duration: 0,
+      showAnimationDuration: 800,
+      showEasing: Easing.bounce,
+      onHidden: () => console.log('Hidden'),
+      onPress: () =>
+        navigation.navigate('Details', {
+          item: data,
+        }),
+      hideOnPress: true,
     });
-    if (!response.ok) {
-      throw new Error('Network issue : ' + response.status);
-    }
-    const result = await response.json();
-    return result;
+    return data;
   } catch (error) {
-    console.error('Error creating object:', error.message);
     throw error;
   }
 };

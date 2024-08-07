@@ -5,10 +5,14 @@ import colors from '../constants/color';
 import {TouchableOpacity, View, Image} from 'react-native';
 import AddObject from '../screens/Object/AddObject';
 import Details from '../screens/Details';
+import Login from '../screens/Login';
+import {useContext} from 'react';
+import {AuthContext} from '../context/AuthContext';
 
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
+  const {isAuthenticated} = useContext(AuthContext);
   return (
     <Tab.Navigator
       screenOptions={{tabBarStyle: style.navigator, headerShown: false}}
@@ -24,7 +28,7 @@ const AppNavigator = () => {
                   source={require('../assets/icons/home.png')}
                   resizeMode="contain"
                   style={{
-                    tintColor: focused ? colors.primary : colors.grey,
+                    tintColor: focused ? colors.primary : colors.darkGrey,
                     ...style.navImage,
                   }}
                 />
@@ -37,44 +41,51 @@ const AppNavigator = () => {
         name="AjouterObjet"
         component={AddObject}
         options={{
-          tabBarStyle: {display: 'none'},
-          tabBarIcon: () => {
+          tabBarIcon: ({focused}) => {
             return (
               <View style={style.navView}>
                 <Image
                   source={require('../assets/icons/plus.png')}
                   resizeMode="contain"
                   style={{
-                    tintColor: '#fff',
+                    tintColor: focused ? colors.white : colors.darkGrey,
                     ...style.centerIcon,
                   }}
                 />
               </View>
             );
           },
-          tabBarButton: ({children, onPress}) => {
+          tabBarButton: ({children, onPress, accessibilityState}) => {
+            const isFocused = accessibilityState.selected;
             return (
               <TouchableOpacity
                 style={style.centerButtonContainer}
                 onPress={onPress}>
-                <View style={style.centerButton}>{children}</View>
+                <View
+                  style={[
+                    style.centerButton,
+                    isFocused && {backgroundColor: colors.primary},
+                  ]}>
+                  {children}
+                </View>
               </TouchableOpacity>
             );
           },
         }}
       />
       <Tab.Screen
-        name="Recherche"
-        component={Home}
+        name="User"
+        component={Login}
         options={{
+          tabBarStyle: {display: isAuthenticated ? 'flex' : 'none'},
           tabBarIcon: ({focused}) => {
             return (
               <View style={style.navView}>
                 <Image
-                  source={require('../assets/icons/home.png')}
+                  source={require('../assets/icons/User.png')}
                   resizeMode="contain"
                   style={{
-                    tintColor: focused ? colors.primary : colors.grey,
+                    tintColor: focused ? colors.primary : colors.darkGrey,
                     ...style.navImage,
                   }}
                 />
