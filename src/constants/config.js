@@ -1,3 +1,5 @@
 //export const API_URL = 'http://localhost:3000/api';
 export const API_URL = 'https://takalobazarserver.onrender.com/api';
-export const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJqb25lc0BleGFtcGxlLmNvbSIsImlkIjo1MiwiZmlyc3RfbmFtZSI6IlRvYmlhcyIsImxhc3RfbmFtZSI6IkJvYiIsInVzZXJuYW1lIjoiYmpvbmVzIiwidHlwZSI6IlVTRVIiLCJqdGkiOiI1Mi0xNzIyODczNzE4OTQwIiwiaWF0IjoxNzIyODczNzE4LCJleHAiOjE3MjMwNDY1MTh9.Ay3ZLDKKkcLVKX-K7g6PApPwAul946Wb_buVheXr5is';
+export const TOKEN_NAME = 'session';
+export const USERID = 'userID';
+export const USERNAME = 'username';
