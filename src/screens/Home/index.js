@@ -24,7 +24,6 @@ const Home = ({navigation}) => {
 
   useEffect(() => {
     if (isFocused) {
-      setLoading(true);
       const fetchData = async () => {
         try {
           const filters = {

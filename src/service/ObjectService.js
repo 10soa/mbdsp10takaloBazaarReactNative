@@ -1,6 +1,7 @@
-import {Easing, Notifier} from 'react-native-notifier';
+import {Easing, Notifier, NotifierComponents} from 'react-native-notifier';
 import {API_URL, TOKEN} from '../constants/config';
 import {fetchWithAuth} from './ApiService';
+import colors from '../constants/color';
 
 export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
   try {
@@ -54,15 +55,28 @@ export const createObject = async (objectData, navigation) => {
       title: 'Succès ',
       description:
         'Votre objet a bien été enregistré. Veuillez cliquer ici pour le consulter.',
+      Component: NotifierComponents.Notification,
       duration: 0,
       showAnimationDuration: 800,
       showEasing: Easing.bounce,
       onHidden: () => console.log('Hidden'),
       onPress: () =>
         navigation.navigate('Details', {
-          item: data,
+          objectId: data.id,
         }),
       hideOnPress: true,
+      componentProps: {
+        titleStyle: {
+          color: colors.secondary,
+          fontSize: 20,
+          fontFamily: 'Asul-Bold',
+        },
+        descriptionStyle: {
+          color: colors.textPrimary,
+          fontSize: 16,
+          fontFamily: 'Asul',
+        },
+      },
     });
     return data;
   } catch (error) {
@@ -88,21 +102,49 @@ export const getObject = async id => {
 };
 
 // Update Ibject
-export const updateObject = async (id, objectData) => {
+export const updateObject = async (id, objectData, navigation) => {
   try {
-    const response = await fetch(`${API_URL}/objects/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${TOKEN}`,
+    const data = await fetchWithAuth(
+      `${API_URL}/objects/${id}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${TOKEN}`,
+        },
+        body: JSON.stringify(objectData),
       },
-      body: JSON.stringify(objectData),
+      navigation,
+    );
+    Notifier.clearQueue(true);
+    Notifier.showNotification({
+      title: 'Succès ',
+      description:
+        'Votre objet a bien été modifié. Veuillez cliquer ici pour le consulter.',
+      Component: NotifierComponents.Notification,
+      duration: 0,
+      showAnimationDuration: 800,
+      showEasing: Easing.bounce,
+      onHidden: () => console.log('Hidden'),
+      onPress: () =>
+        navigation.navigate('Details', {
+          objectId: data.id,
+        }),
+      hideOnPress: true,
+      componentProps: {
+        titleStyle: {
+          color: colors.secondary,
+          fontSize: 20,
+          fontFamily: 'Asul-Bold',
+        },
+        descriptionStyle: {
+          color: colors.textPrimary,
+          fontSize: 16,
+          fontFamily: 'Asul',
+        },
+      },
     });
-    if (!response.ok) {
-      throw new Error('Network issue : ' + response.status);
-    }
-    const result = await response.json();
-    return result;
+    return data;
   } catch (error) {
     console.error('Error updating object:', error.message);
     throw error;

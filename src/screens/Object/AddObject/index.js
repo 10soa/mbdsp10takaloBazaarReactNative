@@ -1,23 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, Alert, Modal, FlatList, Button, Dimensions } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+  Modal,
+  FlatList,
+  Button,
+  Dimensions,
+  Easing,
+} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import Container from '../../../components/Container';
 import colors from '../../../constants/color';
-import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
-import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import { getCategories } from '../../../service/CategoryService';
-import { createObject } from '../../../service/ObjectService';
+import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {getCategories} from '../../../service/CategoryService';
+import {createObject} from '../../../service/ObjectService';
 import IsLoading from '../../../components/IsLoading';
-import { initDB, insertDraft, getDrafts, deleteDrafts } from '../../../constants/database';
+import {
+  initDB,
+  insertDraft,
+  getDrafts,
+  deleteDrafts,
+} from '../../../constants/database';
+import {Notifier, NotifierComponents} from 'react-native-notifier';
+import {getUserId} from '../../../service/SessionService';
+import CustomText from '../../../components/CustomText';
 
-const getBase64Image = async (uri) => {
+const getBase64Image = async uri => {
   try {
     const response = await fetch(uri);
     const blob = await response.blob();
     const reader = new FileReader();
     return new Promise((resolve, reject) => {
       reader.onloadend = () => {
-        const base64String = reader.result.replace(/^data:image\/(png|jpeg|jpg);base64,/, '');
+        const base64String = reader.result.replace(
+          /^data:image\/(png|jpeg|jpg);base64,/,
+          '',
+        );
         resolve(`data:image/png;base64,${base64String}`);
       };
       reader.onerror = reject;
@@ -35,41 +59,66 @@ const checkAndRequestPermission = async () => {
     return true;
   }
 
-  const requestResult = await request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
+  const requestResult = await request(
+    PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+  );
   return requestResult === RESULTS.GRANTED;
 };
-const { width: screenWidth } = Dimensions.get('window');
+const {width: screenWidth} = Dimensions.get('window');
 
-const AddObject = () => {
+const AddObject = ({navigation}) => {
   const [title, setTitle] = useState('');
+  const [titleError, setTitleError] = useState('');
   const [description, setDescription] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
   const [categorie, setCategorie] = useState('');
+  const [categorieError, setCategorieError] = useState('');
   const [photo, setPhoto] = useState(null);
+  const [photoError, setPhotoError] = useState('');
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [drafts, setDrafts] = useState([]);
+
+  const clearForm = () => {
+    setCategorie('');
+    setTitle('');
+    setDescription('');
+    setPhoto(null);
+  };
+
+  const clearError = () => {
+    setCategorieError('');
+    setTitleError('');
+    setDescriptionError('');
+    setPhotoError('');
+    setError('');
+  };
 
   const selectPhoto = async () => {
     const hasPermission = await checkAndRequestPermission();
     if (!hasPermission) {
-      Alert.alert('Permission refusée', 'La permission de lire le stockage externe est requise.');
+      setPhotoError('La permission de lire le stockage externe est requise.');
+      // Alert.alert('Permission refusée', 'La permission de lire le stockage externe est requise.');
       return;
     }
 
-    launchImageLibrary({}, async (response) => {
+    launchImageLibrary({}, async response => {
       if (response.didCancel) {
         console.log('Annuler');
       } else if (response.errorCode) {
-        console.log('Une erreur s\'est produite : ', response.errorMessage);
+        console.log("Une erreur s'est produite : ", response.errorMessage);
       } else if (response.assets && response.assets[0].uri) {
         try {
           const base64Image = await getBase64Image(response.assets[0].uri);
           setPhoto(base64Image);
         } catch (error) {
           console.error('Error processing image:', error.message);
-          Alert.alert('Erreur', 'Une erreur est survenue lors de la conversion de l\'image.');
+          setPhotoError(
+            "Une erreur est survenue lors de la conversion de l'image.",
+          );
+          // Alert.alert('Erreur', 'Une erreur est survenue lors de la conversion de l\'image.');
         }
       } else {
         console.error('Image URI est undefined ou invalide');
@@ -78,8 +127,11 @@ const AddObject = () => {
   };
 
   const handleSaveDraft = async () => {
+    clearError();
     if (!title) {
-      Alert.alert('Erreur', 'Le champ Libellé est obligatoire!');
+      console.log('rr');
+
+      setTitleError('Le champ Libellé est obligatoire!');
       return;
     }
 
@@ -93,37 +145,62 @@ const AddObject = () => {
 
     try {
       await insertDraft(draft);
-      Alert.alert('Succès', 'Brouillon enregistré.');
-      setCategorie("");
-      setTitle("");
-      setDescription("");
-      setPhoto(null);
+      Notifier.clearQueue(true);
+      Notifier.showNotification({
+        title: 'Succès ',
+        description: 'Brouillon enregistré',
+        Component: NotifierComponents.Notification,
+        duration: 0,
+        showAnimationDuration: 800,
+        showEasing: Easing.bounce,
+        onHidden: () => console.log('Hidden'),
+        hideOnPress: true,
+        componentProps: {
+          titleStyle: {
+            color: colors.secondary,
+            fontSize: 20,
+            fontFamily: 'Asul-Bold',
+          },
+          descriptionStyle: {
+            color: colors.textPrimary,
+            fontSize: 16,
+            fontFamily: 'Asul',
+          },
+        },
+      });
+      clearForm();
       fetchDrafts();
     } catch (error) {
-      Alert.alert('Erreur', 'Une erreur est survenue lors de l\'enregistrement du brouillon.');
-      console.error('Error in handleSaveDraft:', error.message);
+      setError(
+        "Une erreur est survenue lors de l'enregistrement du brouillon.",
+      );
+      // console.error('Error in handleSaveDraft:', error.message);
     }
   };
 
   const takePhoto = async () => {
     const hasPermission = await checkAndRequestPermission();
     if (!hasPermission) {
-      Alert.alert('Permission refusée', 'La permission de lire le stockage externe est requise.');
+      setPhotoError('La permission de lire le stockage externe est requise.');
+      // Alert.alert('Permission refusée', 'La permission de lire le stockage externe est requise.');
       return;
     }
-  
-    launchCamera({}, async (response) => {
+
+    launchCamera({}, async response => {
       if (response.didCancel) {
         console.log('Annuler');
       } else if (response.errorCode) {
-        console.log('Une erreur s\'est produite : ', response.errorMessage);
+        console.log("Une erreur s'est produite : ", response.errorMessage);
       } else if (response.assets && response.assets[0].uri) {
         try {
           const base64Image = await getBase64Image(response.assets[0].uri);
           setPhoto(base64Image);
         } catch (error) {
           console.error('Error processing image:', error.message);
-          Alert.alert('Erreur', 'Une erreur est survenue lors de la conversion de l\'image.');
+          setPhotoError(
+            "Une erreur est survenue lors de la conversion de l'image.",
+          );
+          // Alert.alert('Erreur', 'Une erreur est survenue lors de la conversion de l\'image.');
         }
       } else {
         console.error('Image URI est undefined ou invalide');
@@ -131,7 +208,7 @@ const AddObject = () => {
     });
   };
 
-  const handleDraftPress = (item) => {
+  const handleDraftPress = item => {
     setTitle(item.name);
     setDescription(item.description);
     setCategorie(item.category_id);
@@ -139,10 +216,27 @@ const AddObject = () => {
     setModalVisible(false);
   };
 
-  
-  const handleSubmit = async () => {
-    if (!title || !description || !categorie || !photo) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+  const handleSubmit = async navigation => {
+    clearError();
+    let valid = true;
+    if (!title) {
+      setTitleError('Le champ Libellé est obligatoire!');
+      valid = false;
+    }
+    if (!description) {
+      setDescriptionError('Le champ description est obligatoire!');
+      valid = false;
+    }
+    if (!categorie) {
+      setCategorieError('Vous devez selectionnez une catégorie!');
+      valid = false;
+    }
+    if (!photo) {
+      setPhotoError('Vous devez télécharger une photo');
+      valid = false;
+    }
+    if (!valid) {
+      // Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
       return;
     }
 
@@ -151,21 +245,21 @@ const AddObject = () => {
       description,
       category_id: categorie,
       image_file: photo,
-      user_id: 52,
+      user_id: await getUserId(),
     };
 
     try {
       setLoading(true);
-      const result = await createObject(objectData);
-      Alert.alert('Succès', 'Objet ajouté avec succès !');
-      setCategorie("");
-      setTitle("");
-      setDescription("");
-      setPhoto(null);
+      const result = await createObject(objectData, navigation);
+
+      // Alert.alert('Succès', 'Objet ajouté avec succès !');
+      clearForm();
       setLoading(false);
+      navigation.navigate('Home');
     } catch (error) {
-      Alert.alert('Erreur', 'Une erreur est survenue lors de l\'ajout de l\'objet.');
-      console.error('Error in handleSubmit:', error.message);
+      setError(error.message);
+      // Alert.alert('Erreur', 'Une erreur est survenue lors de l\'ajout de l\'objet.');
+      // console.error('Error in handleSubmit:', error.message);
     } finally {
       setLoading(false);
     }
@@ -174,18 +268,22 @@ const AddObject = () => {
   const fetchDrafts = async () => {
     try {
       const drafts = await new Promise((resolve, reject) => {
-        getDrafts((result) => {
+        getDrafts(result => {
           resolve(result);
         });
       });
       setDrafts(drafts);
     } catch (error) {
-      Alert.alert('Erreur', 'Une erreur est survenue lors de la récupération des brouillons.');
+      Alert.alert(
+        'Erreur',
+        'Une erreur est survenue lors de la récupération des brouillons.',
+      );
       console.error('Error fetching drafts:', error.message);
     }
   };
 
   useEffect(() => {
+    clearError();
     setLoading(true);
     initDB();
     fetchDrafts();
@@ -202,35 +300,51 @@ const AddObject = () => {
     fetchData();
   }, []);
 
-  if (loading) {
-    return <IsLoading />;
-  }
+  // if (loading) {
+  //   return <IsLoading />;
+  // }
 
   return (
     <Container isScrollable>
       <Text style={styles.title}>Ajouter un nouvel objet</Text>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.buttonBrouillon} onPress={() => setModalVisible(true)}>
-          <Image source={require('../../../assets/icons/OpenEnvelope.png')} resizeMode="contain" style={{ width: 30, height: 30, tintColor: '#fff' }} />
+        <TouchableOpacity
+          style={styles.buttonBrouillon}
+          onPress={() => setModalVisible(true)}>
+          <Image
+            source={require('../../../assets/icons/OpenEnvelope.png')}
+            resizeMode="contain"
+            style={{width: 30, height: 30, tintColor: '#fff'}}
+          />
           <Text style={styles.buttonText}>Brouillons</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonAjouter} onPress={handleSaveDraft}>
-        <Image source={require('../../../assets/icons/Save.png')} resizeMode="contain" style={{ width: 30, height: 30, tintColor: '#fff' }} />
+        <TouchableOpacity
+          style={styles.buttonAjouter}
+          onPress={handleSaveDraft}>
+          <Image
+            source={require('../../../assets/icons/Save.png')}
+            resizeMode="contain"
+            style={{width: 30, height: 30, tintColor: '#fff'}}
+          />
           <Text style={styles.buttonText}>Enregistrer</Text>
         </TouchableOpacity>
       </View>
       <Text style={styles.label}>Libellé</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, titleError && styles.borderError]}
         placeholder=""
         keyboardType="default"
         value={title}
         onChangeText={setTitle}
       />
-
+      {titleError && <CustomText text={titleError} style={styles.error} />}
       <Text style={styles.label}>Description</Text>
       <TextInput
-        style={[styles.input, styles.textarea]}
+        style={[
+          styles.input,
+          styles.textarea,
+          descriptionError && styles.borderError,
+        ]}
         placeholder=""
         keyboardType="default"
         multiline={true}
@@ -238,88 +352,155 @@ const AddObject = () => {
         value={description}
         onChangeText={setDescription}
       />
-
+      {descriptionError && (
+        <CustomText text={descriptionError} style={styles.error} />
+      )}
       <Text style={styles.label}>Catégorie</Text>
-      <View style={styles.pickerContainer}>
+      <View
+        style={[styles.pickerContainer, categorieError && styles.borderError]}>
         <Picker
           selectedValue={categorie}
-          style={styles.picker}
-          onValueChange={(itemValue) => setCategorie(itemValue)}
-        >
+          style={[styles.picker]}
+          onValueChange={itemValue => setCategorie(itemValue)}>
           <Picker.Item label="..." value="" />
-          {data.map((item) => (
-            <Picker.Item key={item.id} label={item.name} value={item.id} />
+          {data.map(item => (
+            <Picker.Item
+              key={item.id}
+              label={item.name}
+              value={item.id}
+              style={{fontFamily: 'Asul', fontSize: 17}}
+            />
           ))}
         </Picker>
       </View>
-
+      {categorieError && (
+        <CustomText text={categorieError} style={styles.error} />
+      )}
       <Text style={styles.label}>Image de l'objet</Text>
-      <TouchableOpacity style={styles.photoContainer} onPress={selectPhoto}>
+      <TouchableOpacity
+        style={[styles.photoContainer, , photoError && styles.borderError]}
+        onPress={selectPhoto}>
         {photo ? (
-          <Image source={{ uri: photo }} style={styles.photo} />
+          <Image source={{uri: photo}} style={styles.photo} />
         ) : (
           <View style={styles.placeholder}>
-            <Image source={require('../../../assets/icons/clodes.png')} resizeMode="contain" style={{ width: 100, height: 100, tintColor: '#D6CDBD' }} />
+            <Image
+              source={require('../../../assets/icons/clodes.png')}
+              resizeMode="contain"
+              style={[{width: 100, height: 100, tintColor: '#D6CDBD'}]}
+            />
           </View>
         )}
       </TouchableOpacity>
-      
+
+      {photoError && <CustomText text={photoError} style={styles.error} />}
+
       <View style={styles.buttonContainerTake}>
-        <TouchableOpacity  onPress={selectPhoto}>
-          <Image source={require('../../../assets/icons/Picture.png')} resizeMode="contain" style={{ width: 50, height: 50, tintColor: colors.textPrimary }} />
+        <TouchableOpacity onPress={selectPhoto}>
+          <Image
+            source={require('../../../assets/icons/Picture.png')}
+            resizeMode="contain"
+            style={{width: 50, height: 50, tintColor: colors.textPrimary}}
+          />
         </TouchableOpacity>
-        <TouchableOpacity  onPress={takePhoto}>
-        <Image source={require('../../../assets/icons/Camera.png')} resizeMode="contain" style={{ width: 45, height: 43, tintColor: colors.textPrimary,marginTop : 3 }} />
+        <TouchableOpacity onPress={takePhoto}>
+          <Image
+            source={require('../../../assets/icons/Camera.png')}
+            resizeMode="contain"
+            style={{
+              width: 45,
+              height: 43,
+              tintColor: colors.textPrimary,
+              marginTop: 3,
+            }}
+          />
         </TouchableOpacity>
       </View>
-
+      {error && (
+        <CustomText
+          text={error}
+          style={[styles.error, {textAlign: 'center'}]}
+        />
+      )}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.buttonAjouter} onPress={handleSubmit}>
-        <Image source={require('../../../assets/icons/plus.png')} resizeMode="contain" style={{ width: 30, height: 30, tintColor: '#fff' }} />
+        <TouchableOpacity
+          style={styles.buttonAjouter}
+          onPress={() => {
+            handleSubmit(navigation);
+          }}>
+          <Image
+            source={require('../../../assets/icons/plus.png')}
+            resizeMode="contain"
+            style={{width: 30, height: 30, tintColor: '#fff'}}
+          />
           <Text style={styles.buttonText}>Créer l'objet</Text>
         </TouchableOpacity>
       </View>
-      
+
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(!modalVisible)}
-      >
+        onRequestClose={() => setModalVisible(!modalVisible)}>
         <View style={styles.modalBackground}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Charger Brouillon</Text>
-            <FlatList
-              data={drafts}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.draftItem}>
-                  <TouchableOpacity style={styles.textContainer} onPress={() => handleDraftPress(item)}>
-                    <Text style={styles.draftTitle}>{item.name}</Text>
-                    <Text style={styles.draftDescription}>{item.description}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.buttonSpp} onPress={async () => {
-                    try {
-                      await deleteDrafts(item.id);
-                      Alert.alert('Succès', 'Brouillon supprimé.');
-                      fetchDrafts();
-                    } catch (error) {
-                      Alert.alert('Erreur', 'Une erreur est survenue lors de la suppression du brouillon.');
-                      console.error('Error deleting draft:', error.message);
-                    }
-                  }}>
-                    <Image source={require('../../../assets/icons/Remove2.png')} resizeMode="contain" style={{ width: 30, height: 30, tintColor:colors.primary }} />
-                  </TouchableOpacity>
-                </View>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalTitle}>Charger Brouillon</Text>
+              <FlatList
+                data={drafts}
+                keyExtractor={item => item.id.toString()}
+                renderItem={({item}) => (
+                  <View style={styles.draftItem}>
+                    <TouchableOpacity
+                      style={styles.textContainer}
+                      onPress={() => handleDraftPress(item)}>
+                      <Text style={styles.draftTitle}>{item.name}</Text>
+                      <Text style={styles.draftDescription}>
+                        {item.description}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.buttonSpp}
+                      onPress={async () => {
+                        try {
+                          await deleteDrafts(item.id);
+                          Alert.alert('Succès', 'Brouillon supprimé.');
+                          fetchDrafts();
+                        } catch (error) {
+                          Alert.alert(
+                            'Erreur',
+                            'Une erreur est survenue lors de la suppression du brouillon.',
+                          );
+                          console.error('Error deleting draft:', error.message);
+                        }
+                      }}>
+                      <Image
+                        source={require('../../../assets/icons/Remove2.png')}
+                        resizeMode="contain"
+                        style={{
+                          width: 30,
+                          height: 30,
+                          tintColor: colors.black,
+                        }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              />
+              {drafts.length === 0 && (
+                <CustomText
+                  text={"Vous n'avez actuellement aucun brouillon."}
+                  style={{fontSize: 20}}
+                />
               )}
-            />
-            <TouchableOpacity style={styles.buttonClose} onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.buttonCloseText}>Fermer</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonClose}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={styles.buttonCloseText}>Fermer</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-        </View> 
       </Modal>
     </Container>
   );
@@ -340,13 +521,14 @@ const styles = StyleSheet.create({
     marginTop: 40,
     fontSize: 24,
     marginBottom: 30,
-    fontWeight: 'bold',
+    fontFamily: 'Asul-Bold',
     textAlign: 'center',
     color: colors.primary,
   },
   label: {
     fontSize: 18,
     marginBottom: 10,
+    fontFamily: 'Asul',
   },
   input: {
     height: 50,
@@ -355,11 +537,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
+    fontFamily: 'Asul',
     marginBottom: 20,
+    fontSize: 17,
   },
   textarea: {
     height: 100,
     textAlignVertical: 'top',
+    fontFamily: 'Asul',
   },
   pickerContainer: {
     height: 50,
@@ -372,6 +557,8 @@ const styles = StyleSheet.create({
   },
   picker: {
     width: '100%',
+    fontFamily: 'Asul',
+    fontSize: 17,
   },
   photoContainer: {
     width: '100%',
@@ -386,6 +573,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    fontFamily: 'Asul',
     height: '100%',
   },
   photo: {
@@ -397,7 +585,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
-    marginBottom :30
+    marginBottom: 30,
   },
   buttonContainerTake: {
     width: '100%',
@@ -410,7 +598,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     flexDirection: 'row',
-    flexDirection: 'row',
     backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -418,14 +605,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   draftDescription: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#666',
-    width : 250
+    width: 250,
+    fontFamily: 'Asul',
+  },
+  borderError: {
+    borderWidth: 3,
+    borderColor: colors.error,
   },
   buttonSpp: {
     flex: 1,
     height: 40,
-    flexDirection: 'row',
     flexDirection: 'row',
     justifyContent: 'center',
     borderRadius: 5,
@@ -443,9 +634,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 19,
     marginLeft: 10,
-    fontWeight: 'bold',
+    fontFamily: 'Asul-Bold',
   },
   centeredView: {
     flex: 1,
@@ -471,12 +662,11 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 25,
-    fontWeight: 'bold',
-    fontStyle : 'italic',
     marginBottom: 15,
     textAlign: 'left',
     alignSelf: 'flex-start',
-    color : colors.secondary
+    fontFamily: 'Asul-Bold',
+    color: colors.secondary,
   },
   draftItem: {
     flexDirection: 'row',
@@ -488,9 +678,9 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
   },
   draftTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    width : 250
+    fontSize: 18,
+    fontFamily: 'Asul-Bold',
+    width: 250,
   },
   trashButton: {
     marginLeft: 10,
@@ -503,12 +693,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 5,
     padding: 10,
-    alignSelf: 'flex-end'
+    alignSelf: 'flex-end',
   },
   buttonCloseText: {
     color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
+    fontFamily: 'Asul-Bold',
+    fontSize: 18,
+  },
+  error: {
+    color: colors.error,
+    fontSize: 18,
+    marginBottom: 5,
+    marginTop: -10,
   },
 });
 

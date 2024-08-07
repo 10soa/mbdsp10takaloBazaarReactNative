@@ -18,7 +18,7 @@ const AppNavigator = () => {
       screenOptions={{tabBarStyle: style.navigator, headerShown: false}}
       tabBarOptions={{showIcon: true, showLabel: false}}>
       <Tab.Screen
-        name="Accueil"
+        name="Home"
         component={Home}
         options={{
           tabBarIcon: ({focused}) => {

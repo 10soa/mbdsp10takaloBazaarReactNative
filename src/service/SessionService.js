@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {TOKEN_NAME} from '../constants/config';
+import {TOKEN_NAME, USERID, USERNAME} from '../constants/config';
 import {decode as base64_decode} from 'base-64';
 
 export const isConnected = async () => {
@@ -19,6 +19,14 @@ const decodeToken = token => {
 
 export const getToken = async () => {
   return await AsyncStorage.getItem(TOKEN_NAME);
+};
+
+export const getUserId = async () => {
+  return await AsyncStorage.getItem(USERID);
+};
+
+export const getUsername = async () => {
+  return await AsyncStorage.getItem(USERNAME);
 };
 
 export const getUserFromToken = async () => {
