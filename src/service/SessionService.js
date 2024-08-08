@@ -44,3 +44,9 @@ export const getUserFromToken = async () => {
   }
   return null;
 };
+
+export const removeToken = async () => {
+  await AsyncStorage.removeItem(TOKEN_NAME);
+  await AsyncStorage.removeItem(USERID);
+  await AsyncStorage.removeItem(USERNAME);
+}

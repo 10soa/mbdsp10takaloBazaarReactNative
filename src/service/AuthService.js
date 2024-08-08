@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API_URL, TOKEN_NAME, USERID, USERNAME} from '../constants/config';
-import { getUserFromToken } from './SessionService';
+import {removeToken} from './SessionService';
+import {fetchWithAuth} from './ApiService';
 
 export const log = async (email, mdp) => {
   const url = `${API_URL}/auth/user/login`;
@@ -38,26 +39,24 @@ export const log = async (email, mdp) => {
   }
 };
 
-export const logout = async () => {
+export const logout = async navigation => {
   const url = `${API_URL}/auth/logout`;
 
   try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    await fetchWithAuth(
+      url,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
       },
-      body: JSON.stringify({}),
-    });
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || 'Something went wrong');
-    }
-
-    return data;
+      navigation,
+    );
+    await removeToken();
+    navigation.navigate('Home');
   } catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
     throw error;
   }
 };

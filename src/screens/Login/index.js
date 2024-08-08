@@ -8,8 +8,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import colors from '../../constants/color';
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import {log} from '../../service/AuthService';
+import {AuthContext} from '../../context/AuthContext';
 
 const Login = ({text, home, navigation}) => {
   const [email, setEmail] = useState('bjones');
@@ -18,7 +19,7 @@ const Login = ({text, home, navigation}) => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
+  const {setIsAuthenticated} = useContext(AuthContext);
   const handleLogin = async () => {
     try {
       let valid = true;
@@ -42,6 +43,7 @@ const Login = ({text, home, navigation}) => {
 
       await log(email, password);
       setLoading(false);
+      setIsAuthenticated(true);
       if (home === true) {
         navigation.navigate('Home');
         return;
@@ -109,14 +111,23 @@ const Login = ({text, home, navigation}) => {
       ) : null}
       {loading ? (
         <View
-          style={[styles.button, {backgroundColor: colors.secondary, flexDirection: 'row', justifyContent: 'center'}]}
+          style={[
+            styles.button,
+            {
+              backgroundColor: colors.secondary,
+              flexDirection: 'row',
+              justifyContent: 'center',
+            },
+          ]}
           onPress={handleLogin}>
           <ActivityIndicator
             animating={loading}
             size={25}
             color={colors.white}
           />
-          <Text style={[styles.buttonText,{marginLeft: 10}]}>Se connecter</Text>
+          <Text style={[styles.buttonText, {marginLeft: 10}]}>
+            Se connecter
+          </Text>
         </View>
       ) : (
         <TouchableOpacity style={styles.button} onPress={handleLogin}>

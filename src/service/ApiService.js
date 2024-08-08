@@ -1,10 +1,10 @@
 import {TOKEN_NAME} from '../constants/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getToken} from './SessionService';
+import {getToken, removeToken} from './SessionService';
 
 const handleHttpError = async (response, navigation) => {
   if (response.status === 401) {
-    await AsyncStorage.removeItem(TOKEN_NAME);
+    await removeToken();
     navigation.navigate('Login', {
       text: 'Vous devez vous-connecter',
     });

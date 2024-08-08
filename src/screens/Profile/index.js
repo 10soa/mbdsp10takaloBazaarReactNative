@@ -3,22 +3,22 @@ import Container from '../../components/Container';
 import IsLoading from '../../components/IsLoading';
 import UserProfile from './components/UserProfile';
 import {getUserFromToken} from '../../service/SessionService';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import CustomText from '../../components/CustomText';
 import colors from '../../constants/color';
 import ObjectCard from './components/ObjectCard';
 import ListItem from './components/ListItem';
+import { AuthContext } from '../../context/AuthContext';
 
 const Profile = ({navigation}) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const {logoutUser} = useContext(AuthContext);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const userData = await getUserFromToken();
-        userData.profile_picture =
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa4xjShh4ynJbrgYrW_aB4lhKSxeMzQ3cO_A&usqp=CAU';
         setUser(userData);
       } catch (error) {
         console.error('Failed to fetch user', error);
@@ -29,6 +29,10 @@ const Profile = ({navigation}) => {
 
     fetchUser();
   }, []);
+
+  const handleLogout = async () => {
+    await logoutUser(navigation);
+  }
   if (loading) {
     return <IsLoading />;
   }
@@ -55,6 +59,7 @@ const Profile = ({navigation}) => {
       <ListItem
         title="Deconnexion"
         iconSource={require('../../assets/icons/Logout.png')}
+        onPress={handleLogout}
       />
       <CustomText
         text="Information personelle"
