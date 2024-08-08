@@ -8,6 +8,7 @@ import Details from '../screens/Details';
 import Login from '../screens/Login';
 import {useContext} from 'react';
 import {AuthContext} from '../context/AuthContext';
+import Profile from '../screens/Profile';
 
 const Tab = createBottomTabNavigator();
 
@@ -75,7 +76,7 @@ const AppNavigator = () => {
       />
       <Tab.Screen
         name="User"
-        component={Login}
+        component={isAuthenticated ? Profile : Login}
         options={{
           tabBarStyle: {display: isAuthenticated ? 'flex' : 'none'},
           tabBarIcon: ({focused}) => {

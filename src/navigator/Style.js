@@ -4,8 +4,7 @@ export const style = StyleSheet.create({
   navigator: {
     position: 'absolute',
     bottom: 0,
-    borderRadius: 15,
-    backgroundColor: colors.white,
+    backgroundColor: '#F0F0F0',
     elevation: 0,
     height: 50,
   },
