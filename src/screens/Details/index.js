@@ -75,7 +75,7 @@ const Details = ({navigation, route}) => {
             </Text>
           </View>
         </View>
-        <PreviewImage image={object.image} />
+        <PreviewImage image={object.image} idObject={object.id} objectName={object.name}/>
         <InformationLine
           title={object.name}
           description={object.description}
