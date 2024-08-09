@@ -11,7 +11,6 @@ export const log = async (email, mdp) => {
     password: mdp,
   };
   try {
-    console.log('sss', url);
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -63,7 +62,6 @@ export const logout = async navigation => {
 
 export const register = async user => {
   const url = `${API_URL}/register`;
-
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -74,13 +72,20 @@ export const register = async user => {
     });
 
     const data = await response.json();
+
     if (!response.ok) {
-      throw new Error(data.error || 'Something went wrong');
+      if (response.status !== 500) {
+        throw new Error(data.error);
+      } else {
+        throw new Error('Veuillez réessayer ultérieurement');
+      }
     }
+    await AsyncStorage.setItem(TOKEN_NAME, data.token);
+    await AsyncStorage.setItem(USERNAME, data.username);
+    await AsyncStorage.setItem(USERID, data.id.toString());
 
     return data;
   } catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
     throw error;
   }
 };
