@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     width: scale(45),
     height: scale(45),
     borderRadius: scale(50),
-    backgroundColor: colors.primary,
+    backgroundColor: colors.primaryLight,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: scale(15),

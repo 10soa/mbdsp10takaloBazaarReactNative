@@ -88,8 +88,8 @@ const styles = StyleSheet.create({
   },
   TitleContent: {
     fontSize: 15,
-    fontWeight: 500,
     color: colors.white,
+    fontFamily: 'Asul-Bold'
   },
   Products: {
     marginVertical: 20,

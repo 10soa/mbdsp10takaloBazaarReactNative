@@ -98,12 +98,12 @@ const styles = StyleSheet.create({
   title: {
     color: colors.textPrimary,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Asul-Bold'
   },
   subtitle: {
     color: '#FFF',
     fontSize: 14,
-    fontWeight: 500,
+    fontFamily: 'Asul-Bold'
   },
   image: {
     width: 100,

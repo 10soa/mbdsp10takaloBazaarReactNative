@@ -9,11 +9,24 @@ import Login from '../screens/Login';
 import {useContext} from 'react';
 import {AuthContext} from '../context/AuthContext';
 import Profile from '../screens/Profile';
+import Signup from '../screens/Signup';
+import {useNavigation} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
   const {isAuthenticated} = useContext(AuthContext);
+  const navigation = useNavigation();
+  const handlePress = () => {
+    if (isAuthenticated) {
+      navigation.navigate('AjouterObjet');
+    } else {
+      navigation.navigate('User', {
+        text: 'Veuillez vous connecter pour pouvoir publier un objet.',
+        routeName: 'AjouterObjet',
+      });
+    }
+  };
   return (
     <Tab.Navigator
       screenOptions={{tabBarStyle: style.navigator, headerShown: false}}
@@ -40,7 +53,7 @@ const AppNavigator = () => {
       />
       <Tab.Screen
         name="AjouterObjet"
-        component={AddObject}
+        component={isAuthenticated ? AddObject : Login}
         options={{
           tabBarIcon: ({focused}) => {
             return (
@@ -61,7 +74,7 @@ const AppNavigator = () => {
             return (
               <TouchableOpacity
                 style={style.centerButtonContainer}
-                onPress={onPress}>
+                onPress={handlePress}>
                 <View
                   style={[
                     style.centerButton,
@@ -99,6 +112,17 @@ const AppNavigator = () => {
         key={'Details'}
         name={'Details'}
         component={Details}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'Filter',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'Signup'}
+        name={'Signup'}
+        component={Signup}
         options={{
           tabBarButton: props => null,
           tabBarVisible: false,

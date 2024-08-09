@@ -28,9 +28,9 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   textStyle: {
-    fontFamily: 'poppins_black',
+    fontFamily: 'Asul-Bold',
     fontStyle: 'normal',
-    fontSize: scale(18),
+    fontSize: scale(22),
     lineHeight: scale(24),
     textAlign: 'center',
     color: colors.white,

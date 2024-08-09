@@ -92,11 +92,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Asul-Bold'
   },
   name: {
     fontSize: 14,
     color: colors.textPrimary,
+    fontFamily: 'Asul',
   },
   cartIcon: {
     alignSelf: 'flex-end',
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
   cat: {
     color: colors.textPrimary,
     fontSize: 15,
-    fontWeight: 300,
+    fontFamily: 'Asul'
   },
   detailsContent: {
     flexDirection: 'column',
@@ -136,6 +137,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 14,
     color: colors.textPrimary,
+    fontFamily: 'Asul',
     textDecorationLine: 'underline',
   },
 });

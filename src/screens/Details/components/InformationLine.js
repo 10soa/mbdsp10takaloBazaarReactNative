@@ -35,9 +35,10 @@ const styles = StyleSheet.create({
   cat: {
     backgroundColor: colors.primary,
     color: colors.white,
+    paddingBottom: 3,
     paddingHorizontal: 10,
-    fontSize: 14,
-    fontFamily: 'poppins_regular',
+    fontSize: 16,
+    fontFamily: 'Asul',
     alignSelf: 'flex-start',
     borderRadius: 5,
     justifyContent: 'center',
@@ -47,17 +48,18 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   Title: {
-    fontSize: 20,
+    fontSize: 22,
     color: colors.textPrimary,
-    fontFamily: 'poppins_black',
+    fontFamily: 'Asul-Bold',
   },
   description: {
-    fontSize: 16,
+    fontSize: 17,
     color: colors.textPrimary,
-    fontFamily: 'poppins_regular',
+    fontFamily: 'Asul',
   },
   dateContent: {
-    paddingVertical: 2,
+    paddingVertical: 3,
+    paddingBottom: 4,
     paddingHorizontal: 15,
     backgroundColor: colors.grey,
     alignSelf: 'flex-start',
@@ -70,8 +72,8 @@ const styles = StyleSheet.create({
   },
   date: {
     color: colors.textPrimary,
-    fontFamily: 'poppins_regular',
-    fontSize: 14,
+    fontFamily: 'Asul',
+    fontSize: 16,
   },
 });
 

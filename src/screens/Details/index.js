@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   buttonText: {
-    fontSize: scale(16),
+    fontSize: scale(20),
   },
   userContainer: {
     flexDirection: 'row',
@@ -123,15 +123,16 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: colors.textPrimary,
     textDecorationLine: 'underline',
-    fontFamily: 'poppins_regular',
+    fontFamily: 'Asul',
   },
   status: {
     alignSelf: 'flex-start',
     paddingHorizontal: 10,
     borderRadius: 5,
     color: colors.white,
-    fontSize: 14,
-    fontFamily: 'poppins_regular',
+    fontSize: 15,
+    paddingBottom: 3,
+    fontFamily: 'Asul',
   },
 });
 export default Details;
