@@ -26,3 +26,24 @@ export const getHistoryExchange = async (userID, status, navigation) => {
     throw error;
   }
 };
+
+export const getMyCurrentExchange = async (navigation) => {
+    try {
+      const url = `${API_URL}/exchanges/myCurrents`;
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      const result = await fetchWithAuth(url, options, navigation);
+      if (result && result.data) {
+        return result.data;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching exchange history:', error.message);
+      throw error;
+    }
+  };

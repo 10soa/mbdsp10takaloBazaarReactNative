@@ -5,8 +5,8 @@ const CardExchange = ({ exchange }) => {
   return (
     <TouchableOpacity style={styles.card}>
       <Text style={styles.text}>Echange ID : {exchange.id}</Text>
-      <Text style={styles.textBold}>Proposeur : {exchange.proposer_user_name}</Text>
-      <Text style={styles.textBold}>Receveur : {exchange.receiver_user_name}</Text>
+      <Text style={styles.textBold}>Proposeur : {exchange.proposer_user_name || exchange.proposer.username}</Text>
+      <Text style={styles.textBold}>Receveur : {exchange.receiver_user_name || exchange.receiver.username}</Text>
       <Text style={styles.text}>Status : {translateStatus(exchange.status)}</Text>
     </TouchableOpacity>
   );
