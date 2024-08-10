@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   textStyle: {
     fontFamily: 'Asul-Bold',
     fontStyle: 'normal',
-    fontSize: scale(22),
+    fontSize: scale(19),
     lineHeight: scale(24),
     textAlign: 'center',
     color: colors.white,

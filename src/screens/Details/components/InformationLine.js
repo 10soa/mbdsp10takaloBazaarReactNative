@@ -6,12 +6,8 @@ const formatDate = isoString => {
   const date = new Date(isoString);
   const options = {year: 'numeric', month: 'long', day: 'numeric'};
   const formattedDate = date.toLocaleDateString('fr-FR', options);
-  const formattedTime = date.toLocaleTimeString('fr-FR', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
 
-  return `publié le ${formattedDate} à ${formattedTime}`;
+  return `publié le ${formattedDate}`;
 };
 const InformationLine = ({title, description, date, cat}) => {
   return (

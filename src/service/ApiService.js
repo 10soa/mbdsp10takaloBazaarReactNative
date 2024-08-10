@@ -11,7 +11,6 @@ const handleHttpError = async (response, navigation) => {
     return;
   } else if (response.status !== 500) {
     const error = await response.json();
-    console.error('HTTP error occurred:', error);
     throw new Error(error.error);
   } else {
     throw new Error('Veuillez réessayer ultérieurement');
@@ -30,7 +29,7 @@ export const fetchWithAuth = async (url, options = {}, navigation) => {
   try {
     const response = await fetch(url, options);
     if (!response.ok) {
-      handleHttpError(response, navigation);
+      await handleHttpError(response, navigation);
     }
     return await response.json();
   } catch (error) {

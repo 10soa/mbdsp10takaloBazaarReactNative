@@ -11,6 +11,7 @@ import {AuthContext} from '../context/AuthContext';
 import Profile from '../screens/Profile';
 import Signup from '../screens/Signup';
 import {useNavigation} from '@react-navigation/native';
+import Propose from '../screens/Exchange/Propose';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,6 +30,7 @@ const AppNavigator = () => {
   };
   return (
     <Tab.Navigator
+      backBehavior={'history'}
       screenOptions={{tabBarStyle: style.navigator, headerShown: false}}
       tabBarOptions={{showIcon: true, showLabel: false}}>
       <Tab.Screen
@@ -123,6 +125,17 @@ const AppNavigator = () => {
         key={'Signup'}
         name={'Signup'}
         component={Signup}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'Filter',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'ProposeExchange'}
+        name={'ProposeExchange'}
+        component={Propose}
         options={{
           tabBarButton: props => null,
           tabBarVisible: false,
