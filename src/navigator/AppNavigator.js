@@ -9,7 +9,7 @@ import Login from '../screens/Login';
 import {useContext} from 'react';
 import {AuthContext} from '../context/AuthContext';
 import Profile from '../screens/Profile';
-
+import SearchFilter from '../screens/Search';
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
@@ -99,6 +99,17 @@ const AppNavigator = () => {
         key={'Details'}
         name={'Details'}
         component={Details}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'Filter',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'SearchFilter'}
+        name={'SearchFilter'}
+        component={SearchFilter}
         options={{
           tabBarButton: props => null,
           tabBarVisible: false,
