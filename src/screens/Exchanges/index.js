@@ -7,6 +7,7 @@ import colors from '../../constants/color';
 import { getHistoryExchange } from '../../service/ExchangesService';
 import IsLoading from '../../components/IsLoading';
 import { getUserFromToken } from '../../service/SessionService';
+import { useIsFocused,useRoute } from '@react-navigation/native';
 
 const ExchangeHistory = ({ navigation }) => {
   const [exchanges, setExchanges] = useState([]);
@@ -14,24 +15,28 @@ const ExchangeHistory = ({ navigation }) => {
   const [error, setError] = useState(null);
   const [userID, setUserID] = useState(0);
   const [selectedStatus, setSelectedStatus] = useState('');
+  const isFocused = useIsFocused();
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const userId = await getUserFromToken();
+      setUserID(userId.id);
+      const data = await getHistoryExchange(userID, selectedStatus, navigation);
+      setExchanges(data);
+    } catch (error) {
+      console.error(error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userId = await getUserFromToken();
-        setUserID(userId.id);
-        const data = await getHistoryExchange(userID, selectedStatus, navigation);
-        setExchanges(data);
-      } catch (error) {
-        console.error(error);
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [userID, selectedStatus, navigation]);
+    if (isFocused) {
+        fetchData();
+    }
+  }, [isFocused,userID, selectedStatus, navigation]);
 
   if (loading) {
     return <IsLoading />;
