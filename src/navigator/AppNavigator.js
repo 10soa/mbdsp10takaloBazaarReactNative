@@ -13,6 +13,7 @@ import Signup from '../screens/Signup';
 import {useNavigation} from '@react-navigation/native';
 import SearchFilter from '../screens/Search';
 import Propose from '../screens/Exchange/Propose';
+import MyObject from '../screens/Object/Myobject';
 
 const Tab = createBottomTabNavigator();
 
@@ -148,6 +149,17 @@ const AppNavigator = () => {
         key={'ProposeExchange'}
         name={'ProposeExchange'}
         component={Propose}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'Filter',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'MyObject'}
+        name={'MyObject'}
+        component={MyObject}
         options={{
           tabBarButton: props => null,
           tabBarVisible: false,

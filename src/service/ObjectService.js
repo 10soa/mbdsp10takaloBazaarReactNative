@@ -163,6 +163,7 @@ export const getUserObjects = async (userId, params) => {
   }
 
   const url = `${API_URL}/user/${userId}/objects?${queryString}`;
+console.log(url,'url');
 
   try {
     const response = await fetchWithAuth(url, {

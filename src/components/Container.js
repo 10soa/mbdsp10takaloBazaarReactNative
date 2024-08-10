@@ -1,5 +1,6 @@
 import React from 'react';
 import {ScrollView, StyleSheet, View, SafeAreaView} from 'react-native';
+import colors from '../constants/color';
 
 const Container = ({
   children,
@@ -7,6 +8,7 @@ const Container = ({
   bodyStyle,
   paddingVerticalDisabled,
   paddingHorizontalDisabled,
+  color
 }) => {
   return (
     <SafeAreaView style={styles.container}>
@@ -42,7 +44,7 @@ const Container = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
   innerView: {
     flex: 1,

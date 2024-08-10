@@ -44,8 +44,8 @@ const ProductCard = ({product, badgeText, disableShared, onPress, user}) => {
         {!disableShared && (
           <TouchableOpacity style={styles.cartIcon}>
             <Image
-              source={require('../assets/icons/Share.png')}
-              style={{width: 20, height: 20}}
+              source={require('../assets/icons/Share1.png')}
+              style={{width: 20, height: 20, tintColor: colors.grey}}
             />
           </TouchableOpacity>
         )}
