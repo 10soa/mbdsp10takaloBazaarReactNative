@@ -71,8 +71,12 @@ const SearchFilter = ({ navigation }) => {
     return <IsLoading />;
   }
 
+
   return (
     <Container isScrollable paddingVerticalDisabled>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Listes des objets</Text>
+      </View>
       <FilterComponent 
         onApplyFilters={handleApplyFilters} 
         onResetFilters={handleResetFilters} 
@@ -80,18 +84,22 @@ const SearchFilter = ({ navigation }) => {
         visible={isVisible}
       />
       <View style={styles.Products}>
-        {data.map((item, index) => (
-          <ProductCard
-            key={index}
-            product={item}
-            user={item.user}
-            onPress={() => {
-              navigation.navigate('Details', {
-                objectId: item.id,
-              });
-            }}
-          />
-        ))}
+        {data.length > 0 ? (
+          data.map((item, index) => (
+            <ProductCard
+              key={index}
+              product={item}
+              user={item.user}
+              onPress={() => {
+                navigation.navigate('Details', {
+                  objectId: item.id,
+                });
+              }}
+            />
+          ))
+        ) : (
+          <Text style={styles.noResultsText}>Aucun résultat trouvé</Text>
+        )}
       </View>
       {error && <Text style={{ color: 'red' }}>{error.message}</Text>}
     </Container>
@@ -105,6 +113,29 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     gap: 10,
+  },
+  noResultsText: {
+    marginTop: 20,
+    fontSize: 16,
+    color: 'grey',
+    textAlign: 'center',
+    width: '100%',
+    fontFamily :'Asul'
+  },
+  header: {
+    backgroundColor: 'white',
+    paddingVertical: 15,
+    paddingHorizontal: 0,
+    borderTopLeftRadius: 10,
+    marginTop :10,
+    borderTopRightRadius: 10,
+    borderBottomWidth : 1,
+    borderBottomColor : '#E0E0E0'
+  },
+  headerText: {
+    fontSize: 18,
+    color: colors.textPrimary,
+    fontFamily: 'Asul-Bold',
   },
 });
 
