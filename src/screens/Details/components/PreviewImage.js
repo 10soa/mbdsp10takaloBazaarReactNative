@@ -1,14 +1,25 @@
-import React ,{ useState,useRef }from 'react';
-import { View, Text, StyleSheet, Dimensions,TouchableOpacity, Modal, Image, PermissionsAndroid, Platform, Alert } from 'react-native';
+import React, {useState, useRef} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  Modal,
+  Image,
+  PermissionsAndroid,
+  Platform,
+  Alert,
+} from 'react-native';
 import colors from '../../../constants/color';
 import QRCodeGen from './QRCode';
 import RNFS from 'react-native-fs';
-import { captureRef } from 'react-native-view-shot';
+import {captureRef} from 'react-native-view-shot';
 
 const PreviewImage = ({image, isOwner, style, idObject, objectName}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const qrCodeRef = useRef();
-  
+
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
@@ -20,14 +31,18 @@ const PreviewImage = ({image, isOwner, style, idObject, objectName}) => {
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
           {
             title: 'Permission de sauvegarde',
-            message: 'L\'application a besoin de votre permission pour sauvegarder les QR codes',
+            message:
+              "L'application a besoin de votre permission pour sauvegarder les QR codes",
             buttonNeutral: 'Demander plus tard',
             buttonNegative: 'Annuler',
             buttonPositive: 'OK',
           },
         );
         if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-          Alert.alert('Permission refusée', 'Vous devez accorder la permission pour sauvegarder le QR code');
+          Alert.alert(
+            'Permission refusée',
+            'Vous devez accorder la permission pour sauvegarder le QR code',
+          );
           return;
         }
       }
@@ -36,11 +51,16 @@ const PreviewImage = ({image, isOwner, style, idObject, objectName}) => {
         quality: 1.0,
       });
 
-      const path = `${RNFS.PicturesDirectoryPath}/${objectName}_qr_${Date.now()}.png`;
+      const path = `${
+        RNFS.PicturesDirectoryPath
+      }/${objectName}_qr_${Date.now()}.png`;
       await RNFS.moveFile(uri, path);
       Alert.alert('Succès', `QR code sauvegardé dans ${path}`);
     } catch (error) {
-      Alert.alert('Erreur', 'Une erreur est survenue lors de la sauvegarde du QR code');
+      Alert.alert(
+        'Erreur',
+        'Une erreur est survenue lors de la sauvegarde du QR code',
+      );
       console.error(error);
     }
   };
@@ -80,28 +100,31 @@ const PreviewImage = ({image, isOwner, style, idObject, objectName}) => {
             style={{width: 30, height: 30, tintColor: colors.black}}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.remove}>
-          <Image
-            source={require('../../../assets/icons/Unflag.png')}
-            resizeMode="contain"
-            style={{width: 30, height: 30, tintColor: colors.error}}
-          />
-        </TouchableOpacity>
+        {!isOwner && (
+          <TouchableOpacity style={styles.remove}>
+            <Image
+              source={require('../../../assets/icons/Unflag.png')}
+              resizeMode="contain"
+              style={{width: 30, height: 30, tintColor: colors.error}}
+            />
+          </TouchableOpacity>
+        )}
       </View>
 
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={toggleModal}
-      >
+        onRequestClose={toggleModal}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View ref={qrCodeRef}>
-             <QRCodeGen id={idObject} objectName={objectName}/>
+              <QRCodeGen id={idObject} objectName={objectName} />
             </View>
             <View style={styles.modalButtons}>
-              <TouchableOpacity onPress={saveQrToDisk} style={styles.saveButton}>
+              <TouchableOpacity
+                onPress={saveQrToDisk}
+                style={styles.saveButton}>
                 <Image
                   source={require('../../../assets/icons/Save.png')}
                   resizeMode="contain"
@@ -109,12 +132,14 @@ const PreviewImage = ({image, isOwner, style, idObject, objectName}) => {
                 />
                 <Text style={styles.saveButtonText}>Sauvegarder</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-                  <Image
-                    source={require('../../../assets/icons/Close.png')}
-                    resizeMode="contain"
-                    style={{width: 15, height: 23, tintColor: '#fff'}}
-                  />
+              <TouchableOpacity
+                onPress={toggleModal}
+                style={styles.closeButton}>
+                <Image
+                  source={require('../../../assets/icons/Close.png')}
+                  resizeMode="contain"
+                  style={{width: 15, height: 23, tintColor: '#fff'}}
+                />
                 <Text style={styles.closeButtonText}>Fermer</Text>
               </TouchableOpacity>
             </View>
@@ -146,25 +171,25 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 10,
     flexDirection: 'row',
-    gap : 5,
+    gap: 5,
     backgroundColor: colors.secondary,
     borderRadius: 5,
   },
   saveButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: 'Asul',
   },
   modalButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
-
   },
   remove: {
     backgroundColor: colors.white,
     padding: 5,
     borderRadius: 10,
-    elevation: 2,
+    elevation: 10,
   },
   image: {
     width: '100%',
@@ -176,12 +201,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     borderRadius: 5,
     flexDirection: 'row',
-    gap : 5,
-    marginLeft : 50
+    gap: 5,
+    marginLeft: 50,
   },
   closeButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: 'Asul',
   },
   modalContainer: {
     flex: 1,
@@ -190,7 +216,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    width: 300,
+    width: 320,
     padding: 20,
     backgroundColor: 'white',
     borderRadius: 10,

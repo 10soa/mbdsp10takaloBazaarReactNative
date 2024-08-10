@@ -4,8 +4,9 @@ import {
   View,
   FlatList,
   ActivityIndicator,
+  Dimensions,
 } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 import HomeHeader from './components/HomeHeader';
 import Container from '../../components/Container';
 import SearchBar from '../../components/SeachBar';
@@ -44,10 +45,10 @@ const Home = ({navigation}) => {
       fetchData();
     }
   }, [isFocused]);
-  
-  if (loading) {
-    return <IsLoading />;
-  }
+
+  // if (loading) {
+  //   return <IsLoading />;
+  // }
   return (
     <Container isScrollable paddingVerticalDisabled>
       <HomeHeader style={styles.HomeHeader} />
@@ -56,21 +57,27 @@ const Home = ({navigation}) => {
       <View style={styles.Title}>
         <Text style={styles.TitleContent}> Les 20 objets les plus récents</Text>
       </View>
-      <View style={styles.Products}>
-        {data.map((item, index) => (
-          <ProductCard
-            key={index}
-            product={item}
-            badgeText={'Récent'}
-            user={item.user}
-            onPress={() => {
-              navigation.navigate('Details', {
-                objectId: item.id,
-              });
-            }}
-          />
-        ))}
-      </View>
+      {!loading ? (
+        <View style={styles.Products}>
+          {data.map((item, index) => (
+            <ProductCard
+              key={index}
+              product={item}
+              badgeText={'Récent'}
+              user={item.user}
+              onPress={() => {
+                navigation.navigate('Details', {
+                  objectId: item.id,
+                });
+              }}
+            />
+          ))}
+        </View>
+      ) : (
+        <View style={{height: Dimensions.get('screen').height * 0.4}}>
+          <IsLoading />
+        </View>
+      )}
     </Container>
   );
 };
@@ -89,7 +96,7 @@ const styles = StyleSheet.create({
   TitleContent: {
     fontSize: 15,
     color: colors.white,
-    fontFamily: 'Asul-Bold'
+    fontFamily: 'Asul-Bold',
   },
   Products: {
     marginVertical: 20,

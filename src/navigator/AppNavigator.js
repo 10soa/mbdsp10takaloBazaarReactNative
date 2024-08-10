@@ -12,6 +12,8 @@ import Profile from '../screens/Profile';
 import Signup from '../screens/Signup';
 import {useNavigation} from '@react-navigation/native';
 import SearchFilter from '../screens/Search';
+import Propose from '../screens/Exchange/Propose';
+
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
@@ -29,6 +31,7 @@ const AppNavigator = () => {
   };
   return (
     <Tab.Navigator
+      backBehavior={'history'}
       screenOptions={{tabBarStyle: style.navigator, headerShown: false}}
       tabBarOptions={{showIcon: true, showLabel: false}}>
       <Tab.Screen
@@ -134,6 +137,17 @@ const AppNavigator = () => {
         key={'SearchFilter'}
         name={'SearchFilter'}
         component={SearchFilter}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'Filter',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'ProposeExchange'}
+        name={'ProposeExchange'}
+        component={Propose}
         options={{
           tabBarButton: props => null,
           tabBarVisible: false,

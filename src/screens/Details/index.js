@@ -7,20 +7,27 @@ import PreviewImage from './components/PreviewImage';
 import ButtonPrimary from '../../components/ButtonPrimary';
 import {scale} from 'react-native-size-matters';
 import IsLoading from '../../components/IsLoading';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {getObject} from '../../service/ObjectService';
+import {AuthContext} from '../../context/AuthContext';
+import {getUserFromToken} from '../../service/SessionService';
 
 const Details = ({navigation, route}) => {
   const [object, setObject] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isOwner, setIsOwner] = useState(false);
   const [error, setError] = useState(null);
   const {objectId} = route.params;
+  let user = {};
+  const {isAuthenticated} = useContext(AuthContext);
+
   useEffect(() => {
     const fetchObject = async () => {
-      setLoading(true);
+      // setLoading(true);
       try {
         const data = await getObject(objectId);
         setObject(data);
+        setIsOwner(await isOwnerObject(data.user_id));
       } catch (err) {
         setError(err);
       } finally {
@@ -30,6 +37,27 @@ const Details = ({navigation, route}) => {
 
     fetchObject();
   }, [objectId]);
+
+  const isOwnerObject = async (id) => {
+    user = await getUserFromToken();
+    
+    if (user.id === id) {
+      return true;
+    }
+    return false;
+  };
+
+  const goToLogin = (text, routeName) => {
+    navigation.navigate('User', {text: text, routeName: routeName});
+  };
+
+  const proposeExchange = () => {
+    if (!isAuthenticated) {
+      goToLogin();
+      return;
+    }
+    navigation.navigate('ProposeExchange',{user: object.user, object: object});
+  };
 
   if (loading) {
     return <IsLoading />;
@@ -75,7 +103,12 @@ const Details = ({navigation, route}) => {
             </Text>
           </View>
         </View>
-        <PreviewImage image={object.image} idObject={object.id} objectName={object.name}/>
+        <PreviewImage
+          image={object.image}
+          idObject={object.id}
+          objectName={object.name}
+          isOwner={isOwner}
+        />
         <InformationLine
           title={object.name}
           description={object.description}
@@ -83,13 +116,14 @@ const Details = ({navigation, route}) => {
           date={object.created_at}
         />
       </Container>
-      <View style={styles.buttonContainer}>
+      {!isOwner && <View style={styles.buttonContainer}>
         <ButtonPrimary
           textStyle={styles.buttonText}
           text={'Proposer un échange'}
           style={styles.buttonStyle}
+          onPress={proposeExchange}
         />
-      </View>
+      </View>}
     </View>
   );
 };

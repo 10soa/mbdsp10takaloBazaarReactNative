@@ -150,7 +150,7 @@ const AddObject = ({navigation}) => {
         title: 'Succès ',
         description: 'Brouillon enregistré',
         Component: NotifierComponents.Notification,
-        duration: 0,
+        duration: 5000,
         showAnimationDuration: 800,
         showEasing: Easing.bounce,
         onHidden: () => console.log('Hidden'),

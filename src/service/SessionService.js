@@ -33,10 +33,7 @@ export const getUserFromToken = async () => {
   const token = await getToken();
   if (token) {
     try {
-      console.log('decodedTokeneee', token);
       const decodedToken = decodeToken(token);
-      console.log('decodedToken', decodedToken);
-
       return decodedToken || null;
     } catch (error) {
       return null;

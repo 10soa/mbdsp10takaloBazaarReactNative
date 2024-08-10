@@ -106,10 +106,9 @@ export const updateObject = async (id, objectData, navigation) => {
     const data = await fetchWithAuth(
       `${API_URL}/objects/${id}`,
       {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${TOKEN}`,
         },
         body: JSON.stringify(objectData),
       },
@@ -146,6 +145,36 @@ export const updateObject = async (id, objectData, navigation) => {
     return data;
   } catch (error) {
     console.error('Error updating object:', error.message);
+    throw error;
+  }
+};
+
+// getUserObjects
+
+export const getUserObjects = async (userId, params) => {
+  let queryString = '';
+
+  if (params) {
+    queryString = Object.keys(params)
+      .map(
+        key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]),
+      )
+      .join('&');
+  }
+
+  const url = `${API_URL}/user/${userId}/objects?${queryString}`;
+
+  try {
+    const response = await fetchWithAuth(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user objects:', error);
     throw error;
   }
 };
