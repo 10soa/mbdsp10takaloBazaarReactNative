@@ -11,16 +11,15 @@ export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
       order_by: 'created_at',
       order_direction: sortBy,
     };
-
     if (filters.name) params.name = filters.name;
     if (filters.description) params.description = filters.description;
     if (filters.category_id) params.category_id = filters.category_id;
     if (filters.created_at_start)
       params.created_at_start = filters.created_at_start;
     if (filters.created_at_end) params.created_at_end = filters.created_at_end;
-    const response = await fetch(`${API_URL}/objects?${params.toString()}`);
-
-    if (!response.ok) {
+    const query = new URLSearchParams(params).toString();
+    const response = await fetch(`${API_URL}/objects?${query}`);
+    if (!response.ok) { 
       throw new Error('Network response was not ok');
     }
     const result = await response.json();

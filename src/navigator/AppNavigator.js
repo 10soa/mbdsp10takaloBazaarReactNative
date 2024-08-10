@@ -11,7 +11,7 @@ import {AuthContext} from '../context/AuthContext';
 import Profile from '../screens/Profile';
 import Signup from '../screens/Signup';
 import {useNavigation} from '@react-navigation/native';
-
+import SearchFilter from '../screens/Search';
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
@@ -123,6 +123,17 @@ const AppNavigator = () => {
         key={'Signup'}
         name={'Signup'}
         component={Signup}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'Signup',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'SearchFilter'}
+        name={'SearchFilter'}
+        component={SearchFilter}
         options={{
           tabBarButton: props => null,
           tabBarVisible: false,
