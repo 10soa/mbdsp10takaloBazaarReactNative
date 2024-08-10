@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import SearchFilter from '../screens/Search';
 import Propose from '../screens/Exchange/Propose';
 import ExchangeHistory from '../screens/Exchanges';
+import MyObject from '../screens/Object/Myobject';
 
 const Tab = createBottomTabNavigator();
 
@@ -163,6 +164,17 @@ const AppNavigator = () => {
           tabBarButton: props => null,
           tabBarVisible: false,
           tabBarLabel: 'ExchangeHistory',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'MyObject'}
+        name={'MyObject'}
+        component={MyObject}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'Filter',
           tabBarStyle: {display: 'none'},
         }}
       />

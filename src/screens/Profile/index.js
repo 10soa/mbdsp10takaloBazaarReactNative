@@ -45,7 +45,7 @@ const Profile = ({navigation}) => {
         style={[styles.screenTitle, {marginBottom: 15, marginTop: 10}]}
       />
       <UserProfile user={user} />
-      <ObjectCard />
+      <ObjectCard onPress={() => navigation.navigate('MyObject')}/>
       <CustomText
         text="Generale"
         style={[styles.screenTitle, {marginTop: 10}]}
