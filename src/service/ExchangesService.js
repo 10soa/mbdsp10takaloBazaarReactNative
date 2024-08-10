@@ -1,11 +1,10 @@
 import { API_URL } from '../constants/config';
 import { fetchWithAuth } from './ApiService';
 
-export const getHistoryExchange = async (userID, status = '', navigation) => {
+export const getHistoryExchange = async (userID, status, navigation) => {
   try {
     if(status=="All") status='';
-    const page = 1, limit = 1000;
-    const url = `${API_URL}/exchange/history/${userID}?page=${page}&limit=${limit}&status=${status}`;
+    const url = `${API_URL}/exchange/history/${userID}?page=1&limit=&status=${status}`;
     const options = {
       method: 'GET',
       headers: {
