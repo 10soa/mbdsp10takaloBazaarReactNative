@@ -9,6 +9,8 @@ import colors from '../../constants/color';
 import ObjectCard from './components/ObjectCard';
 import ListItem from './components/ListItem';
 import { AuthContext } from '../../context/AuthContext';
+import ExchangeHistory from '../Exchanges';
+import { useNavigation } from '@react-navigation/native';
 
 const Profile = ({navigation}) => {
   const [user, setUser] = useState(null);
@@ -55,6 +57,7 @@ const Profile = ({navigation}) => {
       <ListItem
         title="Mes historiques d'échanges"
         iconSource={require('../../assets/icons/TimeMachine.png')}
+        onPress={() => navigation.navigate('ExchangeHistory')}
       />
       <ListItem
         title="Deconnexion"

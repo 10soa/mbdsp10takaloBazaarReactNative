@@ -12,6 +12,8 @@ import Profile from '../screens/Profile';
 import Signup from '../screens/Signup';
 import {useNavigation} from '@react-navigation/native';
 import SearchFilter from '../screens/Search';
+import ExchangeHistory from '../screens/Exchanges';
+
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
@@ -138,6 +140,17 @@ const AppNavigator = () => {
           tabBarButton: props => null,
           tabBarVisible: false,
           tabBarLabel: 'Filter',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'ExchangeHistory'}
+        name={'ExchangeHistory'}
+        component={ExchangeHistory}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'ExchangeHistory',
           tabBarStyle: {display: 'none'},
         }}
       />
