@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import CardExchange from './CardComponent/cardExchange';
-import Container from '../../components/Container';
-import colors from '../../constants/color';
-import { getHistoryExchange } from '../../service/ExchangesService';
-import IsLoading from '../../components/IsLoading';
-import { getUserFromToken } from '../../service/SessionService';
-import { useIsFocused } from '@react-navigation/native';
+import CardExchange from '../CardComponent/cardExchange';
+import Container from '../../../components/Container';
+import colors from '../../../constants/color';
+import { getHistoryExchange,getMyCurrentExchange } from '../../../service/ExchangesService';
+import IsLoading from '../../../components/IsLoading';
+import { getUserFromToken } from '../../../service/SessionService';
+import { useIsFocused,useRoute } from '@react-navigation/native';
 
-const ExchangeHistory = ({ navigation }) => {
+const CurrentExchange = ({ navigation }) => {
   const [exchanges, setExchanges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,7 +22,7 @@ const ExchangeHistory = ({ navigation }) => {
       setLoading(true);
       const userId = await getUserFromToken();
       setUserID(userId.id);
-      const data = await getHistoryExchange(userID, selectedStatus, navigation);
+      const data = await getMyCurrentExchange(navigation);
       setExchanges(data);
     } catch (error) {
       console.error(error);
@@ -36,7 +36,7 @@ const ExchangeHistory = ({ navigation }) => {
     if (isFocused) {
         fetchData();
     }
-  }, [isFocused, userID, selectedStatus, navigation]);
+  }, [isFocused,userID, selectedStatus, navigation]);
 
   if (loading) {
     return <IsLoading />;
@@ -49,33 +49,20 @@ const ExchangeHistory = ({ navigation }) => {
   return (
     <Container style={{ flex: 1 }}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Historique des échanges</Text>
+        <Text style={styles.headerText}>Négociations en cours</Text>
       </View>
       <View style={styles.exchangeCount}>
         <Text style={styles.exchangeCountText}>Nombre d'échanges: {exchanges.length}</Text>
-      </View>
-      <View style={styles.pickerContainer}>
-        <View style={styles.pickerWrapper}>
-          <Picker
-            selectedValue={selectedStatus}
-            onValueChange={(itemValue) => setSelectedStatus(itemValue)}
-            style={styles.picker}
-          >
-            <Picker.Item label="Tous les statuts" value="All" />
-            <Picker.Item label="Accepté" value="Accepted" />
-            <Picker.Item label="Annulé" value="Cancelled" />
-          </Picker>
-        </View>
       </View>
       {exchanges.length === 0 ? (
         <Text style={styles.noResultsText}>Aucun résultat!</Text>
       ) : (
         <FlatList
-          data={exchanges}
-          renderItem={({ item }) => <CardExchange exchange={item} />}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ flexGrow: 1 }}
-          ListFooterComponent={<View style={{ height: 0 }} />}
+            data={exchanges}
+            renderItem={({ item }) => <CardExchange exchange={item} />}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{ flexGrow: 1 }}
+            ListFooterComponent={<View style={{ height: 0 }} />}
         />
       )}
     </Container>
@@ -135,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ExchangeHistory;
+export default CurrentExchange;

@@ -53,6 +53,7 @@ const Profile = ({navigation}) => {
       <ListItem
         title="Mes échanges en cours"
         iconSource={require('../../assets/icons/DataTransfer.png')}
+        onPress={() => navigation.navigate('CurrentExchange')}
       />
       <ListItem
         title="Mes historiques d'échanges"
