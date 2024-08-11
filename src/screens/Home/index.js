@@ -65,6 +65,7 @@ const Home = ({navigation}) => {
               product={item}
               badgeText={'Récent'}
               user={item.user}
+              navigation={navigation}
               onPress={() => {
                 navigation.navigate('Details', {
                   objectId: item.id,

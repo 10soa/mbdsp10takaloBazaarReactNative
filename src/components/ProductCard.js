@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import colors from '../constants/color';
 
-const ProductCard = ({product, badgeText, disableShared, onPress, user}) => {
+const ProductCard = ({product, badgeText, disableShared, onPress, user, navigation}) => {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       {badgeText && (
@@ -22,7 +22,9 @@ const ProductCard = ({product, badgeText, disableShared, onPress, user}) => {
       <View style={styles.details}>
         <View style={styles.detailsContent}>
           {user && (
-            <View style={styles.userContainer}>
+            <TouchableOpacity
+              style={styles.userContainer}
+              onPress={() => navigation.navigate('ProfileUser', {user: user})}>
               {user.profile_picture && (
                 <Image
                   source={{uri: user.profile_picture}}
@@ -36,7 +38,7 @@ const ProductCard = ({product, badgeText, disableShared, onPress, user}) => {
                 />
               )}
               <Text style={styles.userName}>{user.username}</Text>
-            </View>
+            </TouchableOpacity>
           )}
           <Text style={styles.title}>{product.name}</Text>
           <Text style={styles.cat}>{product.category.name}</Text>
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Asul-Bold'
+    fontFamily: 'Asul-Bold',
   },
   name: {
     fontSize: 14,
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
   cat: {
     color: colors.textPrimary,
     fontSize: 15,
-    fontFamily: 'Asul'
+    fontFamily: 'Asul',
   },
   detailsContent: {
     flexDirection: 'column',

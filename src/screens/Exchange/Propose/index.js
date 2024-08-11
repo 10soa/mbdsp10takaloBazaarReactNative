@@ -158,7 +158,7 @@ const Propose = ({navigation, route}) => {
   );
 
   return (
-    <NotifierWrapper>
+    <>
       <Header navigation={navigation} title="Proposer un échange" />
       <Container isScrollable>
         <View style={styles.container}>
@@ -277,7 +277,7 @@ const Propose = ({navigation, route}) => {
           </View>
         </TouchableOpacity>
       </Modal>
-    </NotifierWrapper>
+    </>
   );
 };
 

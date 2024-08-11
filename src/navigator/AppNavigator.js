@@ -15,6 +15,7 @@ import SearchFilter from '../screens/Search';
 import Propose from '../screens/Exchange/Propose';
 import ExchangeHistory from '../screens/Exchanges';
 import MyObject from '../screens/Object/Myobject';
+import ProfileUser from '../screens/Profile/ProfileUser';
 
 const Tab = createBottomTabNavigator();
 
@@ -171,6 +172,17 @@ const AppNavigator = () => {
         key={'MyObject'}
         name={'MyObject'}
         component={MyObject}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'Filter',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'ProfileUser'}
+        name={'ProfileUser'}
+        component={ProfileUser}
         options={{
           tabBarButton: props => null,
           tabBarVisible: false,

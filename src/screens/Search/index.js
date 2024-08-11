@@ -90,6 +90,7 @@ const SearchFilter = ({ navigation }) => {
                 objectId: item.id,
               });
             }}
+            navigation={navigation}
           />
         ))}
       </View>
