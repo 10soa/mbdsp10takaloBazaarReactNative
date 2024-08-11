@@ -10,7 +10,7 @@ import { getObject, updateObject } from '../../../service/ObjectService';
 import IsLoading from '../../../components/IsLoading';
 import { NavigationActions } from 'react-navigation';
 import { useIsFocused,useRoute } from '@react-navigation/native';
-
+import CustomText from '../../../components/CustomText';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const getBase64Image = async (uri) => {
@@ -74,8 +74,13 @@ const UpdateObject = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
+  const [photoError, setPhotoError] = useState('');
+  const [categorieError, setCategorieError] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
+  const [titleError, setTitleError] = useState('');
 
   useEffect(() => {
+    clearError();
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -98,6 +103,14 @@ const UpdateObject = ({ route, navigation }) => {
 
     fetchData();
   }, [objectId]);
+
+  const clearError = () => {
+    setCategorieError('');
+    setTitleError('');
+    setDescriptionError('');
+    setPhotoError('');
+    setError('');
+  };
 
   const selectPhoto = async () => {
     const hasPermission = await checkAndRequestPermission();
@@ -128,7 +141,8 @@ const UpdateObject = ({ route, navigation }) => {
   const takePhoto = async () => {
     const hasPermission = await checkAndRequestPermission();
     if (!hasPermission) {
-      Alert.alert('Permission refusée', 'La permission de lire le stockage externe est requise.');
+      setPhotoError('La permission de lire le stockage externe est requise.');
+      //Alert.alert('Permission refusée', 'La permission de lire le stockage externe est requise.');
       return;
     }
 
@@ -143,7 +157,10 @@ const UpdateObject = ({ route, navigation }) => {
           setPhoto(base64Image);
         } catch (error) {
           console.error('Error processing image:', error.message);
-          Alert.alert('Erreur', 'Une erreur est survenue lors de la conversion de l\'image.');
+          setPhotoError(
+            "Une erreur est survenue lors de la conversion de l'image.",
+          );
+          //Alert.alert('Erreur', 'Une erreur est survenue lors de la conversion de l\'image.');
         }
       } else {
         console.error('Image URI est undefined ou invalide');
@@ -152,10 +169,31 @@ const UpdateObject = ({ route, navigation }) => {
   };
 
   const handleUpdate = async () => {
-    if (!title || !description || !categorie || !photo) {
+    /*if (!title || !description || !categorie || !photo) {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
       return;
-    }
+    }*/
+      clearError();
+      let valid = true;
+      if (!title) {
+        setTitleError('Le champ Libellé est obligatoire!');
+        valid = false;
+      }
+      if (!description) {
+        setDescriptionError('Le champ description est obligatoire!');
+        valid = false;
+      }
+      if (!categorie) {
+        setCategorieError('Vous devez selectionnez une catégorie!');
+        valid = false;
+      }
+      if (!photo) {
+        setPhotoError('Vous devez télécharger une photo');
+        valid = false;
+      }
+      if (!valid) {
+        return;
+      }
 
     const objectData = {
       name: title,
@@ -191,7 +229,7 @@ const UpdateObject = ({ route, navigation }) => {
         value={title}
         onChangeText={setTitle}
       />
-
+      {titleError && <CustomText text={titleError} style={styles.error} />}
       <Text style={styles.label}>Description</Text>
       <TextInput
         style={[styles.input, styles.textarea]}
@@ -202,7 +240,9 @@ const UpdateObject = ({ route, navigation }) => {
         value={description}
         onChangeText={setDescription}
       />
-
+      {descriptionError && (
+        <CustomText text={descriptionError} style={styles.error} />
+      )}
       <Text style={styles.label}>Catégorie</Text>
       <View style={styles.pickerContainer}>
         <Picker
@@ -216,7 +256,9 @@ const UpdateObject = ({ route, navigation }) => {
           ))}
         </Picker>
       </View>
-
+      {categorieError && (
+        <CustomText text={categorieError} style={styles.error} />
+      )}
       <Text style={styles.label}>Image de l'objet</Text>
       <TouchableOpacity style={styles.photoContainer} onPress={selectPhoto}>
         {photo ? (
@@ -227,7 +269,7 @@ const UpdateObject = ({ route, navigation }) => {
           </View>
         )}
       </TouchableOpacity>
-
+      {photoError && <CustomText text={photoError} style={styles.error} />}
       <View style={styles.buttonContainerTake}>
         <TouchableOpacity onPress={selectPhoto}>
           <Image source={require('../../../assets/icons/Picture.png')} resizeMode="contain" style={{ width: 50, height: 50, tintColor: colors.textPrimary }} />
@@ -236,7 +278,12 @@ const UpdateObject = ({ route, navigation }) => {
           <Image source={require('../../../assets/icons/Camera.png')} resizeMode="contain" style={{ width: 45, height: 43, tintColor: colors.textPrimary, marginTop: 3 }} />
         </TouchableOpacity>
       </View>
-
+      {error && (
+        <CustomText
+          text={error}
+          style={[styles.error, {textAlign: 'center'}]}
+        />
+      )}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.buttonAjouter} onPress={handleUpdate}>
           <Image source={require('../../../assets/icons/Edit.png')} resizeMode="contain" style={{ width: 25, height: 25, tintColor: '#fff' }} />
@@ -282,6 +329,12 @@ const styles = StyleSheet.create({
   textarea: {
     height: 100,
     textAlignVertical: 'top',
+  },
+  error: {
+    color: colors.error,
+    fontSize: 18,
+    marginBottom: 5,
+    marginTop: -10,
   },
   pickerContainer: {
     height: 50,
