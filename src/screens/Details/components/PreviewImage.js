@@ -14,14 +14,23 @@ import {
 import colors from '../../../constants/color';
 import QRCodeGen from './QRCode';
 import RNFS from 'react-native-fs';
+import { useNavigation } from '@react-navigation/native';
 import {captureRef} from 'react-native-view-shot';
 
 const PreviewImage = ({image, isOwner, style, idObject, objectName}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const qrCodeRef = useRef();
-
+  const navigation = useNavigation();
+  
   const toggleModal = () => {
     setModalVisible(!modalVisible);
+  };
+
+  const goEditPage = () => {
+    console.log(idObject);
+    if (idObject) {
+      navigation.navigate('UpdateObject', { idObject: idObject });
+    }
   };
 
   const saveQrToDisk = async () => {
@@ -76,7 +85,7 @@ const PreviewImage = ({image, isOwner, style, idObject, objectName}) => {
       />
       {isOwner && (
         <View style={styles.isOwner}>
-          <TouchableOpacity style={styles.remove}>
+          <TouchableOpacity style={styles.remove} onPress={goEditPage}>
             <Image
               source={require('../../../assets/icons/Edit.png')}
               resizeMode="contain"

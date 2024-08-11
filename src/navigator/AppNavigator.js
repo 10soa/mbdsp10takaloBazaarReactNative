@@ -16,6 +16,7 @@ import Propose from '../screens/Exchange/Propose';
 import ExchangeHistory from '../screens/Exchanges';
 import MyObject from '../screens/Object/Myobject';
 import CurrentExchange from '../screens/Exchanges/MyCurrent';
+import UpdateObject from '../screens/Object/UpdateObject';
 
 const Tab = createBottomTabNavigator();
 
@@ -187,6 +188,16 @@ const AppNavigator = () => {
           tabBarVisible: false,
           tabBarLabel: 'CurrentExchange',
           tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'UpdateObject'}
+        name={'UpdateObject'}
+        component={UpdateObject}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'UpdateObject',
         }}
       />
     </Tab.Navigator>

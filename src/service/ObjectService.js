@@ -106,7 +106,7 @@ export const updateObject = async (id, objectData, navigation) => {
     const data = await fetchWithAuth(
       `${API_URL}/objects/${id}`,
       {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },

@@ -9,6 +9,7 @@ import { getCategories } from '../../../service/CategoryService';
 import { getObject, updateObject } from '../../../service/ObjectService';
 import IsLoading from '../../../components/IsLoading';
 import { NavigationActions } from 'react-navigation';
+import { useIsFocused,useRoute } from '@react-navigation/native';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -65,7 +66,7 @@ const checkAndRequestPermission = async () => {
 };
 
 const UpdateObject = ({ route, navigation }) => {
-  const  objectId = 124;
+  const  objectId = route.params?.idObject;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [categorie, setCategorie] = useState('');
