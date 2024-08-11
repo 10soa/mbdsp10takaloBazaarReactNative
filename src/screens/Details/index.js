@@ -1,4 +1,4 @@
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
 import DetailsHeader from './components/DetailsHeader';
 import Container from '../../components/Container';
 import colors from '../../constants/color';
@@ -38,9 +38,9 @@ const Details = ({navigation, route}) => {
     fetchObject();
   }, [objectId]);
 
-  const isOwnerObject = async (id) => {
+  const isOwnerObject = async id => {
     user = await getUserFromToken();
-    
+
     if (user.id === id) {
       return true;
     }
@@ -56,7 +56,7 @@ const Details = ({navigation, route}) => {
       goToLogin();
       return;
     }
-    navigation.navigate('ProposeExchange',{user: object.user, object: object});
+    navigation.navigate('ProposeExchange', {user: object.user, object: object});
   };
 
   if (loading) {
@@ -72,7 +72,11 @@ const Details = ({navigation, route}) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <View style={styles.userContainer}>
+          <TouchableOpacity
+            style={styles.userContainer}
+            onPress={() =>
+              navigation.navigate('ProfileUser', {user: object.user})
+            }>
             {object.user.profile_picture && (
               <Image
                 source={{uri: object.user.profile_picture}}
@@ -87,7 +91,7 @@ const Details = ({navigation, route}) => {
             )}
 
             <Text style={styles.userName}>{object.user.username}</Text>
-          </View>
+          </TouchableOpacity>
           <View style={{justifyContent: 'center'}}>
             <Text
               style={[
@@ -116,14 +120,16 @@ const Details = ({navigation, route}) => {
           date={object.created_at}
         />
       </Container>
-      {!isOwner && <View style={styles.buttonContainer}>
-        <ButtonPrimary
-          textStyle={styles.buttonText}
-          text={'Proposer un échange'}
-          style={styles.buttonStyle}
-          onPress={proposeExchange}
-        />
-      </View>}
+      {!isOwner && (
+        <View style={styles.buttonContainer}>
+          <ButtonPrimary
+            textStyle={styles.buttonText}
+            text={'Proposer un échange'}
+            style={styles.buttonStyle}
+            onPress={proposeExchange}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -151,7 +157,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 50,
-    marginRight: 15,
+    marginRight: 12,
   },
   userName: {
     fontSize: 17,

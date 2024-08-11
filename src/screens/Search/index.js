@@ -90,6 +90,7 @@ const SearchFilter = ({ navigation }) => {
               key={index}
               product={item}
               user={item.user}
+              navigation={navigation}
               onPress={() => {
                 navigation.navigate('Details', {
                   objectId: item.id,

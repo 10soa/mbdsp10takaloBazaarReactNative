@@ -15,7 +15,7 @@ import {scale} from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-const UserProfile = ({user}) => {
+const UserProfile = ({user, disableTouchableImage}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleOpenModal = () => {
@@ -85,25 +85,46 @@ const UserProfile = ({user}) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handleOpenModal}>
-        {user.profile_picture ? (
-          <Image
-            source={{uri: user.profile_picture}}
-            style={styles.profileImage}
-          />
-        ) : (
-          <Image
-            source={require('../../../assets/img/user.png')}
-            style={styles.profileImage}
-          />
-        )}
-      </TouchableOpacity>
+      {disableTouchableImage ? (
+        <View onPress={handleOpenModal}>
+          {user.profile_picture ? (
+            <Image
+              source={{uri: user.profile_picture}}
+              style={styles.profileImage}
+            />
+          ) : (
+            <Image
+              source={require('../../../assets/img/user.png')}
+              style={styles.profileImage}
+            />
+          )}
+        </View>
+      ) : (
+        <TouchableOpacity onPress={handleOpenModal}>
+          {user.profile_picture ? (
+            <Image
+              source={{uri: user.profile_picture}}
+              style={styles.profileImage}
+            />
+          ) : (
+            <Image
+              source={require('../../../assets/img/user.png')}
+              style={styles.profileImage}
+            />
+          )}
+        </TouchableOpacity>
+      )}
       <View style={styles.infoContainer}>
         <Text style={styles.name}>
           {user.last_name} {user.first_name}
         </Text>
         <Text style={styles.username}>{user.username}</Text>
         <Text style={styles.email}>{user.email}</Text>
+        {user.gender && (
+          <Text style={styles.gender}>
+            {user.gender == 'Female' ? 'Femme' : 'Homme'}
+          </Text>
+        )}
       </View>
 
       <Modal
@@ -199,6 +220,11 @@ const styles = StyleSheet.create({
     fontSize: scale(14),
     color: '#777',
     fontFamily: 'Asul',
+  },
+  gender: {
+    fontSize: scale(14),
+    color: '#777',
+    fontFamily: 'Asul-Bold',
   },
   modalOverlay: {
     flex: 1,
