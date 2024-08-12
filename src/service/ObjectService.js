@@ -151,7 +151,7 @@ export const updateObject = async (id, objectData, navigation) => {
 
 // getUserObjects
 
-export const getUserObjects = async (userId, params) => {
+export const getUserObjects = async (userId, params, navigation) => {
   let queryString = '';
 
   if (params) {
@@ -163,7 +163,6 @@ export const getUserObjects = async (userId, params) => {
   }
 
   const url = `${API_URL}/user/${userId}/objects?${queryString}`;
-console.log(url,'url');
 
   try {
     const response = await fetchWithAuth(url, {
@@ -171,11 +170,96 @@ console.log(url,'url');
       headers: {
         'Content-Type': 'application/json',
       },
+      navigation,
     });
 
     return response.data;
   } catch (error) {
     console.error('Error fetching user objects:', error);
+    throw error;
+  }
+};
+
+export const removeObject = async (objectId, navigation) => {
+  try {
+    const response = await fetchWithAuth(
+      `${API_URL}/object/${objectId}/remove`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      navigation,
+    );
+    Notifier.clearQueue(true);
+    Notifier.showNotification({
+      title: 'Succès ',
+      description: 'Votre objet a été retiré et est désormais indisponible.',
+      Component: NotifierComponents.Notification,
+      duration: 5000,
+      showAnimationDuration: 800,
+      showEasing: Easing.bounce,
+      onHidden: () => console.log('Hidden'),
+      hideOnPress: true,
+      componentProps: {
+        titleStyle: {
+          color: colors.secondary,
+          fontSize: 20,
+          fontFamily: 'Asul-Bold',
+        },
+        descriptionStyle: {
+          color: colors.textPrimary,
+          fontSize: 16,
+          fontFamily: 'Asul',
+        },
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const restoreObject = async (objectId, navigation) => {
+  try {
+    const response = await fetchWithAuth(
+      `${API_URL}/object/${objectId}/repost`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      navigation,
+    );
+    Notifier.clearQueue(true);
+    Notifier.showNotification({
+      title: 'Succès ',
+      description: 'Votre objet a été reposté et est maintenant disponible.',
+      Component: NotifierComponents.Notification,
+      duration: 5000,
+      showAnimationDuration: 800,
+      showEasing: Easing.bounce,
+      onHidden: () => console.log('Hidden'),
+      hideOnPress: true,
+      componentProps: {
+        titleStyle: {
+          color: colors.secondary,
+          fontSize: 19,
+          fontFamily: 'Asul-Bold',
+        },
+        descriptionStyle: {
+          color: colors.textPrimary,
+          fontSize: 16,
+          fontFamily: 'Asul',
+        },
+      },
+    });
+    console.log('response',response);
+    
+    return response;
+  } catch (error) {
     throw error;
   }
 };
