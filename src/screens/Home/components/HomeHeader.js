@@ -1,8 +1,15 @@
-import {Image} from 'react-native';
-import {StyleSheet} from 'react-native';
-import {View} from 'react-native';
+import React from 'react';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import colors from '../../../constants/color';
 
-const HomeHeader = ({navigation, style}) => {
+const HomeHeader = ({ navigation, style }) => {
+  const navigate = useNavigation();
+
+  const goScanQR = async () => {
+    navigate.navigate("QRCodeScannerComponent");
+  };
+
   return (
     <View style={[Styles.container, style]}>
       <View>
@@ -11,10 +18,18 @@ const HomeHeader = ({navigation, style}) => {
           resizeMode="contain"
         />
       </View>
-      <View>
+      <View style={Styles.rightContainer}>
+        <TouchableOpacity onPress={goScanQR}>
+          <Image
+            source={require('../../../assets/icons/qrcode.png')}
+            resizeMode="contain"
+            style={[Styles.iconScan, { tintColor: colors.textPrimary }]}
+          />
+        </TouchableOpacity>
         <Image
-          source={require('../../../assets/icons/Tune.png')}
+          source={require('../../../assets/icons/Notification.png')}
           resizeMode="contain"
+          style={[Styles.iconNotif, { tintColor: colors.textPrimary }]}
         />
       </View>
     </View>
@@ -23,10 +38,26 @@ const HomeHeader = ({navigation, style}) => {
 
 const Styles = StyleSheet.create({
   container: {
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 15,
+    height: 60,
+  },
+  rightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconScan: {
+    width: 25,
+    height: 25,
+    marginLeft: 15,
+  },
+  iconNotif: {
+    width: 25,
+    height: 25,
+    marginLeft: 15,
   },
 });
+
 export default HomeHeader;

@@ -64,6 +64,7 @@ const ExchangeHistory = ({ navigation }) => {
             <Picker.Item label="Tous les statuts" value="All" />
             <Picker.Item label="Accepté" value="Accepted" />
             <Picker.Item label="Annulé" value="Cancelled" />
+            <Picker.Item label="Refusé" value="Refused" />
           </Picker>
         </View>
       </View>

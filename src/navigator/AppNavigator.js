@@ -19,7 +19,7 @@ import CurrentExchange from '../screens/Exchanges/MyCurrent';
 import UpdateObject from '../screens/Object/UpdateObject';
 import ProfileUser from '../screens/Profile/ProfileUser';
 import ExchangeDetails from '../screens/Exchange/Details';
-
+import QRCodeScannerComponent from '../components/scanQR/QRCodeScannerComponen';
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
@@ -224,6 +224,17 @@ const AppNavigator = () => {
           tabBarButton: props => null,
           tabBarVisible: false,
           tabBarLabel: 'ExchangeDetails',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'QRCodeScannerComponent'}
+        name={'QRCodeScannerComponent'}
+        component={QRCodeScannerComponent}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'QRCodeScannerComponent',
           tabBarStyle: {display: 'none'},
         }}
       />
