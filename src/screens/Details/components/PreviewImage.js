@@ -14,10 +14,19 @@ import {
 import colors from '../../../constants/color';
 import QRCodeGen from './QRCode';
 import RNFS from 'react-native-fs';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {captureRef} from 'react-native-view-shot';
 
-const PreviewImage = ({image, isOwner, style, idObject, objectName}) => {
+const PreviewImage = ({
+  image,
+  isOwner,
+  style,
+  idObject,
+  objectName,
+  removeObject,
+  status,
+  repostObject
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const qrCodeRef = useRef();
   const navigation = useNavigation();
@@ -92,11 +101,19 @@ const PreviewImage = ({image, isOwner, style, idObject, objectName}) => {
               style={{width: 30, height: 30, tintColor: colors.black}}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.remove}>
+          <TouchableOpacity style={styles.remove} onPress={status == 'Removed' ? repostObject : removeObject}>
             <Image
-              source={require('../../../assets/icons/Remove.png')}
+              source={
+                status == 'Removed'
+                  ? require('../../../assets/icons/Eye.png')
+                  : require('../../../assets/icons/Hide.png')
+              }
               resizeMode="contain"
-              style={{width: 30, height: 30, tintColor: colors.error}}
+              style={{
+                width: 30,
+                height: 30,
+                tintColor: status == 'Removed' ? colors.primary : colors.error,
+              }}
             />
           </TouchableOpacity>
         </View>

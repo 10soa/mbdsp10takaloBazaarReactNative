@@ -109,7 +109,7 @@ const Propose = ({navigation, route}) => {
 
   const getObjects = async (id, params) => {
     try {
-      const data = await getUserObjects(id, params);
+      const data = await getUserObjects(id, params, navigation);
       return data.objects;
     } catch (error) {}
   };

@@ -56,7 +56,7 @@ const MyObject = ({navigation}) => {
         page,
         limit
       };
-      const data = await getUserObjects(userData.id, params);
+      const data = await getUserObjects(userData.id, params, navigation);
       console.log('data', data);
 
       setMyObjects(append ? [...myObjects, ...data.objects] : data.objects);

@@ -70,7 +70,7 @@ const ProfileUser = ({navigation, route}) => {
         page,
         limit,
       };
-      const data = await getUserObjects(user.id, params);
+      const data = await getUserObjects(user.id, params, navigation);
       console.log('data', data);
 
       setMyObjects(append ? [...myObjects, ...data.objects] : data.objects);

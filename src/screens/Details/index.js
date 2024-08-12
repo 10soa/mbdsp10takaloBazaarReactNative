@@ -8,7 +8,7 @@ import ButtonPrimary from '../../components/ButtonPrimary';
 import {scale} from 'react-native-size-matters';
 import IsLoading from '../../components/IsLoading';
 import React, {useContext, useEffect, useState} from 'react';
-import {getObject} from '../../service/ObjectService';
+import {getObject, removeObject, restoreObject} from '../../service/ObjectService';
 import {AuthContext} from '../../context/AuthContext';
 import {getUserFromToken} from '../../service/SessionService';
 
@@ -49,6 +49,28 @@ const Details = ({navigation, route}) => {
 
   const goToLogin = (text, routeName) => {
     navigation.navigate('User', {text: text, routeName: routeName});
+  };
+
+  const remove = async () => {
+    try {
+      setLoading(true);
+      const data = await removeObject(object.id, navigation);
+      setObject(await getObject(object.id));
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const repost = async () => {
+    try {
+      setLoading(true);
+      const data = await restoreObject(object.id, navigation);
+      setObject(await getObject(object.id));
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   const proposeExchange = () => {
@@ -112,6 +134,9 @@ const Details = ({navigation, route}) => {
           idObject={object.id}
           objectName={object.name}
           isOwner={isOwner}
+          removeObject={remove}
+          repostObject={repost}
+          status={object.status}
         />
         <InformationLine
           title={object.name}
