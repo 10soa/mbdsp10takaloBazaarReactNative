@@ -72,7 +72,7 @@ const ExchangeHistory = ({ navigation }) => {
       ) : (
         <FlatList
           data={exchanges}
-          renderItem={({ item }) => <CardExchange exchange={item} />}
+          renderItem={({ item }) => <CardExchange exchange={item} navigation={navigation}/>}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={{ flexGrow: 1 }}
           ListFooterComponent={<View style={{ height: 0 }} />}

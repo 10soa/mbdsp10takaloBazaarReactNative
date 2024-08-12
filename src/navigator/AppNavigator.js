@@ -18,6 +18,7 @@ import MyObject from '../screens/Object/Myobject';
 import CurrentExchange from '../screens/Exchanges/MyCurrent';
 import UpdateObject from '../screens/Object/UpdateObject';
 import ProfileUser from '../screens/Profile/ProfileUser';
+import ExchangeDetails from '../screens/Exchange/Details';
 
 const Tab = createBottomTabNavigator();
 
@@ -156,7 +157,8 @@ const AppNavigator = () => {
         options={{
           tabBarButton: props => null,
           tabBarVisible: false,
-          tabBarLabel: 'Filter',
+          tabBarLabel: 'ProposeExchange',
+          tabBarStyle: {display: 'none'},
         }}
       />
       <Tab.Screen
@@ -178,6 +180,7 @@ const AppNavigator = () => {
           tabBarButton: props => null,
           tabBarVisible: false,
           tabBarLabel: 'MyObject',
+          tabBarStyle: {display: 'none'},
         }}
       />
       <Tab.Screen
@@ -210,6 +213,17 @@ const AppNavigator = () => {
           tabBarButton: props => null,
           tabBarVisible: false,
           tabBarLabel: 'ProfileUser',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'ExchangeDetails'}
+        name={'ExchangeDetails'}
+        component={ExchangeDetails}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'ExchangeDetails',
           tabBarStyle: {display: 'none'},
         }}
       />

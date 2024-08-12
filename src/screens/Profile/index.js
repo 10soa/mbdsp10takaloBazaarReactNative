@@ -41,7 +41,7 @@ const Profile = ({navigation}) => {
   return (
     <Container isScrollable>
       <CustomText
-        text="Votre profile"
+        text="Mon profil"
         style={[styles.screenTitle, {marginBottom: 15, marginTop: 10}]}
       />
       <UserProfile user={user} />
@@ -56,7 +56,7 @@ const Profile = ({navigation}) => {
         onPress={() => navigation.navigate('CurrentExchange')}
       />
       <ListItem
-        title="Mes historiques d'échanges"
+        title="Mon historique d'échanges"
         iconSource={require('../../assets/icons/TimeMachine.png')}
         onPress={() => navigation.navigate('ExchangeHistory')}
       />
@@ -66,7 +66,7 @@ const Profile = ({navigation}) => {
         onPress={handleLogout}
       />
       <CustomText
-        text="Information personelle"
+        text="Informations personelles"
         style={[styles.screenTitle, {marginTop: 30}]}
       />
       <ListItem

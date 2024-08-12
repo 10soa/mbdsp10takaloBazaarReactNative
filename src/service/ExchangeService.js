@@ -49,3 +49,18 @@ export const proposerExchange = async (body, navigation) => {
     throw error;
   }
 };
+
+export const getExchangeById = async (exchangeId, navigation) => {
+  try {
+    const data = await fetchWithAuth(
+      `${API_URL}/exchange/${exchangeId}`,
+      {
+        method: 'GET',
+      },
+      navigation,
+    );
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

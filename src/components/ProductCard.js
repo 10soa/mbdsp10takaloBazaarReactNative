@@ -2,9 +2,20 @@ import React from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import colors from '../constants/color';
 
-const ProductCard = ({product, badgeText, disableShared, onPress, user, navigation}) => {
+const ProductCard = ({
+  styleCard,
+  product,
+  badgeText,
+  disableShared,
+  onPress,
+  user,
+  navigation,
+  disableCategory,
+}) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.card, styleCard && styleCard]}
+      onPress={onPress}>
       {badgeText && (
         <View style={styles.badge}>
           <Text style={styles.name}>{badgeText}</Text>
@@ -41,7 +52,9 @@ const ProductCard = ({product, badgeText, disableShared, onPress, user, navigati
             </TouchableOpacity>
           )}
           <Text style={styles.title}>{product.name}</Text>
-          <Text style={styles.cat}>{product.category.name}</Text>
+          {!disableCategory && (
+            <Text style={styles.cat}>{product.category.name}</Text>
+          )}
         </View>
         {!disableShared && (
           <TouchableOpacity style={styles.cartIcon}>

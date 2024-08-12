@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet,TouchableOpacity } from 'react-native';
 
-const CardExchange = ({ exchange }) => {
+const CardExchange = ({exchange, navigation}) => {
   return (
     <TouchableOpacity style={styles.card}>
       <Text style={styles.text}>Echange ID : {exchange.id}</Text>
@@ -12,17 +12,19 @@ const CardExchange = ({ exchange }) => {
   );
 };
 
-const translateStatus = (status) => {
-    switch (status) {
-      case 'Accepted':
-        return 'Accepté';
-      case 'Cancelled':
-        return 'Annulé';
-      case 'Proposed':
-        return 'Proposé';
-      default:
-        return status;
-    }
+const translateStatus = status => {
+  switch (status) {
+    case 'Accepted':
+      return 'Accepté';
+    case 'Cancelled':
+      return 'Annulé';
+    case 'Proposed':
+      return 'Proposé';
+    case 'Refused':
+      return 'Refusé';
+    default:
+      return status;
+  }
 };
 
 const styles = StyleSheet.create({
@@ -35,6 +37,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
+    elevation: 5,
   },
   text: {
     fontSize: 16,

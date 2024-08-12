@@ -10,7 +10,7 @@ const ButtonPrimary = ({onPress, style, text, image, textStyle}) => {
     <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
       {image && (
         <View style={{justifyContent: 'center'}}>
-          <Image source={image} />
+          <Image source={image} style={{width: scale(15), height: scale(15), tintColor: colors.white}}/>
         </View>
       )}
       <Text allowFontScaling={true} style={[styles.textStyle, textStyle]}>
@@ -26,6 +26,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     padding: scale(10),
     elevation: 3,
+    flexDirection: 'row',
+    gap: scale(5),
+    alignContent: 'center',
+    justifyContent: 'center'
   },
   textStyle: {
     fontFamily: 'Asul-Bold',
