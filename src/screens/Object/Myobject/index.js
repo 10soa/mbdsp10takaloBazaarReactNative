@@ -57,8 +57,6 @@ const MyObject = ({navigation}) => {
         limit
       };
       const data = await getUserObjects(userData.id, params, navigation);
-      console.log('data', data);
-
       setMyObjects(append ? [...myObjects, ...data.objects] : data.objects);
       setHasMore(data.objects.length > 0);
     } catch (error) {

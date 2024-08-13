@@ -25,20 +25,19 @@ const PreviewImage = ({
   objectName,
   removeObject,
   status,
-  repostObject
+  repostObject,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const qrCodeRef = useRef();
   const navigation = useNavigation();
-  
+
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
 
   const goEditPage = () => {
-    console.log(idObject);
     if (idObject) {
-      navigation.navigate('UpdateObject', { idObject: idObject });
+      navigation.navigate('UpdateObject', {idObject: idObject});
     }
   };
 
@@ -101,7 +100,9 @@ const PreviewImage = ({
               style={{width: 30, height: 30, tintColor: colors.black}}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.remove} onPress={status == 'Removed' ? repostObject : removeObject}>
+          <TouchableOpacity
+            style={styles.remove}
+            onPress={status == 'Removed' ? repostObject : removeObject}>
             <Image
               source={
                 status == 'Removed'
@@ -112,20 +113,22 @@ const PreviewImage = ({
               style={{
                 width: 30,
                 height: 30,
-                tintColor: status == 'Removed' ? colors.primary : colors.error,
+                tintColor: status == 'Removed' ? colors.secondary : colors.error,
               }}
             />
           </TouchableOpacity>
         </View>
       )}
       <View style={styles.buttons}>
-        <TouchableOpacity style={styles.remove} onPress={toggleModal}>
-          <Image
-            source={require('../../../assets/icons/Share1.png')}
-            resizeMode="contain"
-            style={{width: 30, height: 30, tintColor: colors.black}}
-          />
-        </TouchableOpacity>
+        {status != 'Removed' && (
+          <TouchableOpacity style={styles.remove} onPress={toggleModal}>
+            <Image
+              source={require('../../../assets/icons/Share1.png')}
+              resizeMode="contain"
+              style={{width: 30, height: 30, tintColor: colors.black}}
+            />
+          </TouchableOpacity>
+        )}
         {!isOwner && (
           <TouchableOpacity style={styles.remove}>
             <Image

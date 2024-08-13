@@ -14,15 +14,16 @@ import Banner from './components/Banner';
 import colors from '../../constants/color';
 import ProductCard from '../../components/ProductCard';
 import {getObjects} from '../../service/ObjectService';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import IsLoading from '../../components/IsLoading';
+import {AuthContext} from '../../context/AuthContext';
 
 const Home = ({navigation}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const isFocused = useIsFocused();
-
+  const {userID, isAuthenticated} = useContext(AuthContext);
   useEffect(() => {
     if (isFocused) {
       const fetchData = async () => {
@@ -45,10 +46,6 @@ const Home = ({navigation}) => {
       fetchData();
     }
   }, [isFocused]);
-
-  // if (loading) {
-  //   return <IsLoading />;
-  // }
   return (
     <Container isScrollable paddingVerticalDisabled>
       <HomeHeader style={styles.HomeHeader} />
@@ -63,8 +60,10 @@ const Home = ({navigation}) => {
             <ProductCard
               key={index}
               product={item}
+              isOwner={item.user_id.toString() == userID}
               badgeText={'Récent'}
               user={item.user}
+              isAuthenticated={isAuthenticated}
               navigation={navigation}
               onPress={() => {
                 navigation.navigate('Details', {

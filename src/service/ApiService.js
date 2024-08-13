@@ -5,8 +5,8 @@ import {getToken, removeToken} from './SessionService';
 const handleHttpError = async (response, navigation) => {
   if (response.status === 401) {
     await removeToken();
-    navigation.navigate('Login', {
-      text: 'Vous devez vous-connecter',
+    navigation.navigate('User', {
+      text: 'Vous devez vous-connecter!',
     });
     return;
   } else if (response.status !== 500) {

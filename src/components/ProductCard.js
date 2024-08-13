@@ -11,6 +11,8 @@ const ProductCard = ({
   user,
   navigation,
   disableCategory,
+  isOwner,
+  isAuthenticated,
 }) => {
   return (
     <TouchableOpacity
@@ -35,7 +37,15 @@ const ProductCard = ({
           {user && (
             <TouchableOpacity
               style={styles.userContainer}
-              onPress={() => navigation.navigate('ProfileUser', {user: user})}>
+              onPress={() =>
+                !isAuthenticated
+                  ? navigation.navigate('User', {
+                      text: 'Vous devez être connecté pour consulter les profils des utilisateurs.',
+                    })
+                  : isOwner
+                  ? navigation.navigate('User')
+                  : navigation.navigate('ProfileUser', {user: user})
+              }>
               {user.profile_picture && (
                 <Image
                   source={{uri: user.profile_picture}}

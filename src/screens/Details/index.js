@@ -8,7 +8,11 @@ import ButtonPrimary from '../../components/ButtonPrimary';
 import {scale} from 'react-native-size-matters';
 import IsLoading from '../../components/IsLoading';
 import React, {useContext, useEffect, useState} from 'react';
-import {getObject, removeObject, restoreObject} from '../../service/ObjectService';
+import {
+  getObject,
+  removeObject,
+  restoreObject,
+} from '../../service/ObjectService';
 import {AuthContext} from '../../context/AuthContext';
 import {getUserFromToken} from '../../service/SessionService';
 
@@ -36,7 +40,7 @@ const Details = ({navigation, route}) => {
     };
 
     fetchObject();
-  }, [objectId]);
+  }, [route]);
 
   const isOwnerObject = async id => {
     user = await getUserFromToken();
@@ -97,7 +101,13 @@ const Details = ({navigation, route}) => {
           <TouchableOpacity
             style={styles.userContainer}
             onPress={() =>
-              navigation.navigate('ProfileUser', {user: object.user})
+              !isAuthenticated
+                ? navigation.navigate('User', {
+                    text: 'Vous devez être connecté pour consulter les profils des utilisateurs.',
+                  })
+                : isOwner
+                ? navigation.navigate('User')
+                : navigation.navigate('ProfileUser', {user: user})
             }>
             {object.user.profile_picture && (
               <Image

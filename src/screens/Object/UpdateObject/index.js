@@ -205,10 +205,9 @@ const UpdateObject = ({ route, navigation }) => {
     try {
       setLoading(true);
       await updateObject(objectId, objectData, navigation);
-      navigation.navigate('Accueil');
+      navigation.navigate('Home');
     } catch (error) {
       Alert.alert('Erreur', 'Une erreur est survenue lors de la mise à jour de l\'objet.');
-      console.error('Error updating object:', error.message);
     } finally {
       setLoading(false);
     }

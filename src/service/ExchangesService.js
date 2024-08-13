@@ -15,14 +15,11 @@ export const getHistoryExchange = async (userID, status, navigation) => {
     const result = await fetchWithAuth(url, options, navigation);
     
     if (result && result.data && result.data.exchanges) {
-      console.log('Exchanges fetched successfully:', result);
-      return result.data.exchanges;
+     return result.data.exchanges;
     } else {
-      console.error('Unexpected response format:', result);
-      return [];
+     return [];
     }
   } catch (error) {
-    console.error('Error fetching exchange history:', error.message);
     throw error;
   }
 };

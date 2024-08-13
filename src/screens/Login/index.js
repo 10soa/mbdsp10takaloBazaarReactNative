@@ -66,9 +66,10 @@ const Login = ({navigation, route}) => {
         return;
       }
 
-      await log(formData.email, formData.password);
+      const user = await log(formData.email, formData.password);
       setLoading(false);
       setIsAuthenticated(true);
+      setuserID(user.user.id.toString());
       navigation.navigate(redirectTo);
     } catch (error) {
       setLoading(false);

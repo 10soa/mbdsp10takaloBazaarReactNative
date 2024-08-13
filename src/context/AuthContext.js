@@ -1,16 +1,21 @@
 import React, {createContext, useState, useEffect} from 'react';
-import {getToken} from '../service/SessionService';
+import {getToken, getUserFromToken, getUserId} from '../service/SessionService';
 import {logout} from '../service/AuthService';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userID, setuserID] = useState('');
 
   useEffect(() => {
     const checkAuth = async () => {
       const token = await getToken();
       setIsAuthenticated(!!token);
+      if (token) {
+        const user = await getUserId();
+        setuserID(user.id);
+      }
     };
 
     checkAuth();
@@ -20,12 +25,19 @@ export const AuthProvider = ({children}) => {
     try {
       await logout(navigation);
       setIsAuthenticated(false);
+      setuserID('');
     } catch {}
   };
 
   return (
     <AuthContext.Provider
-      value={{isAuthenticated, setIsAuthenticated, logoutUser}}>
+      value={{
+        isAuthenticated,
+        setIsAuthenticated,
+        logoutUser,
+        userID,
+        setuserID,
+      }}>
       {children}
     </AuthContext.Provider>
   );

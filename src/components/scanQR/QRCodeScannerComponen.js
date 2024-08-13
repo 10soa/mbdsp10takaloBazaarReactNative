@@ -45,7 +45,6 @@ const QRCodeScannerComponent = () => {
         navigation.navigate('Details', {
             objectId: e.data,
         });
-        console.log("VALUE QR",e.data);
       }}
       reactivate={true}
       topContent={<Text>Scanner un QR Code</Text>}

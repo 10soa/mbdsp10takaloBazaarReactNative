@@ -31,7 +31,6 @@ const SearchFilter = ({ navigation }) => {
   const fetchObjects = async (filters = {}) => {
     setLoading(true);
     try {
-      console.log('Fetching objects with filters:', filters);
       const result = await getObjects(1, 1000, filters.order || 'desc', filters);
       setData(result.objects);
     } catch (error) {

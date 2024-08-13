@@ -19,7 +19,7 @@ import {Picker} from '@react-native-picker/picker';
 const Signup = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const {setIsAuthenticated} = useContext(AuthContext);
+  const {setIsAuthenticated, setuserID} = useContext(AuthContext);
   const textLogin = route.params?.textLogin || '';
   const [formData, setFormData] = useState({
     email: '',
@@ -96,9 +96,10 @@ const Signup = ({navigation, route}) => {
         gender: formData.sexe,
       };
 
-      await register(user);
+      const data = await register(user);
       setLoading(false);
       setIsAuthenticated(true);
+      setuserID(data.id.toString());
       navigation.navigate(redirectTo);
     } catch (error) {
       setLoading(false);

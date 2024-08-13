@@ -19,7 +19,7 @@ export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
     if (filters.created_at_end) params.created_at_end = filters.created_at_end;
     const query = new URLSearchParams(params).toString();
     const response = await fetch(`${API_URL}/objects?${query}`);
-    if (!response.ok) { 
+    if (!response.ok) {
       throw new Error('Network response was not ok');
     }
     const result = await response.json();
@@ -165,17 +165,19 @@ export const getUserObjects = async (userId, params, navigation) => {
   const url = `${API_URL}/user/${userId}/objects?${queryString}`;
 
   try {
-    const response = await fetchWithAuth(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetchWithAuth(
+      url,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
       navigation,
-    });
+    );
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching user objects:', error);
     throw error;
   }
 };
@@ -256,8 +258,6 @@ export const restoreObject = async (objectId, navigation) => {
         },
       },
     });
-    console.log('response',response);
-    
     return response;
   } catch (error) {
     throw error;

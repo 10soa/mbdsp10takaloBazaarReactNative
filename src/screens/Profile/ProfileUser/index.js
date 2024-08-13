@@ -71,8 +71,6 @@ const ProfileUser = ({navigation, route}) => {
         limit,
       };
       const data = await getUserObjects(user.id, params, navigation);
-      console.log('data', data);
-
       setMyObjects(append ? [...myObjects, ...data.objects] : data.objects);
       setHasMore(data.objects.length > 0);
     } catch (error) {
