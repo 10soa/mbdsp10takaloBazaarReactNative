@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import colors from '../../../constants/color';
+import {useNavigation} from '@react-navigation/native';
 
 const {width: viewportWidth} = Dimensions.get('window');
 
@@ -30,16 +31,20 @@ const data = [
   },
 ];
 
-const Banner = () => {
+const Banner = ({navigation}) => {
   const [activeSlide, setActiveSlide] = useState(0);
   let carouselRef = null;
+
+  const goToList = () => {
+    navigation.navigate('SearchFilter');
+  };
 
   const renderItem = ({item}) => {
     return (
       <View style={styles.card}>
         <View style={styles.textContainer}>
           <Text style={styles.title}>{item.title}</Text>
-          <TouchableOpacity style={styles.ObjectButton}>
+          <TouchableOpacity style={styles.ObjectButton} onPress={goToList}>
             <Text style={styles.subtitle}>{item.subtitle}</Text>
           </TouchableOpacity>
         </View>
@@ -98,12 +103,12 @@ const styles = StyleSheet.create({
   title: {
     color: colors.textPrimary,
     fontSize: 18,
-    fontFamily: 'Asul-Bold'
+    fontFamily: 'Asul-Bold',
   },
   subtitle: {
     color: '#FFF',
     fontSize: 14,
-    fontFamily: 'Asul-Bold'
+    fontFamily: 'Asul-Bold',
   },
   image: {
     width: 100,

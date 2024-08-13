@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-} from 'react-native';
-import { useIsFocused,useRoute } from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, View, Text} from 'react-native';
+import {useIsFocused, useRoute} from '@react-navigation/native';
 import Container from '../../components/Container';
 import colors from '../../constants/color';
 import ProductCard from '../../components/ProductCard';
-import { getObjects } from '../../service/ObjectService';
+import {getObjects} from '../../service/ObjectService';
 import IsLoading from '../../components/IsLoading';
 import FilterComponent from './Filtre/filtre';
+import Header from '../../components/Header';
 
-const SearchFilter = ({ navigation }) => {
+const SearchFilter = ({navigation}) => {
   const route = useRoute();
   const [data, setData] = useState([]);
   const [isVisible, setIsVisible] = useState(true);
@@ -31,10 +28,15 @@ const SearchFilter = ({ navigation }) => {
   const fetchObjects = async (filters = {}) => {
     setLoading(true);
     try {
-      const result = await getObjects(1, 1000, filters.order || 'desc', filters);
+      const result = await getObjects(
+        1,
+        1000,
+        filters.order || 'desc',
+        filters,
+      );
       setData(result.objects);
     } catch (error) {
-      setError(error);
+      setLoading(true);
     } finally {
       setLoading(false);
     }
@@ -46,7 +48,7 @@ const SearchFilter = ({ navigation }) => {
     }
   }, [isFocused]);
 
-  const handleApplyFilters = (newFilters) => {
+  const handleApplyFilters = newFilters => {
     setFilters(newFilters);
     fetchObjects(newFilters);
     setIsVisible(false);
@@ -66,43 +68,61 @@ const SearchFilter = ({ navigation }) => {
     setIsVisible(true);
   };
 
-  if (loading) {
-    return <IsLoading />;
-  }
-
+  // if (loading) {
+  //   return <IsLoading />;
+  // }
 
   return (
-    <Container isScrollable paddingVerticalDisabled>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Listes des objets</Text>
-      </View>
-      <FilterComponent 
-        onApplyFilters={handleApplyFilters} 
-        onResetFilters={handleResetFilters} 
+    <>
+      <Header
+        haveLine
+        title="Listes des objets"
+        color={colors.textPrimary}
+        navigation={navigation}
+        backgroundColor={colors.white}
+      />
+      <FilterComponent
+        onApplyFilters={handleApplyFilters}
+        onResetFilters={handleResetFilters}
         filters={filters}
         visible={isVisible}
       />
-      <View style={styles.Products}>
-        {data.length > 0 ? (
-          data.map((item, index) => (
-            <ProductCard
-              key={index}
-              product={item}
-              user={item.user}
-              navigation={navigation}
-              onPress={() => {
-                navigation.navigate('Details', {
-                  objectId: item.id,
-                });
-              }}
-            />
-          ))
-        ) : (
-          <Text style={styles.noResultsText}>Aucun résultat trouvé</Text>
-        )}
-      </View>
-      {error && <Text style={{ color: 'red' }}>{error.message}</Text>}
-    </Container>
+      {loading ? (
+        <IsLoading />
+      ) : (
+        <Container isScrollable paddingVerticalDisabled>
+          <View style={styles.Products}>
+            {data.length > 0 ? (
+              data.map((item, index) => (
+                <ProductCard
+                  key={index}
+                  product={item}
+                  user={item.user}
+                  navigation={navigation}
+                  onPress={() => {
+                    navigation.navigate('Details', {
+                      objectId: item.id,
+                    });
+                  }}
+                />
+              ))
+            ) : (
+              <Text style={styles.noResultsText}>Aucun résultat trouvé</Text>
+            )}
+          </View>
+          {error && (
+            <Text
+              style={{
+                color: colors.primary,
+                fontFamily: 'Asul',
+                textAlign: 'center',
+              }}>
+              {error.message}
+            </Text>
+          )}
+        </Container>
+      )}
+    </>
   );
 };
 
@@ -120,17 +140,17 @@ const styles = StyleSheet.create({
     color: 'grey',
     textAlign: 'center',
     width: '100%',
-    fontFamily :'Asul'
+    fontFamily: 'Asul',
   },
   header: {
     backgroundColor: 'white',
     paddingVertical: 15,
     paddingHorizontal: 0,
     borderTopLeftRadius: 10,
-    marginTop :10,
+    marginTop: 10,
     borderTopRightRadius: 10,
-    borderBottomWidth : 1,
-    borderBottomColor : '#E0E0E0'
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
   },
   headerText: {
     fontSize: 18,

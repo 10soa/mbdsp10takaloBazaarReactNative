@@ -14,12 +14,15 @@ import {log} from '../../service/AuthService';
 import {AuthContext} from '../../context/AuthContext';
 import {validateForm} from '../../service/Function';
 import Container from '../../components/Container';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-const Login = ({navigation, route}) => {
+const Login = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const {setIsAuthenticated} = useContext(AuthContext);
-  let text = route.params?.text || '';
+  const {setIsAuthenticated, setuserID} = useContext(AuthContext);
+  const route = useRoute();
+  const navigation = useNavigation();
+  let text = route?.params?.text || '';
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -50,7 +53,7 @@ const Login = ({navigation, route}) => {
     }
   };
 
-  const redirectTo = route.params?.routeName || 'Home';
+  const redirectTo = route?.params?.routeName || 'Home';
   const goToSignup = () => {
     navigation.navigate('Signup', {routeName: redirectTo, textLogin: text});
   };

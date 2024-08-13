@@ -17,6 +17,7 @@ import {getObjects} from '../../service/ObjectService';
 import React, {useContext, useEffect, useState} from 'react';
 import IsLoading from '../../components/IsLoading';
 import {AuthContext} from '../../context/AuthContext';
+import ButtonPrimary from '../../components/ButtonPrimary';
 
 const Home = ({navigation}) => {
   const [data, setData] = useState([]);
@@ -50,7 +51,7 @@ const Home = ({navigation}) => {
     <Container isScrollable paddingVerticalDisabled>
       <HomeHeader style={styles.HomeHeader} />
       <SearchBar />
-      <Banner />
+      <Banner navigation={navigation} />
       <View style={styles.Title}>
         <Text style={styles.TitleContent}> Les 20 objets les plus récents</Text>
       </View>
@@ -72,6 +73,12 @@ const Home = ({navigation}) => {
               }}
             />
           ))}
+          <ButtonPrimary
+            text={'Voir plus'}
+            style={{width: '100%'}}
+            imageRight={require('../../assets/icons/Forward.png')}
+            onPress={() => navigation.navigate('SearchFilter')}
+          />
         </View>
       ) : (
         <View style={{height: Dimensions.get('screen').height * 0.4}}>

@@ -5,17 +5,43 @@ import colors from '../constants/color';
 import {TouchableOpacity} from 'react-native';
 import {scale} from 'react-native-size-matters';
 
-const ButtonPrimary = ({onPress, style, text, image, textStyle}) => {
+const ButtonPrimary = ({
+  onPress,
+  style,
+  text,
+  image,
+  textStyle,
+  imageRight,
+}) => {
   return (
     <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
       {image && (
         <View style={{justifyContent: 'center'}}>
-          <Image source={image} style={{width: scale(15), height: scale(15), tintColor: colors.white}}/>
+          <Image
+            source={image}
+            style={{
+              width: scale(15),
+              height: scale(15),
+              tintColor: colors.white,
+            }}
+          />
         </View>
       )}
       <Text allowFontScaling={true} style={[styles.textStyle, textStyle]}>
         {text}
       </Text>
+      {imageRight && (
+        <View style={{justifyContent: 'center'}}>
+          <Image
+            source={imageRight}
+            style={{
+              width: scale(15),
+              height: scale(15),
+              tintColor: colors.white,
+            }}
+          />
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

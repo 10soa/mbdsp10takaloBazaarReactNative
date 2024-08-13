@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet,TouchableOpacity } from 'react-native';
 
-const CardExchange = ({exchange, navigation}) => {
+const CardExchange = ({exchange, onPress}) => {
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <Text style={styles.text}>Echange ID : {exchange.id}</Text>
       <Text style={styles.textBold}>Proposeur : {exchange.proposer_user_name || exchange.proposer.username}</Text>
       <Text style={styles.textBold}>Receveur : {exchange.receiver_user_name || exchange.receiver.username}</Text>

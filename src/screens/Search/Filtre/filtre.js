@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { TextInput } from 'react-native-paper';
-import { getCategories } from '../../../service/CategoryService';
+import React, {useState, useEffect} from 'react';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
+import {TextInput} from 'react-native-paper';
+import {getCategories} from '../../../service/CategoryService';
 import colors from '../../../constants/color';
+import { scale } from 'react-native-size-matters';
 
-const FilterComponent = ({ onApplyFilters, onResetFilters, filters,visible }) => {
+const FilterComponent = ({
+  onApplyFilters,
+  onResetFilters,
+  filters,
+  visible,
+}) => {
   const [name, setName] = useState(filters.name);
   const [description, setDescription] = useState(filters.description);
   const [category, setCategory] = useState(filters.category_id);
@@ -37,7 +43,7 @@ const FilterComponent = ({ onApplyFilters, onResetFilters, filters,visible }) =>
       description,
       category_id: category,
       created_at_start: dateMin,
-      created_at_end: dateMax, 
+      created_at_end: dateMax,
       order,
     };
     onApplyFilters(newFilters);
@@ -61,17 +67,23 @@ const FilterComponent = ({ onApplyFilters, onResetFilters, filters,visible }) =>
     <View style={styles.container}>
       <TouchableOpacity onPress={toggleFilterVisibility} style={styles.filtre}>
         <Image
-          source={require('../../../assets/icons/Pipeline.png')}
+          source={require('../../../assets/icons/Funnel.png')}
           resizeMode="contain"
-          style={{ width: 20, height: 20, tintColor: 'grey', marginRight: 5, marginBottom: 10 }}
+          style={{
+            width: 20,
+            height: 20,
+            tintColor: colors.darkGrey,
+            marginRight: 5,
+            marginBottom: 10,
+          }}
         />
         <Text style={styles.title}>Filtres</Text>
         <Image
           source={require('../../../assets/icons/Down.png')}
           resizeMode="contain"
           style={[
-            { width: 20, height: 20, tintColor: 'grey', marginLeft: 'auto' },
-            { transform: [{ rotate: isFilterVisible ? '180deg' : '0deg' }] },
+            {width: 20, height: 20, tintColor: colors.darkGrey, marginLeft: 'auto'},
+            {transform: [{rotate: isFilterVisible ? '180deg' : '0deg'}]},
           ]}
         />
       </TouchableOpacity>
@@ -84,7 +96,7 @@ const FilterComponent = ({ onApplyFilters, onResetFilters, filters,visible }) =>
             onChangeText={setName}
             style={[styles.input, styles.textInput]}
             mode="outlined"
-            theme={{ colors: { primary: 'grey', text: 'grey' } }}
+            theme={{colors: {primary: 'grey', text: 'grey'}}}
           />
 
           <TextInput
@@ -93,7 +105,7 @@ const FilterComponent = ({ onApplyFilters, onResetFilters, filters,visible }) =>
             onChangeText={setDescription}
             style={styles.input}
             mode="outlined"
-            theme={{ colors: { primary: 'grey', text: 'grey' } }}
+            theme={{colors: {primary: 'grey', text: 'grey'}}}
           />
 
           <View style={styles.pickerContainer}>
@@ -101,11 +113,14 @@ const FilterComponent = ({ onApplyFilters, onResetFilters, filters,visible }) =>
               <Picker
                 selectedValue={category}
                 style={styles.picker}
-                onValueChange={(itemValue) => setCategory(itemValue)}
-              >
+                onValueChange={itemValue => setCategory(itemValue)}>
                 <Picker.Item label="Sélectionner une catégorie" value="" />
-                {dataCat.map((item) => (
-                  <Picker.Item key={item.id} label={item.name} value={item.id} />
+                {dataCat.map(item => (
+                  <Picker.Item
+                    key={item.id}
+                    label={item.name}
+                    value={item.id}
+                  />
                 ))}
               </Picker>
             </View>
@@ -117,7 +132,7 @@ const FilterComponent = ({ onApplyFilters, onResetFilters, filters,visible }) =>
             onChangeText={setDateMin}
             style={styles.input}
             mode="outlined"
-            theme={{ colors: { primary: 'grey', text: 'grey' } }}
+            theme={{colors: {primary: 'grey', text: 'grey'}}}
           />
 
           <TextInput
@@ -126,7 +141,7 @@ const FilterComponent = ({ onApplyFilters, onResetFilters, filters,visible }) =>
             onChangeText={setDateMax}
             style={styles.input}
             mode="outlined"
-            theme={{ colors: { primary: 'grey', text: 'grey' } }}
+            theme={{colors: {primary: 'grey', text: 'grey'}}}
           />
 
           <View style={styles.pickerContainer}>
@@ -134,8 +149,7 @@ const FilterComponent = ({ onApplyFilters, onResetFilters, filters,visible }) =>
               <Picker
                 selectedValue={order}
                 style={styles.picker}
-                onValueChange={(itemValue) => setOrder(itemValue)}
-              >
+                onValueChange={itemValue => setOrder(itemValue)}>
                 <Picker.Item label="Le plus récent" value="desc" />
                 <Picker.Item label="Le plus ancien" value="asc" />
               </Picker>
@@ -143,19 +157,23 @@ const FilterComponent = ({ onApplyFilters, onResetFilters, filters,visible }) =>
           </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttonFind} onPress={handleApplyFilters}>
+            <TouchableOpacity
+              style={styles.buttonFind}
+              onPress={handleApplyFilters}>
               <Image
                 source={require('../../../assets/icons/Search.png')}
                 resizeMode="contain"
-                style={{ width: 25, height: 25, tintColor: '#fff' }}
+                style={{width: 25, height: 25, tintColor: '#fff'}}
               />
               <Text style={styles.buttonText}>Filtrer</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonRest} onPress={handleResetFilters}>
+            <TouchableOpacity
+              style={styles.buttonRest}
+              onPress={handleResetFilters}>
               <Image
                 source={require('../../../assets/icons/Reboot.png')}
                 resizeMode="contain"
-                style={{ width: 15, height: 15, tintColor: '#fff' }}
+                style={{width: 15, height: 15, tintColor: '#fff'}}
               />
               <Text style={styles.buttonText}>Réinitialiser</Text>
             </TouchableOpacity>
@@ -169,12 +187,13 @@ const FilterComponent = ({ onApplyFilters, onResetFilters, filters,visible }) =>
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: colors.white,
   },
   title: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: scale(18),
     marginBottom: 10,
-    fontFamily: 'Asul',
+    color: colors.darkGrey,
+    fontFamily: 'Asul-Bold',
   },
   filtre: {
     flexDirection: 'row',
@@ -183,6 +202,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 10,
+    fontFamily: 'Asul',
   },
   pickerContainer: {
     marginBottom: 10,
@@ -198,7 +218,8 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
-    color: 'grey',
+    // color: 'grey',
+    fontFamily: 'Asul',
   },
   buttonContainer: {
     flexDirection: 'row',

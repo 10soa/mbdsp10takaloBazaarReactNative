@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import CardExchange from './CardComponent/cardExchange';
 import Container from '../../components/Container';
 import colors from '../../constants/color';
-import { getHistoryExchange } from '../../service/ExchangesService';
+import {getHistoryExchange} from '../../service/ExchangesService';
 import IsLoading from '../../components/IsLoading';
-import { getUserFromToken } from '../../service/SessionService';
-import { useIsFocused } from '@react-navigation/native';
+import {getUserFromToken} from '../../service/SessionService';
+import {useIsFocused} from '@react-navigation/native';
+import Header from '../../components/Header';
+import {scale} from 'react-native-size-matters';
 
-const ExchangeHistory = ({ navigation }) => {
+const ExchangeHistory = ({navigation}) => {
   const [exchanges, setExchanges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,105 +36,136 @@ const ExchangeHistory = ({ navigation }) => {
 
   useEffect(() => {
     if (isFocused) {
-        fetchData();
+      fetchData();
     }
   }, [isFocused, userID, selectedStatus, navigation]);
 
-  if (loading) {
-    return <IsLoading />;
-  }
-
   if (error) {
-    return <Text style={{ color: 'red' }}>Erreur: {error.message}</Text>;
+    return <Text style={{color: 'red'}}>Erreur: {error.message}</Text>;
   }
 
   return (
-    <Container style={{ flex: 1 }}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Historique des échanges</Text>
-      </View>
-      <View style={styles.exchangeCount}>
-        <Text style={styles.exchangeCountText}>Nombre d'échanges: {exchanges.length}</Text>
-      </View>
-      <View style={styles.pickerContainer}>
-        <View style={styles.pickerWrapper}>
-          <Picker
-            selectedValue={selectedStatus}
-            onValueChange={(itemValue) => setSelectedStatus(itemValue)}
-            style={styles.picker}
-          >
-            <Picker.Item label="Tous les statuts" value="All" />
-            <Picker.Item label="Accepté" value="Accepted" />
-            <Picker.Item label="Annulé" value="Cancelled" />
-            <Picker.Item label="Refusé" value="Refused" />
-          </Picker>
-        </View>
-      </View>
-      {exchanges.length === 0 ? (
-        <Text style={styles.noResultsText}>Aucun résultat!</Text>
+    <>
+      <Header
+        backgroundColor={colors.secondary}
+        title="Historique des échanges"
+        navigation={navigation}
+      />
+      {loading ? (
+        <IsLoading />
       ) : (
-        <FlatList
-          data={exchanges}
-          renderItem={({ item }) => <CardExchange exchange={item} navigation={navigation}/>}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ flexGrow: 1 }}
-          ListFooterComponent={<View style={{ height: 0 }} />}
-        />
+        <Container>
+          <View style={styles.exchangeCount}>
+            <Text style={styles.exchangeCountText}>
+              Nombre d'échanges: {exchanges.length}
+            </Text>
+          </View>
+          <View style={styles.pickerContainer}>
+            <View style={styles.pickerWrapper}>
+              <Picker
+                selectedValue={selectedStatus}
+                onValueChange={itemValue => setSelectedStatus(itemValue)}
+                style={styles.picker}>
+                <Picker.Item
+                  label="Tous les statuts"
+                  value="All"
+                  style={{fontFamily: 'Asul'}}
+                />
+                <Picker.Item
+                  label="Accepté"
+                  value="Accepted"
+                  style={{fontFamily: 'Asul'}}
+                />
+                <Picker.Item
+                  label="Annulé"
+                  value="Cancelled"
+                  style={{fontFamily: 'Asul'}}
+                />
+                <Picker.Item
+                  label="Refusé"
+                  value="Refused"
+                  style={{fontFamily: 'Asul'}}
+                />
+              </Picker>
+            </View>
+          </View>
+          {exchanges.length === 0 ? (
+            <Text style={styles.noResultsText}>Aucun résultat!</Text>
+          ) : (
+            <FlatList
+              data={exchanges}
+              renderItem={({item}) => (
+                <CardExchange
+                  exchange={item}
+                  onPress={() =>
+                    navigation.navigate('ExchangeDetails', {
+                      exchangeId: item.id,
+                    })
+                  }
+                />
+              )}
+              keyExtractor={item => item.id.toString()}
+              contentContainerStyle={{flexGrow: 1}}
+              ListFooterComponent={<View style={{height: 0}} />}
+            />
+          )}
+        </Container>
       )}
-    </Container>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
     backgroundColor: colors.secondary,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    paddingVertical: scale(15),
+    paddingHorizontal: scale(20),
+    borderTopLeftRadius: scale(10),
+    borderTopRightRadius: scale(10),
   },
   headerText: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: colors.white,
     fontFamily: 'Asul-Bold',
   },
   pickerContainer: {
-    marginVertical: 10,
-    marginHorizontal: 20,
-    paddingHorizontal: 10,
+    marginVertical: scale(10),
+    marginHorizontal: scale(20),
+    paddingHorizontal: scale(10),
   },
   pickerWrapper: {
     borderWidth: 1,
     borderColor: 'grey',
-    borderRadius: 10,
+    borderRadius: scale(10),
   },
   picker: {
-    height: 50,
+    height: scale(50),
     color: colors.textPrimary,
   },
   exchangeCount: {
     backgroundColor: colors.primary,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginTop: 10,
+    paddingVertical: scale(15),
+    paddingHorizontal: scale(20),
+    borderRadius: scale(10),
+    marginTop: scale(10),
+    // marginHorizontal: scale(28)
   },
   exchangeCountText: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: colors.white,
     fontFamily: 'Asul',
     textAlign: 'center',
   },
   exchangeList: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingHorizontal: scale(20),
+    paddingBottom: scale(20),
   },
   noResultsText: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: 'grey',
-    fontFamily:'Asul',
+    fontFamily: 'Asul',
     textAlign: 'center',
-    marginTop: 100,
+    marginTop: scale(100),
   },
 });
 

@@ -79,7 +79,7 @@ const Details = ({navigation, route}) => {
 
   const proposeExchange = () => {
     if (!isAuthenticated) {
-      goToLogin();
+      goToLogin('Connectez-vous pour réaliser un échange.');
       return;
     }
     navigation.navigate('ProposeExchange', {user: object.user, object: object});
@@ -107,7 +107,7 @@ const Details = ({navigation, route}) => {
                   })
                 : isOwner
                 ? navigation.navigate('User')
-                : navigation.navigate('ProfileUser', {user: user})
+                : navigation.navigate('ProfileUser', {user: object.user})
             }>
             {object.user.profile_picture && (
               <Image

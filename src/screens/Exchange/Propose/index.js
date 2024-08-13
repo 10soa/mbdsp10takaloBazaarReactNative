@@ -216,7 +216,7 @@ const Propose = ({navigation, route}) => {
         </ScrollView>
       </Container>
       <View style={styles.buttonContainer}>
-        {error && <CustomText text={error} style={styles.textError}/> }
+        {error && <CustomText text={error} style={styles.textError} />}
         {!loading ? (
           <ButtonPrimary text="Proposer l'échange" onPress={proposeExchange} />
         ) : (
@@ -256,17 +256,32 @@ const Propose = ({navigation, route}) => {
             setMyModalVisible(false);
           }}>
           <View style={styles.modalContainer}>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => {
-                setUserModalVisible(false);
-                setMyModalVisible(false);
+            <View
+              style={{
+                flexDirection: 'row',
+                marginBottom: scale(20),
+                justifyContent: 'space-between',
               }}>
-              <Image
-                source={require('../../../assets/icons/Close.png')}
-                style={styles.closeIcon}
+              <CustomText
+                text={
+                  myModalVisible
+                    ? currentUser.last_name + ' ' + currentUser.first_name
+                    : user.last_name + ' ' + user.first_name
+                }
+                style={styles.titleModal}
               />
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => {
+                  setUserModalVisible(false);
+                  setMyModalVisible(false);
+                }}>
+                <Image
+                  source={require('../../../assets/icons/Close.png')}
+                  style={styles.closeIcon}
+                />
+              </TouchableOpacity>
+            </View>
             <FlatList
               data={myModalVisible ? myObjets : userObjects}
               renderItem={renderProductCard}
@@ -323,8 +338,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   closeButton: {
-    alignSelf: 'flex-end',
-    marginBottom: scale(10),
+    alignSelf: 'flex-start',
   },
   closeIcon: {
     width: scale(20),
@@ -345,12 +359,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: colors.white,
   },
-  textError:{
+  textError: {
     color: colors.error,
     textAlign: 'center',
     marginBottom: scale(10),
-    fontSize: scale(16)
-  }
+    fontSize: scale(16),
+  },
+  titleModal: {
+    color: colors.white,
+    fontSize: scale(16),
+    backgroundColor: colors.primary,
+    paddingHorizontal: scale(20),
+    paddingVertical: scale(5),
+    alignSelf: 'flex-start',
+    borderRadius: scale(10),
+  },
 });
 
 export default Propose;

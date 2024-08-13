@@ -74,8 +74,7 @@ const ProfileUser = ({navigation, route}) => {
       setMyObjects(append ? [...myObjects, ...data.objects] : data.objects);
       setHasMore(data.objects.length > 0);
     } catch (error) {
-      console.error('Error fetching objects', error);
-      return [];
+      setLoading(true);
     } finally {
       setLoading(false);
       setLoadingMore(false);

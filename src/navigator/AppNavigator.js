@@ -101,18 +101,32 @@ const AppNavigator = () => {
         component={isAuthenticated ? Profile : Login}
         options={{
           tabBarStyle: {display: isAuthenticated ? 'flex' : 'none'},
-          tabBarIcon: ({focused}) => {
+          tabBarIcon: props => {
+            const {onPress, ...rest} = props;
+            const navigation = useNavigation();
             return (
-              <View style={style.navView}>
-                <Image
-                  source={require('../assets/icons/User.png')}
-                  resizeMode="contain"
-                  style={{
-                    tintColor: focused ? colors.primary : colors.darkGrey,
-                    ...style.navImage,
-                  }}
-                />
-              </View>
+              <TouchableOpacity
+                {...rest}
+                onPress={() => {
+                  if (!isAuthenticated) {
+                    navigation.navigate('Login', {text: ''});
+                  } else {
+                    navigation.navigate('Profile');
+                  }
+                }}>
+                <View style={style.navView}>
+                  <Image
+                    source={require('../assets/icons/User.png')}
+                    resizeMode="contain"
+                    style={{
+                      tintColor: props.focused
+                        ? colors.primary
+                        : colors.darkGrey,
+                      ...style.navImage,
+                    }}
+                  />
+                </View>
+              </TouchableOpacity>
             );
           },
         }}
@@ -125,6 +139,28 @@ const AppNavigator = () => {
           tabBarButton: props => null,
           tabBarVisible: false,
           tabBarLabel: 'Filter',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'Profile'}
+        name={'Profile'}
+        component={Profile}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'Profile',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+       <Tab.Screen
+        key={'Login'}
+        name={'Login'}
+        component={Login}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'Login',
           tabBarStyle: {display: 'none'},
         }}
       />
@@ -194,7 +230,7 @@ const AppNavigator = () => {
           tabBarStyle: {display: 'none'},
         }}
       />
-       <Tab.Screen
+      <Tab.Screen
         key={'UpdateObject'}
         name={'UpdateObject'}
         component={UpdateObject}
