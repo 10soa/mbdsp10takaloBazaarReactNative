@@ -15,6 +15,8 @@ import {
 } from '../../service/ObjectService';
 import {AuthContext} from '../../context/AuthContext';
 import {getUserFromToken} from '../../service/SessionService';
+import Header from '../../components/Header';
+import {useIsFocused} from '@react-navigation/native';
 
 const Details = ({navigation, route}) => {
   const [object, setObject] = useState(null);
@@ -24,12 +26,13 @@ const Details = ({navigation, route}) => {
   const {objectId} = route.params;
   let user = {};
   const {isAuthenticated} = useContext(AuthContext);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchObject = async () => {
       // setLoading(true);
       try {
-        const data = await getObject(objectId);
+        const data = await getObject(objectId ? objectId : object.id);
         setObject(data);
         setIsOwner(await isOwnerObject(data.user_id));
       } catch (err) {
@@ -38,9 +41,12 @@ const Details = ({navigation, route}) => {
         setLoading(false);
       }
     };
+    if (isFocused) {
+      console.log('euuuh');
 
-    fetchObject();
-  }, [route]);
+      fetchObject();
+    }
+  }, [isFocused]);
 
   const isOwnerObject = async id => {
     user = await getUserFromToken();
@@ -85,85 +91,92 @@ const Details = ({navigation, route}) => {
     navigation.navigate('ProposeExchange', {user: object.user, object: object});
   };
 
-  if (loading) {
-    return <IsLoading />;
-  }
+  // if (loading) {
+  //   return <IsLoading />;
+  // }
   return (
     <View style={{flex: 1}}>
-      <Container isScrollable style={{paddingBottom: 70}}>
-        <DetailsHeader onBackPress={() => navigation.goBack()} />
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <TouchableOpacity
-            style={styles.userContainer}
-            onPress={() =>
-              !isAuthenticated
-                ? navigation.navigate('User', {
-                    text: 'Vous devez être connecté pour consulter les profils des utilisateurs.',
-                  })
-                : isOwner
-                ? navigation.navigate('User')
-                : navigation.navigate('ProfileUser', {user: object.user})
-            }>
-            {object.user.profile_picture && (
-              <Image
-                source={{uri: object.user.profile_picture}}
-                style={styles.userImage}
-              />
-            )}
-            {!object.user.profile_picture && (
-              <Image
-                source={require('../../assets/img/user.png')}
-                style={styles.userImage}
-              />
-            )}
+      <Header title={"Details de l'objet"} navigation={navigation} />
+      {loading ? (
+        <IsLoading />
+      ) : (
+        <>
+          <Container isScrollable style={{paddingBottom: 70}}>
+            {/* <DetailsHeader onBackPress={() => navigation.goBack()} /> */}
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity
+                style={styles.userContainer}
+                onPress={() =>
+                  !isAuthenticated
+                    ? navigation.navigate('User', {
+                        text: 'Vous devez être connecté pour consulter les profils des utilisateurs.',
+                      })
+                    : isOwner
+                    ? navigation.navigate('User')
+                    : navigation.navigate('ProfileUser', {user: object.user})
+                }>
+                {object.user.profile_picture && (
+                  <Image
+                    source={{uri: object.user.profile_picture}}
+                    style={styles.userImage}
+                  />
+                )}
+                {!object.user.profile_picture && (
+                  <Image
+                    source={require('../../assets/img/user.png')}
+                    style={styles.userImage}
+                  />
+                )}
 
-            <Text style={styles.userName}>{object.user.username}</Text>
-          </TouchableOpacity>
-          <View style={{justifyContent: 'center'}}>
-            <Text
-              style={[
-                styles.status,
-                {
-                  backgroundColor:
-                    object.status === 'Available'
-                      ? colors.success
-                      : colors.error,
-                },
-              ]}>
-              {object.status === 'Available' ? 'Disponible' : 'Indisponible'}
-            </Text>
-          </View>
-        </View>
-        <PreviewImage
-          image={object.image}
-          idObject={object.id}
-          objectName={object.name}
-          isOwner={isOwner}
-          removeObject={remove}
-          repostObject={repost}
-          status={object.status}
-        />
-        <InformationLine
-          title={object.name}
-          description={object.description}
-          cat={object.category.name}
-          date={object.created_at}
-        />
-      </Container>
-      {!isOwner && (
-        <View style={styles.buttonContainer}>
-          <ButtonPrimary
-            textStyle={styles.buttonText}
-            text={'Proposer un échange'}
-            style={styles.buttonStyle}
-            onPress={proposeExchange}
-          />
-        </View>
+                <Text style={styles.userName}>{object.user.username}</Text>
+              </TouchableOpacity>
+              <View style={{justifyContent: 'center'}}>
+                <Text
+                  style={[
+                    styles.status,
+                    {
+                      backgroundColor:
+                        object.status === 'Available'
+                          ? colors.success
+                          : colors.error,
+                    },
+                  ]}>
+                  {object.status === 'Available' ? 'Disponible' : 'Retiré'}
+                </Text>
+              </View>
+            </View>
+            <PreviewImage
+              image={object.image}
+              idObject={object.id}
+              objectName={object.name}
+              isOwner={isOwner}
+              removeObject={remove}
+              repostObject={repost}
+              status={object.status}
+            />
+            <InformationLine
+              title={object.name}
+              description={object.description}
+              cat={object.category.name}
+              date={object.created_at}
+            />
+          </Container>
+          {!isOwner && (
+            <View style={styles.buttonContainer}>
+              <ButtonPrimary
+                textStyle={styles.buttonText}
+                text={'Proposer un échange'}
+                style={styles.buttonStyle}
+                onPress={proposeExchange}
+              />
+            </View>
+          )}
+        </>
       )}
     </View>
   );

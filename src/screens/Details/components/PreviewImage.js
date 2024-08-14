@@ -105,14 +105,14 @@ const PreviewImage = ({
             <Image
               source={
                 status == 'Removed'
-                  ? require('../../../assets/icons/Eye.png')
-                  : require('../../../assets/icons/Hide.png')
+                  ? require('../../../assets/icons/Hide.png')
+                  : require('../../../assets/icons/Eye.png')
               }
               resizeMode="contain"
               style={{
                 width: 30,
                 height: 30,
-                tintColor: status == 'Removed' ? colors.secondary : colors.error,
+                tintColor: status == 'Removed' ? colors.error : colors.secondary,
               }}
             />
           </TouchableOpacity>

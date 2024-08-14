@@ -36,7 +36,7 @@ const Home = ({navigation}) => {
             created_at_start: '',
             created_at_end: '',
           };
-          const result = await getObjects(1, 20, 'desc', filters);
+          const result = await getObjects(1, 20, 'desc', filters, navigation);
           setData(result.objects);
         } catch (error) {
           setError(error);
@@ -47,7 +47,6 @@ const Home = ({navigation}) => {
       fetchData();
     }
   }, [isFocused]);
-  console.log('userID',userID);
   
   return (
     <Container isScrollable paddingVerticalDisabled>

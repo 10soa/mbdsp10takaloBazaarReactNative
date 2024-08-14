@@ -36,6 +36,7 @@ const SearchFilter = ({navigation}) => {
         20,
         filters.order || 'desc',
         filters,
+        navigation
       );
 
       if (result.objects.length > 0) {

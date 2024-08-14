@@ -75,8 +75,8 @@ const MyObject = ({navigation}) => {
   const renderProductCard = ({item}) => (
     <ProductCard
       product={item}
-      backgroundBadge={item.status == 'Removed' && colors.error}
-      badgeText={item.status == 'Available' ? 'Disponible' : 'Indisponible'}
+      backgroundBadge={item.status == 'Available' ? colors.secondary : colors.error}
+      badgeText={item.status == 'Available' ? 'Disponible' : 'Retiré'}
       onPress={() => {
         navigation.navigate('Details', {
           objectId: item.id,
