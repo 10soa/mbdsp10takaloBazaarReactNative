@@ -1,9 +1,9 @@
-import {StyleSheet, Text} from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import Container from '../../components/Container';
 import IsLoading from '../../components/IsLoading';
 import UserProfile from './components/UserProfile';
-import {getUserFromToken} from '../../service/SessionService';
-import {useContext, useEffect, useState} from 'react';
+import { getUserFromToken } from '../../service/SessionService';
+import { useContext, useEffect, useState } from 'react';
 import CustomText from '../../components/CustomText';
 import colors from '../../constants/color';
 import ObjectCard from './components/ObjectCard';
@@ -11,23 +11,27 @@ import ListItem from './components/ListItem';
 import { AuthContext } from '../../context/AuthContext';
 import ExchangeHistory from '../Exchanges';
 import { useNavigation } from '@react-navigation/native';
+import { getUser } from '../../service/UserService';
 
-const Profile = ({navigation}) => {
+const Profile = ({ navigation }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const {logoutUser} = useContext(AuthContext);
+  const { logoutUser } = useContext(AuthContext);
+
+  const fetchUser = async () => {
+    try {
+      let userData = await getUserFromToken();
+      if (userData) {
+        userData = await getUser(userData.id);
+      }
+      setUser(userData);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userData = await getUserFromToken();
-        setUser(userData);
-      } catch (error) {
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUser();
   }, []);
 
@@ -41,13 +45,13 @@ const Profile = ({navigation}) => {
     <Container isScrollable>
       <CustomText
         text="Mon profil"
-        style={[styles.screenTitle, {marginBottom: 15, marginTop: 10}]}
+        style={[styles.screenTitle, { marginBottom: 15, marginTop: 10 }]}
       />
       <UserProfile user={user} />
-      <ObjectCard onPress={() => navigation.navigate('MyObject')}/>
+      <ObjectCard onPress={() => navigation.navigate('MyObject')} />
       <CustomText
         text="Generale"
-        style={[styles.screenTitle, {marginTop: 10}]}
+        style={[styles.screenTitle, { marginTop: 10 }]}
       />
       <ListItem
         title="Mes échanges en cours"
@@ -66,11 +70,12 @@ const Profile = ({navigation}) => {
       />
       <CustomText
         text="Informations personelles"
-        style={[styles.screenTitle, {marginTop: 30}]}
+        style={[styles.screenTitle, { marginTop: 30 }]}
       />
       <ListItem
         title="Modifier mon compte"
         iconSource={require('../../assets/icons/Registration.png')}
+        onPress={() => navigation.navigate('EditUser', { onGoBack: fetchUser })}
       />
       <ListItem
         title="Changer mon mot de passe"
