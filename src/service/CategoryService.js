@@ -9,7 +9,6 @@ export const getCategories = async () => {
       const result = await response.json();
       return result.data.categories;
     } catch (error) {
-      console.error('Error fetching categories:', error.message);
       throw error;
     }
 };

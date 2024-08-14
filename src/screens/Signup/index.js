@@ -8,10 +8,10 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import colors from '../../constants/color';
-import {useContext, useState} from 'react';
+import {useCallback, useContext, useState} from 'react';
 import {log, register} from '../../service/AuthService';
 import {AuthContext} from '../../context/AuthContext';
-import {useRoute} from '@react-navigation/native';
+import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {validateForm} from '../../service/Function';
 import Container from '../../components/Container';
 import {Picker} from '@react-native-picker/picker';
@@ -66,6 +66,21 @@ const Signup = ({navigation, route}) => {
   };
 
   const redirectTo = route.params?.routeName || 'Home';
+
+  useFocusEffect(
+    useCallback(() => {
+      setFormErrors({
+        email: '',
+        password: '',
+        pseudo: '',
+        nom: '',
+        prenom: '',
+        sexe: '',
+      });
+      return () => {
+      };
+    }, [])
+  );
 
   const goToLogin = () => {
     navigation.navigate('User', {routeName: redirectTo, text: textLogin});

@@ -27,9 +27,8 @@ const MyObject = ({navigation}) => {
   useEffect(() => {
     const prepareData = async () => {
       try {
-        await getObjects(page, '');
+        await getObjects(1, '');
       } catch (err) {
-        console.error('Failed to fetch user data', err);
       } finally {
         setLoading(false);
       }
@@ -41,9 +40,9 @@ const MyObject = ({navigation}) => {
     prepareData();
   }, []);
 
-  const getObjects = async (page, name, append = false) => {
+  const getObjects = async (page = 1, name, append = false) => {
     try {
-        setPage(page);
+      setPage(page);
       if (!append) {
         setLoading(true);
       } else {
@@ -60,7 +59,6 @@ const MyObject = ({navigation}) => {
       setMyObjects(append ? [...myObjects, ...data.objects] : data.objects);
       setHasMore(data.objects.length > 0);
     } catch (error) {
-      console.error('Error fetching objects', error);
       return [];
     } finally {
       setLoading(false);
@@ -70,7 +68,6 @@ const MyObject = ({navigation}) => {
 
   const loadMore = () => {
     if (!loadingMore && hasMore) {
-      setPage(prevPage => prevPage + 1);
       getObjects(page + 1, name, true);
     }
   };
@@ -78,6 +75,8 @@ const MyObject = ({navigation}) => {
   const renderProductCard = ({item}) => (
     <ProductCard
       product={item}
+      backgroundBadge={item.status == 'Removed' && colors.error}
+      badgeText={item.status == 'Available' ? 'Disponible' : 'Indisponible'}
       onPress={() => {
         navigation.navigate('Details', {
           objectId: item.id,

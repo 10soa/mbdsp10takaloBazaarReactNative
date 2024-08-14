@@ -30,7 +30,6 @@ export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
       currentPage: result.data.currentPage,
     };
   } catch (error) {
-    console.error('Error fetching objects:', error.message);
     throw error;
   }
 };
@@ -92,10 +91,6 @@ export const getObject = async id => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error(
-      'There was a problem with the fetch operation:',
-      error.message,
-    );
     throw error;
   }
 };
@@ -144,7 +139,6 @@ export const updateObject = async (id, objectData, navigation) => {
     });
     return data;
   } catch (error) {
-    console.error('Error updating object:', error.message);
     throw error;
   }
 };
@@ -163,6 +157,7 @@ export const getUserObjects = async (userId, params, navigation) => {
   }
 
   const url = `${API_URL}/user/${userId}/objects?${queryString}`;
+  console.log('url', url);
 
   try {
     const response = await fetchWithAuth(

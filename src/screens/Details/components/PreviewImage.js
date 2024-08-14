@@ -78,7 +78,6 @@ const PreviewImage = ({
         'Erreur',
         'Une erreur est survenue lors de la sauvegarde du QR code',
       );
-      console.error(error);
     }
   };
 

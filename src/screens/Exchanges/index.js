@@ -27,7 +27,6 @@ const ExchangeHistory = ({navigation}) => {
       const data = await getHistoryExchange(userID, selectedStatus, navigation);
       setExchanges(data);
     } catch (error) {
-      console.error(error);
       setError(error);
     } finally {
       setLoading(false);

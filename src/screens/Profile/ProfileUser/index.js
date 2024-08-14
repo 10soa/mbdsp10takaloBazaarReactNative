@@ -34,7 +34,6 @@ const ProfileUser = ({navigation, route}) => {
       try {
         await getObjects(undefined, '');
       } catch (err) {
-        console.error('Failed to fetch user data', err);
       } finally {
         setLoading(false);
       }

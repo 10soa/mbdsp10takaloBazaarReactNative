@@ -47,6 +47,8 @@ const Home = ({navigation}) => {
       fetchData();
     }
   }, [isFocused]);
+  console.log('userID',userID);
+  
   return (
     <Container isScrollable paddingVerticalDisabled>
       <HomeHeader style={styles.HomeHeader} />

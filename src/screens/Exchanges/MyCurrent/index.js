@@ -30,7 +30,6 @@ const CurrentExchange = ({navigation}) => {
       const data = await getMyCurrentExchange(navigation);
       setExchanges(data);
     } catch (error) {
-      console.error(error);
       setError(error);
     } finally {
       setLoading(false);
@@ -43,9 +42,6 @@ const CurrentExchange = ({navigation}) => {
     }
   }, [isFocused, userID, selectedStatus, navigation]);
 
-  // if (loading) {
-  //   return <IsLoading />;
-  // }
 
   if (error) {
     return <Text style={{color: 'red'}}>Erreur: {error.message}</Text>;

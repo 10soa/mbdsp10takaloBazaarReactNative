@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: scale(5),
     alignContent: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   textStyle: {
     fontFamily: 'Asul-Bold',

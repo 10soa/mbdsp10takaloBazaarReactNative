@@ -4,7 +4,7 @@ import {Picker} from '@react-native-picker/picker';
 import {TextInput} from 'react-native-paper';
 import {getCategories} from '../../../service/CategoryService';
 import colors from '../../../constants/color';
-import { scale } from 'react-native-size-matters';
+import {scale} from 'react-native-size-matters';
 
 const FilterComponent = ({
   onApplyFilters,
@@ -27,9 +27,9 @@ const FilterComponent = ({
     const fetchData = async () => {
       try {
         const result = await getCategories();
+        setIsFilterVisible(visible);
         setDataCat(result);
       } catch (error) {
-        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -46,7 +46,7 @@ const FilterComponent = ({
       created_at_end: dateMax,
       order,
     };
-    onApplyFilters(newFilters);
+    onApplyFilters(newFilters, setIsFilterVisible);
   };
 
   const handleResetFilters = () => {
@@ -56,7 +56,7 @@ const FilterComponent = ({
     setDateMin('');
     setDateMax('');
     setOrder('desc');
-    onResetFilters();
+    onResetFilters(setIsFilterVisible);
   };
 
   const toggleFilterVisibility = () => {
@@ -82,7 +82,12 @@ const FilterComponent = ({
           source={require('../../../assets/icons/Down.png')}
           resizeMode="contain"
           style={[
-            {width: 20, height: 20, tintColor: colors.darkGrey, marginLeft: 'auto'},
+            {
+              width: 20,
+              height: 20,
+              tintColor: colors.darkGrey,
+              marginLeft: 'auto',
+            },
             {transform: [{rotate: isFilterVisible ? '180deg' : '0deg'}]},
           ]}
         />

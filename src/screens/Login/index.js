@@ -9,12 +9,12 @@ import {
   Dimensions,
 } from 'react-native';
 import colors from '../../constants/color';
-import {useContext, useState} from 'react';
+import {useCallback, useContext, useState} from 'react';
 import {log} from '../../service/AuthService';
 import {AuthContext} from '../../context/AuthContext';
 import {validateForm} from '../../service/Function';
 import Container from '../../components/Container';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -23,6 +23,18 @@ const Login = () => {
   const route = useRoute();
   const navigation = useNavigation();
   let text = route?.params?.text || '';
+
+  useFocusEffect(
+    useCallback(() => {
+      setFormErrors({
+        email: '',
+        password: '',
+      });
+      return () => {
+      };
+    }, [])
+  );
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',

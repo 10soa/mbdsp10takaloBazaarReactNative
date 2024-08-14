@@ -6,6 +6,7 @@ const ProductCard = ({
   styleCard,
   product,
   badgeText,
+  backgroundBadge,
   disableShared,
   onPress,
   user,
@@ -19,7 +20,11 @@ const ProductCard = ({
       style={[styles.card, styleCard && styleCard]}
       onPress={onPress}>
       {badgeText && (
-        <View style={styles.badge}>
+        <View
+          style={[
+            styles.badge,
+            backgroundBadge && {backgroundColor: backgroundBadge},
+          ]}>
           <Text style={styles.name}>{badgeText}</Text>
         </View>
       )}
@@ -61,7 +66,7 @@ const ProductCard = ({
               <Text style={styles.userName}>{user.username}</Text>
             </TouchableOpacity>
           )}
-          <Text style={styles.title}>{product.name}</Text>
+          <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{product.name}</Text>
           {!disableCategory && (
             <Text style={styles.cat}>{product.category.name}</Text>
           )}

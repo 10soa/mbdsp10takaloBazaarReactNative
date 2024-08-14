@@ -48,7 +48,6 @@ const getBase64Image = async uri => {
       reader.readAsDataURL(blob);
     });
   } catch (error) {
-    console.error('Error converting image to base64:', error.message);
     throw error;
   }
 };
@@ -121,7 +120,6 @@ const AddObject = ({navigation}) => {
           // Alert.alert('Erreur', 'Une erreur est survenue lors de la conversion de l\'image.');
         }
       } else {
-        console.error('Image URI est undefined ou invalide');
       }
     });
   };

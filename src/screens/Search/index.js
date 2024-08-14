@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, FlatList} from 'react-native';
 import {useIsFocused, useRoute} from '@react-navigation/native';
 import Container from '../../components/Container';
 import colors from '../../constants/color';
@@ -8,12 +8,16 @@ import {getObjects} from '../../service/ObjectService';
 import IsLoading from '../../components/IsLoading';
 import FilterComponent from './Filtre/filtre';
 import Header from '../../components/Header';
+import { scale } from 'react-native-size-matters';
 
 const SearchFilter = ({navigation}) => {
   const route = useRoute();
   const [data, setData] = useState([]);
   const [isVisible, setIsVisible] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMoreData, setHasMoreData] = useState(true);
   const [filters, setFilters] = useState({
     name: route.params?.name || '',
     description: '',
@@ -25,36 +29,64 @@ const SearchFilter = ({navigation}) => {
   const [error, setError] = useState(null);
   const isFocused = useIsFocused();
 
-  const fetchObjects = async (filters = {}) => {
-    setLoading(true);
+  const fetchObjects = async (filters = {}, page = 1, append = false) => {
     try {
       const result = await getObjects(
-        1,
-        1000,
+        page,
+        20,
         filters.order || 'desc',
         filters,
       );
-      setData(result.objects);
+
+      if (result.objects.length > 0) {
+        setData(prevData =>
+          append ? [...prevData, ...result.objects] : result.objects,
+        );
+        setHasMoreData(result.objects.length > 0);
+      } else {
+        setHasMoreData(false);
+      }
     } catch (error) {
-      setLoading(true);
+      setError(error);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  const loadMoreData = () => {
+    if (!loadingMore && hasMoreData) {
+      setLoadingMore(true);
+      setPage(prevPage => {
+        const nextPage = prevPage + 1;
+        fetchObjects(filters, nextPage, true);
+        return nextPage;
+      });
     }
   };
 
   useEffect(() => {
     if (isFocused) {
+      setLoading(true);
+      setHasMoreData(true);
+      setLoadingMore(false);
+      setPage(1);
       fetchObjects(filters);
     }
   }, [isFocused]);
 
-  const handleApplyFilters = newFilters => {
+  const handleApplyFilters = (newFilters,setVisible) => {
+    setLoading(true);
     setFilters(newFilters);
+    setData([]);
+    setHasMoreData(true);
+    setLoadingMore(false);
+    setPage(1);
     fetchObjects(newFilters);
-    setIsVisible(false);
+    setVisible(false);
   };
 
-  const handleResetFilters = () => {
+  const handleResetFilters = (setVisible) => {
     const defaultFilters = {
       name: '',
       description: '',
@@ -63,9 +95,13 @@ const SearchFilter = ({navigation}) => {
       created_at_end: '',
       order: 'desc',
     };
+    setLoading(true);
     setFilters(defaultFilters);
+    setHasMoreData(true);
+    setLoadingMore(false);
+    setPage(1);
     fetchObjects(defaultFilters);
-    setIsVisible(true);
+    setVisible(false);
   };
 
   // if (loading) {
@@ -76,7 +112,7 @@ const SearchFilter = ({navigation}) => {
     <>
       <Header
         haveLine
-        title="Listes des objets"
+        title="Liste des objets"
         color={colors.textPrimary}
         navigation={navigation}
         backgroundColor={colors.white}
@@ -90,26 +126,33 @@ const SearchFilter = ({navigation}) => {
       {loading ? (
         <IsLoading />
       ) : (
-        <Container isScrollable paddingVerticalDisabled>
-          <View style={styles.Products}>
-            {data.length > 0 ? (
-              data.map((item, index) => (
-                <ProductCard
-                  key={index}
-                  product={item}
-                  user={item.user}
-                  navigation={navigation}
-                  onPress={() => {
-                    navigation.navigate('Details', {
-                      objectId: item.id,
-                    });
-                  }}
-                />
-              ))
-            ) : (
-              <Text style={styles.noResultsText}>Aucun résultat trouvé</Text>
+        <Container paddingVerticalDisabled>
+          <FlatList
+            data={data}
+            renderItem={({item, index}) => (
+              <ProductCard
+                key={index}
+                styleCard={{marginHorizontal: scale(5)}}
+                product={item}
+                user={item.user}
+                navigation={navigation}
+                onPress={() => {
+                  navigation.navigate('Details', {
+                    objectId: item.id,
+                  });
+                }}
+              />
             )}
-          </View>
+            keyExtractor={(item, index) => item.id.toString()}
+            numColumns={2}
+            contentContainerStyle={styles.Products}
+            onEndReached={loadMoreData}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={loadingMore ? <IsLoading /> : null}
+            ListEmptyComponent={
+              <Text style={styles.noResultsText}>Aucun résultat trouvé</Text>
+            }
+          />
           {error && (
             <Text
               style={{
@@ -127,13 +170,6 @@ const SearchFilter = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  Products: {
-    marginVertical: 20,
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    gap: 10,
-  },
   noResultsText: {
     marginTop: 20,
     fontSize: 16,

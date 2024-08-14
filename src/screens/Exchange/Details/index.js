@@ -38,7 +38,6 @@ const ExchangeDetails = ({navigation, route}) => {
       const data = await getExchangeById(id, navigation);
       setExchange(data); 
     } catch (error) {
-      console.error('Failed to get exchange:', error);
     } finally {
       setLoading(false);
     }

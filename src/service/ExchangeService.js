@@ -20,16 +20,17 @@ export const proposerExchange = async (body, navigation) => {
     Notifier.clearQueue(true);
     Notifier.showNotification({
       title: 'Succès ',
-      description: 'Votre proposition ...',
+      description:
+        'Votre proposition a été envoyée avec succès au receveur. Cliquez ici pour consulter les détails',
       Component: NotifierComponents.Notification,
       duration: 0,
       showAnimationDuration: 800,
       showEasing: Easing.bounce,
       onHidden: () => console.log('Hidden'),
-      // onPress: () =>
-      //   navigation.navigate('Details', {
-      //     objectId: data.id,
-      //   }),
+      onPress: () =>
+        navigation.navigate('ExchangeDetails', {
+          exchangeId: data.exchange.id,
+        }),
       hideOnPress: true,
       componentProps: {
         titleStyle: {

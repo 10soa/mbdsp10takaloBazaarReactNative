@@ -150,7 +150,6 @@ const AppNavigator = () => {
           tabBarButton: props => null,
           tabBarVisible: false,
           tabBarLabel: 'Profile',
-          tabBarStyle: {display: 'none'},
         }}
       />
        <Tab.Screen

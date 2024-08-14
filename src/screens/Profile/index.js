@@ -23,7 +23,6 @@ const Profile = ({navigation}) => {
         const userData = await getUserFromToken();
         setUser(userData);
       } catch (error) {
-        console.error('Failed to fetch user', error);
       } finally {
         setLoading(false);
       }

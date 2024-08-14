@@ -40,7 +40,6 @@ export const getMyCurrentExchange = async (navigation) => {
         return [];
       }
     } catch (error) {
-      console.error('Error fetching exchange history:', error.message);
       throw error;
     }
   };

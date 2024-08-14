@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Easing,
   Text,
+  TextInput,
 } from 'react-native';
 import Container from '../../../components/Container';
 import {useEffect, useState} from 'react';
@@ -24,11 +25,7 @@ import ItemCard from './components/ItemCard';
 import {proposerExchange} from '../../../service/ExchangeService';
 import ProductCard from '../../../components/ProductCard';
 import {getUserObjects} from '../../../service/ObjectService';
-import {
-  Notifier,
-  NotifierComponents,
-  NotifierWrapper,
-} from 'react-native-notifier';
+import {Notifier, NotifierComponents} from 'react-native-notifier';
 import CustomText from '../../../components/CustomText';
 
 const Propose = ({navigation, route}) => {
@@ -43,24 +40,54 @@ const Propose = ({navigation, route}) => {
   const [myObjets, setMyObjects] = useState([]);
   const [userObjects, setUserObjets] = useState([]);
   const [error, setError] = useState('');
+  const [myPage, setMyPage] = useState(1);
+  const [userPage, setUserPage] = useState(1);
+  const [myLoadingMore, setMyLoadingMore] = useState(false);
+  const [userLoadingMore, setUserLoadingMore] = useState(false);
+  const [myHasMoreData, setMyHasMoreData] = useState(true);
+  const [userHasMoreData, setUserHasMoreData] = useState(true);
+  const [myName, setMyName] = useState('');
+  const [userName, setUserName] = useState('');
+
   const user = route.params?.user || {};
 
   useEffect(() => {
     const prepareData = async () => {
       try {
+        setMyHasMoreData(true);
+        setMyLoadingMore(false);
+        setUserHasMoreData(true);
+        setUserLoadingMore(false);
+        setUserName('');
+        setMyName('');
         const userData = await getUserFromToken();
         setCurrentUser(userData);
-        setUserObjets(await getObjects(user.id, {}));
-        setMyObjects(await getObjects(userData.id, {}));
-      } catch (err) {
-        console.error('Failed to fetch user data', err);
-      }
+        await getObjects(user.id, {}, false, true, 1);
+        await getObjects(userData.id, {}, false, false, 1);
+      } catch (err) {}
     };
     prepareData();
+    setReceivedItem([]);
+    setRcvObjectId([]);
+    setProposedItem([]);
+    setPrpObjectId([]);
     if (route.params?.object) {
       addObject([], setReceivedItem, [], setRcvObjectId, route.params?.object);
     }
   }, [route]);
+
+  const loadMoreMyObjects = () => {
+    if (myHasMoreData && !myLoadingMore) {
+      setMyPage(prevPage => prevPage + 1);
+      getObjects(currentUser.id, {}, true, false, myPage + 1);
+    }
+  };
+
+  const loadMoreUserObjects = () => {
+    if (userHasMoreData && !userLoadingMore) {
+      getObjects(user.id, {}, true, true, userPage + 1);
+    }
+  };
 
   const addObject = (list, setList, listId, setListId, object) => {
     setError('');
@@ -107,11 +134,47 @@ const Propose = ({navigation, route}) => {
     setIds(updatedIds);
   };
 
-  const getObjects = async (id, params) => {
+  const getObjects = async (
+    id,
+    params,
+    append = false,
+    isUserObjects = false,
+    page = 1,
+  ) => {
     try {
-      const data = await getUserObjects(id, params, navigation);
-      return data.objects;
-    } catch (error) {}
+      const setPage = isUserObjects ? setUserPage : setMyPage;
+      const setLoading = isUserObjects ? setUserLoadingMore : setMyLoadingMore;
+      const setObjects = isUserObjects ? setUserObjets : setMyObjects;
+      const setHasMoreData = isUserObjects
+        ? setUserHasMoreData
+        : setMyHasMoreData;
+      setPage(page);
+
+      setLoading(true);
+      const data = await getUserObjects(id, {
+        ...params,
+        name: isUserObjects ? userName : myName,
+        status: 'Available',
+        page,
+        limit: 10,
+      });
+
+      if (append) {
+        if (data.objects.length === 0) {
+          setHasMoreData(false);
+        } else {
+          setObjects(prevObjects => [...prevObjects, ...data.objects]);
+        }
+      } else {
+        setObjects(data.objects);
+        setHasMoreData(true);
+        setLoading(false);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const proposeExchange = async () => {
@@ -249,7 +312,7 @@ const Propose = ({navigation, route}) => {
           setUserModalVisible(false);
           setMyModalVisible(false);
         }}>
-        <TouchableOpacity
+        <View
           style={styles.modalOverlay}
           onPress={() => {
             setUserModalVisible(false);
@@ -263,11 +326,7 @@ const Propose = ({navigation, route}) => {
                 justifyContent: 'space-between',
               }}>
               <CustomText
-                text={
-                  myModalVisible
-                    ? currentUser.last_name + ' ' + currentUser.first_name
-                    : user.last_name + ' ' + user.first_name
-                }
+                text={myModalVisible ? currentUser.username : user.username}
                 style={styles.titleModal}
               />
               <TouchableOpacity
@@ -282,15 +341,45 @@ const Propose = ({navigation, route}) => {
                 />
               </TouchableOpacity>
             </View>
+            <View style={styles.inputContainer}>
+              <Image
+                source={require('../../../assets/icons/Search.png')}
+                style={styles.icon}
+              />
+              <TextInput
+                placeholder="Recherchez des objets"
+                placeholderTextColor={colors.darkGrey}
+                style={styles.input}
+                value={myModalVisible ? myName : userName}
+                onChangeText={myModalVisible ? setMyName : setUserName}
+                onSubmitEditing={() =>
+                  myModalVisible
+                    ? getObjects(currentUser.id, {}, false, false, 1)
+                    : getObjects(user.id, {}, false, true, 1)
+                }
+              />
+            </View>
             <FlatList
               data={myModalVisible ? myObjets : userObjects}
               renderItem={renderProductCard}
               keyExtractor={item => item.id.toString()}
               numColumns={2}
               columnWrapperStyle={styles.row}
+              onEndReached={
+                myModalVisible ? loadMoreMyObjects : loadMoreUserObjects
+              }
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={() =>
+                (myModalVisible ? myLoadingMore : userLoadingMore) ? (
+                  <ActivityIndicator size="large" color={colors.primary} />
+                ) : null
+              }
+              ListEmptyComponent={
+                <Text style={styles.noResultsText}>Aucun résultat trouvé</Text>
+              }
             />
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
     </>
   );
@@ -373,6 +462,39 @@ const styles = StyleSheet.create({
     paddingVertical: scale(5),
     alignSelf: 'flex-start',
     borderRadius: scale(10),
+  },
+  input: {
+    flex: 1,
+    height: 50,
+    color: colors.darkGrey,
+    fontFamily: 'Asul',
+    fontSize: 17,
+  },
+  icon: {
+    marginRight: 10,
+    tintColor: colors.darkGrey,
+    width: 22,
+    height: 22,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f1f1f1',
+    borderRadius: 15,
+    marginVertical: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    width: '100%',
+    elevation: 4,
+  },
+  noResultsText: {
+    marginTop: 20,
+    fontSize: 16,
+    color: 'grey',
+    textAlign: 'center',
+    width: '100%',
+    fontFamily: 'Asul',
   },
 });
 
