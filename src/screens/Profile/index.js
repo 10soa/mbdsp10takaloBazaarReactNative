@@ -9,13 +9,13 @@ import colors from '../../constants/color';
 import ObjectCard from './components/ObjectCard';
 import ListItem from './components/ListItem';
 import { AuthContext } from '../../context/AuthContext';
-import ExchangeHistory from '../Exchanges';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 const Profile = ({navigation}) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const {logoutUser} = useContext(AuthContext);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -27,12 +27,20 @@ const Profile = ({navigation}) => {
         setLoading(false);
       }
     };
-
-    fetchUser();
-  }, []);
+    if(isFocused){
+      fetchUser();
+    }
+  }, [isFocused]);
 
   const handleLogout = async () => {
-    await logoutUser(navigation);
+    setLoading(true);
+    try{
+      await logoutUser(navigation);
+    }
+    catch(error){
+    }finally{
+      setLoading(false);
+    }
   }
   if (loading) {
     return <IsLoading />;
