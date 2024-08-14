@@ -250,6 +250,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: colors.textPrimary,
   },
+  pickerItem: {
+    fontFamily: 'Asul',
+    fontSize: 17,
+    color: colors.textPrimary,
+  },
   pickerContainer: {
     borderWidth: 1,
     borderColor: '#ccc',
