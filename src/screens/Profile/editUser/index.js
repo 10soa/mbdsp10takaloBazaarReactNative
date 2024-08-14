@@ -256,6 +256,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 20,
     justifyContent: 'center',
+    fontFamily: 'Asul',
     color: colors.textPrimary,
   },
   picker: {
