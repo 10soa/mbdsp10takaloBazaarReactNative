@@ -47,52 +47,54 @@ const Home = ({navigation}) => {
       fetchData();
     }
   }, [isFocused]);
-  
+
   return (
-    <Container isScrollable paddingVerticalDisabled>
-      <HomeHeader style={styles.HomeHeader} />
-      <SearchBar />
-      <Banner navigation={navigation} />
-      <View style={styles.Title}>
-        <Text style={styles.TitleContent}> Les 20 objets les plus récents</Text>
-      </View>
-      {!loading ? (
-        <View style={styles.Products}>
-          {data.map((item, index) => (
-            <ProductCard
-              key={index}
-              product={item}
-              isOwner={item.user_id.toString() == userID}
-              badgeText={'Récent'}
-              user={item.user}
-              isAuthenticated={isAuthenticated}
-              navigation={navigation}
-              onPress={() => {
-                navigation.navigate('Details', {
-                  objectId: item.id,
-                });
-              }}
+    <>
+      <HomeHeader  />
+      <Container isScrollable paddingVerticalDisabled>
+        <SearchBar />
+        <Banner navigation={navigation} />
+        <View style={styles.Title}>
+          <Text style={styles.TitleContent}>
+            {' '}
+            Les 20 objets les plus récents
+          </Text>
+        </View>
+        {!loading ? (
+          <View style={styles.Products}>
+            {data.map((item, index) => (
+              <ProductCard
+                key={index}
+                product={item}
+                isOwner={item.user_id.toString() == userID}
+                badgeText={'Récent'}
+                user={item.user}
+                isAuthenticated={isAuthenticated}
+                navigation={navigation}
+                onPress={() => {
+                  navigation.navigate('Details', {
+                    objectId: item.id,
+                  });
+                }}
+              />
+            ))}
+            <ButtonPrimary
+              text={'Voir plus'}
+              style={{width: '100%'}}
+              imageRight={require('../../assets/icons/Forward.png')}
+              onPress={() => navigation.navigate('SearchFilter')}
             />
-          ))}
-          <ButtonPrimary
-            text={'Voir plus'}
-            style={{width: '100%'}}
-            imageRight={require('../../assets/icons/Forward.png')}
-            onPress={() => navigation.navigate('SearchFilter')}
-          />
-        </View>
-      ) : (
-        <View style={{height: Dimensions.get('screen').height * 0.4}}>
-          <IsLoading />
-        </View>
-      )}
-    </Container>
+          </View>
+        ) : (
+          <View style={{height: Dimensions.get('screen').height * 0.4}}>
+            <IsLoading />
+          </View>
+        )}
+      </Container>
+    </>
   );
 };
 const styles = StyleSheet.create({
-  HomeHeader: {
-    marginTop: 10,
-  },
   Title: {
     marginTop: 20,
     backgroundColor: colors.primary,
