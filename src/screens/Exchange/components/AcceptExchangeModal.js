@@ -14,7 +14,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import colors from '../../../constants/color';
 import { accepterExchange } from '../../../service/ExchangeService';
 
-const AcceptExchangeModal = ({ idExchange, visible, onClose, onConfirm }) => {
+const AcceptExchangeModal = ({ idExchange, visible, onClose, onConfirm, navigation }) => {
     const [meetingPlace, setMeetingPlace] = useState('');
     const [appointmentDate, setAppointmentDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -61,7 +61,7 @@ const AcceptExchangeModal = ({ idExchange, visible, onClose, onConfirm }) => {
                     meeting_place: meetingPlace,
                     appointment_date: formattedDate,
                 };
-                await accepterExchange(idExchange, body, null);
+                await accepterExchange(idExchange, body, navigation);
                 onConfirm();
             } catch (error) {
                 console.error('Failed to accept exchange:', error);

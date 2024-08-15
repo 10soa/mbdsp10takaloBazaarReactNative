@@ -230,6 +230,7 @@ const ExchangeDetails = ({ navigation, route }) => {
             onClose={() => setModalVisible(false)}
             onConfirm={handleAccept}
             idExchange={exchange.id}
+            navigation={navigation}
           />
         </>
       )}
