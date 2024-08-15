@@ -1,7 +1,52 @@
-import {Easing, Notifier, NotifierComponents} from 'react-native-notifier';
-import {API_URL} from '../constants/config';
-import {fetchWithAuth} from './ApiService';
+/* eslint-disable prettier/prettier */
+import { Easing, Notifier, NotifierComponents } from 'react-native-notifier';
+import { API_URL } from '../constants/config';
+import { fetchWithAuth } from './ApiService';
 import colors from '../constants/color';
+
+export const accepterExchange = async (idExchange, payload, navigation) => {
+  try {
+    const data = await fetchWithAuth(
+      `${API_URL}/exchange/${idExchange}/accept`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      },
+      navigation,
+    );
+
+    Notifier.clearQueue(true);
+    Notifier.showNotification({
+      title: 'Succès ',
+      description:
+        'L\'échange a bien été accepté avec succès',
+      Component: NotifierComponents.Notification,
+      duration: 0,
+      showAnimationDuration: 800,
+      showEasing: Easing.bounce,
+      onHidden: () => console.log('Hidden'),
+      hideOnPress: true,
+      componentProps: {
+        titleStyle: {
+          color: colors.secondary,
+          fontSize: 20,
+          fontFamily: 'Asul-Bold',
+        },
+        descriptionStyle: {
+          color: colors.textPrimary,
+          fontSize: 16,
+          fontFamily: 'Asul',
+        },
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const proposerExchange = async (body, navigation) => {
   try {

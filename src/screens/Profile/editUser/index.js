@@ -116,7 +116,7 @@ const EditUser = ({ navigation }) => {
     };
 
     try {
-      await updateUserProfile(idUser, updatedUser, 'Votre profil a été mis à jour avec succès !', null);
+      await updateUserProfile(idUser, updatedUser, 'Votre profil a été mis à jour avec succès !', navigation);
       // Alert.alert('Succès', 'Profil mis à jour avec succès !');
 
       if (route.params && route.params.onGoBack) {
