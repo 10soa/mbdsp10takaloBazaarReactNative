@@ -1,31 +1,34 @@
-import {Image, StyleSheet, View, ScrollView, Text} from 'react-native';
+/* eslint-disable prettier/prettier */
+import React, { useState, useEffect } from 'react';
+import { Image, StyleSheet, View, ScrollView, Text, Alert } from 'react-native';
 import Container from '../../../components/Container';
-import {useEffect, useState} from 'react';
 import Header from '../../../components/Header';
-import {scale} from 'react-native-size-matters';
+import { scale } from 'react-native-size-matters';
 import User from '../Propose/components/User';
 import colors from '../../../constants/color';
 import ButtonPrimary from '../../../components/ButtonPrimary';
 import TitleExchange from '../../../components/TitleExchange';
-import {getExchangeById} from '../../../service/ExchangeService';
+import { getExchangeById, acceptExchange } from '../../../service/ExchangeService';
 import ProductCard from '../../../components/ProductCard';
 import CustomText from '../../../components/CustomText';
 import IsLoading from '../../../components/IsLoading';
-import {getUserFromToken} from '../../../service/SessionService';
+import { getUserFromToken } from '../../../service/SessionService';
+import AcceptExchangeModal from '../components/AcceptExchangeModal';
 
-const ExchangeDetails = ({navigation, route}) => {
+const ExchangeDetails = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [exchange, setExchange] = useState({});
   const [propositionObjects, setPropositionObjects] = useState([]);
   const [receiverObjects, setReceiverObjects] = useState([]);
   const [user, setUser] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const prepareData = async id => {
       try {
         await getExchange(id);
         setUser(await getUserFromToken());
-      } catch (err) {}
+      } catch (err) { }
     };
     if (route.params?.exchangeId) {
       prepareData(route.params?.exchangeId);
@@ -36,7 +39,7 @@ const ExchangeDetails = ({navigation, route}) => {
     try {
       setLoading(true);
       const data = await getExchangeById(id, navigation);
-      setExchange(data); 
+      setExchange(data);
     } catch (error) {
     } finally {
       setLoading(false);
@@ -73,15 +76,22 @@ const ExchangeDetails = ({navigation, route}) => {
 
   const formatDate = isoString => {
     const date = new Date(isoString);
-    const options = {year: 'numeric', month: 'long', day: 'numeric'};
-    const formattedDate = date.toLocaleDateString('fr-FR', options);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('fr-FR', options);
+  };
 
-    return formattedDate;
+  const handleAccept = async () => {
+    try {
+      setModalVisible(false);
+      getExchange(exchange.id);
+    } catch (error) {
+      Alert.alert('Erreur', "Une erreur s'est produite lors de l'acceptation de l'échange.");
+    }
   };
 
   return (
     <>
-      <Header navigation={navigation} title="Details de l'échange" />
+      <Header navigation={navigation} title="Détails de l'échange" />
       {loading ? (
         <IsLoading />
       ) : (
@@ -115,7 +125,7 @@ const ExchangeDetails = ({navigation, route}) => {
                 <ProductCard
                   product={item.object}
                   key={index}
-                  styleCard={{marginHorizontal: 10, width: scale(130)}}
+                  styleCard={{ marginHorizontal: 10, width: scale(130) }}
                   disableShared
                   disableCategory
                   onPress={() => {
@@ -132,7 +142,7 @@ const ExchangeDetails = ({navigation, route}) => {
                 <ProductCard
                   product={item.object}
                   key={index}
-                  styleCard={{marginHorizontal: 10, width: scale(130)}}
+                  styleCard={{ marginHorizontal: 10, width: scale(130) }}
                   disableShared
                   disableCategory
                   onPress={() => {
@@ -144,7 +154,7 @@ const ExchangeDetails = ({navigation, route}) => {
               ))}
             </ScrollView>
             <TitleExchange
-              title="Details"
+              title="Détails"
               icon={require('../../../assets/icons/Info.png')}
             />
             <View style={styles.detailsContent}>
@@ -178,7 +188,7 @@ const ExchangeDetails = ({navigation, route}) => {
                     style={styles.details}
                   />
                   <CustomText
-                    text={'Raison: ' + exchange.notr}
+                    text={'Raison: ' + exchange.note}
                     style={styles.details}
                   />
                 </>
@@ -199,21 +209,28 @@ const ExchangeDetails = ({navigation, route}) => {
                 <ButtonPrimary
                   image={require('../../../assets/icons/Done.png')}
                   text="Accepter"
-                  style={{width: '45%', justifyContent: 'center'}}
-                  textStyle={{fontSize: scale(16)}}
+                  style={{ width: '45%', justifyContent: 'center' }}
+                  textStyle={{ fontSize: scale(16) }}
+                  onPress={() => setModalVisible(true)}
                 />
                 <ButtonPrimary
                   image={require('../../../assets/icons/Close.png')}
-                  text="refuser"
+                  text="Refuser"
                   style={{
                     backgroundColor: colors.textPrimary,
                     width: '45%',
                     justifyContent: 'center',
                   }}
-                  textStyle={{fontSize: scale(16)}}
+                  textStyle={{ fontSize: scale(16) }}
                 />
               </View>
             )}
+          <AcceptExchangeModal
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            onConfirm={handleAccept}
+            idExchange={exchange.id}
+          />
         </>
       )}
     </>
