@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Image} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import CardExchange from './CardComponent/cardExchange';
 import Container from '../../components/Container';
@@ -54,36 +54,55 @@ const ExchangeHistory = ({navigation}) => {
         <IsLoading />
       ) : (
         <Container>
-          <View style={styles.exchangeCount}>
-            <Text style={styles.exchangeCountText}>
-              Nombre d'échanges: {exchanges.length}
-            </Text>
-          </View>
           <View style={styles.pickerContainer}>
-            <View style={styles.pickerWrapper}>
+            <View
+              style={[
+                styles.inputContainer,
+                {paddingLeft: 30, paddingRight: 20},
+              ]}>
+              <Image
+                source={require('../../assets/icons/state.png')}
+                style={[styles.icon, {marginRight: 0}]}
+              />
               <Picker
                 selectedValue={selectedStatus}
-                onValueChange={itemValue => setSelectedStatus(itemValue)}
-                style={styles.picker}>
+                style={[styles.picker]}
+                onValueChange={itemValue => setSelectedStatus(itemValue)}>
                 <Picker.Item
                   label="Tous les statuts"
                   value="All"
-                  style={{fontFamily: 'Asul'}}
+                  style={{
+                    fontFamily: 'Asul',
+                    fontSize: 17,
+                    color: colors.darkGrey,
+                  }}
                 />
                 <Picker.Item
                   label="Accepté"
                   value="Accepted"
-                  style={{fontFamily: 'Asul'}}
+                  style={{
+                    fontFamily: 'Asul',
+                    fontSize: 17,
+                    color: colors.darkGrey,
+                  }}
                 />
                 <Picker.Item
                   label="Annulé"
                   value="Cancelled"
-                  style={{fontFamily: 'Asul'}}
+                  style={{
+                    fontFamily: 'Asul',
+                    fontSize: 17,
+                    color: colors.darkGrey,
+                  }}
                 />
                 <Picker.Item
                   label="Refusé"
                   value="Refused"
-                  style={{fontFamily: 'Asul'}}
+                  style={{
+                    fontFamily: 'Asul',
+                    fontSize: 17,
+                    color: colors.darkGrey,
+                  }}
                 />
               </Picker>
             </View>
@@ -128,18 +147,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Asul-Bold',
   },
   pickerContainer: {
-    marginVertical: scale(10),
-    marginHorizontal: scale(20),
-    paddingHorizontal: scale(10),
+    // marginVertical: scale(10),
+    // marginHorizontal: scale(20),
+    // paddingHorizontal: scale(10),
   },
   pickerWrapper: {
     borderWidth: 1,
     borderColor: 'grey',
     borderRadius: scale(10),
-  },
-  picker: {
-    height: scale(50),
-    color: colors.textPrimary,
   },
   exchangeCount: {
     backgroundColor: colors.primary,
@@ -165,6 +180,32 @@ const styles = StyleSheet.create({
     fontFamily: 'Asul',
     textAlign: 'center',
     marginTop: scale(100),
+  },
+  picker: {
+    width: '100%',
+    fontFamily: 'Asul',
+    fontSize: 17,
+    color: colors.darkGrey,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f1f1f1',
+    borderRadius: 15,
+    marginVertical: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    width: '100%',
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: colors.darkGrey
+  }, 
+  icon: {
+    marginRight: 10,
+    tintColor: colors.darkGrey,
+    width: 22,
+    height: 22,
   },
 });
 
