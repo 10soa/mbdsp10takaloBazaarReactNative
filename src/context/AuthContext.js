@@ -14,7 +14,7 @@ export const AuthProvider = ({children}) => {
       setIsAuthenticated(!!token);
       if (token) {
         const user = await getUserId();
-        setuserID(user.id);
+        setuserID(user);
       }
     };
 

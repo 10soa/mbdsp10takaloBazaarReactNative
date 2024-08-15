@@ -20,6 +20,7 @@ import UpdateObject from '../screens/Object/UpdateObject';
 import ProfileUser from '../screens/Profile/ProfileUser';
 import ExchangeDetails from '../screens/Exchange/Details';
 import QRCodeScannerComponent from '../components/scanQR/QRCodeScannerComponen';
+import ChangePassword from '../screens/Profile/ChangePassword';
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
@@ -270,6 +271,17 @@ const AppNavigator = () => {
           tabBarButton: props => null,
           tabBarVisible: false,
           tabBarLabel: 'QRCodeScannerComponent',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
+      <Tab.Screen
+        key={'ChangePassword'}
+        name={'ChangePassword'}
+        component={ChangePassword}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'ChangePassword',
           tabBarStyle: {display: 'none'},
         }}
       />

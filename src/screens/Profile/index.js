@@ -83,6 +83,7 @@ const Profile = ({navigation}) => {
       <ListItem
         title="Changer mon mot de passe"
         iconSource={require('../../assets/icons/PasswordBook.png')}
+        onPress={() => navigation.navigate('ChangePassword')}
       />
     </Container>
   );
