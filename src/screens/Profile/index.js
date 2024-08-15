@@ -11,23 +11,27 @@ import ListItem from './components/ListItem';
 import { AuthContext } from '../../context/AuthContext';
 import ExchangeHistory from '../Exchanges';
 import { useNavigation } from '@react-navigation/native';
+import { getUser } from '../../service/UserService';
 
 const Profile = ({ navigation }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const { logoutUser } = useContext(AuthContext);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userData = await getUserFromToken();
-        setUser(userData);
-      } catch (error) {
-      } finally {
-        setLoading(false);
+  const fetchUser = async () => {
+    try {
+      let userData = await getUserFromToken();
+      if (userData) {
+        userData = await getUser(userData.id);
       }
-    };
+      setUser(userData);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchUser();
   }, []);
 

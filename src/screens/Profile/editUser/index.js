@@ -14,7 +14,7 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import colors from '../../../constants/color';
 import { getUserFromToken } from '../../../service/SessionService';
-import { getUser, updateUser } from '../../../service/UserService';
+import { getUser, updateUserProfile } from '../../../service/UserService';
 import { useRoute } from '@react-navigation/native';
 
 const EditUser = ({ navigation }) => {
@@ -116,7 +116,7 @@ const EditUser = ({ navigation }) => {
     };
 
     try {
-      await updateUser(updatedUser);
+      await updateUserProfile(idUser, updatedUser, 'Votre profil a été mis à jour avec succès !', null);
       // Alert.alert('Succès', 'Profil mis à jour avec succès !');
 
       if (route.params && route.params.onGoBack) {

@@ -286,6 +286,17 @@ const AppNavigator = () => {
           tabBarStyle: { display: 'none' },
         }}
       />
+      <Tab.Screen
+        key={'ChangePassword'}
+        name={'ChangePassword'}
+        component={ChangePassword}
+        options={{
+          tabBarButton: props => null,
+          tabBarVisible: false,
+          tabBarLabel: 'ChangePassword',
+          tabBarStyle: {display: 'none'},
+        }}
+      />
     </Tab.Navigator>
   );
 };

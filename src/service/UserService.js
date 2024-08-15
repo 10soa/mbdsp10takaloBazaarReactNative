@@ -3,6 +3,21 @@ import { API_URL } from '../constants/config';
 import { fetchWithAuth } from './ApiService';
 import colors from '../constants/color';
 
+export const getUser = async idUser => {
+    try {
+        const data = await fetchWithAuth(
+            `${API_URL}/user/${idUser}`,
+            {
+                method: 'GET',
+            },
+            null,
+        );
+        return data.user;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const updateUserProfile = async (id, data, successText, navigation) => {
     try {
         const response = await fetchWithAuth(
