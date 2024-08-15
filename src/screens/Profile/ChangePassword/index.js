@@ -8,45 +8,56 @@ import {
   ActivityIndicator,
   Dimensions,
 } from 'react-native';
-import colors from '../../constants/color';
+import colors from '../../../constants/color';
 import {useCallback, useContext, useState} from 'react';
-import {log} from '../../service/AuthService';
-import {AuthContext} from '../../context/AuthContext';
-import {validateForm} from '../../service/Function';
-import Container from '../../components/Container';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {AuthContext} from '../../../context/AuthContext';
+import {validateForm} from '../../../service/Function';
+import Container from '../../../components/Container';
+import {useFocusEffect} from '@react-navigation/native';
 import {scale} from 'react-native-size-matters';
+import {updateUserProfile} from '../../../service/UserService';
 
-const Login = () => {
+const ChangePassword = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const {setIsAuthenticated, setuserID} = useContext(AuthContext);
-  const route = useRoute();
-  const navigation = useNavigation();
-  let text = route?.params?.text || '';
+  const {userID} = useContext(AuthContext);
 
   useFocusEffect(
     useCallback(() => {
       setFormErrors({
-        email: '',
+        oldPassword: '',
         password: '',
+        confirmPassword: '',
       });
+      setErrorMessage('');
+      setLoading(false);
       return () => {};
     }, []),
   );
 
+  const translateInput = name => {
+    switch (name) {
+      case 'oldPassword':
+        return 'Ancien mot de passe';
+      case 'password':
+        return 'Nouveau mot de passe';
+      case 'confirmPassword':
+        return 'Confirmation mot de passe';
+      default:
+        return name;
+    }
+  };
+
   const [formData, setFormData] = useState({
-    email: '',
+    oldPassword: '',
     password: '',
+    confirmPassword: '',
   });
 
   const [formErrors, setFormErrors] = useState({
-    email: '',
+    oldPassword: '',
     password: '',
+    confirmPassword: '',
   });
 
   const handleInputChange = (name, value) => {
@@ -64,34 +75,55 @@ const Login = () => {
     } else {
       setFormErrors({
         ...formErrors,
-        [name]: name + ' est obligatoire',
+        [name]: translateInput(name) + ' est obligatoire',
       });
     }
   };
 
-  const redirectTo = route?.params?.routeName || 'Home';
-  const goToSignup = () => {
-    navigation.navigate('Signup', {routeName: redirectTo, textLogin: text});
-  };
-  const handleLogin = async () => {
-    try {
-      let valid = true;
-      setLoading(true);
-      setErrorMessage('');
-      valid = validateForm(['email', 'password'], formData, setFormErrors);
-
-      if (!valid) {
-        setLoading(false);
-        return;
-      }
-
-      const user = await log(formData.email, formData.password);
+  const onSubmitRestPassword = async () => {
+    setLoading(true);
+    setErrorMessage('');
+    let valid = true;
+    valid = validateForm(
+      ['oldPassword', 'password', 'confirmPassword'],
+      formData,
+      setFormErrors,
+      translateInput,
+    );
+    if (formData.password !== formData.confirmPassword) {
+      setFormErrors(prevErrors => ({
+        ...prevErrors,
+        confirmPassword: 'Les mots de passe ne correspondent pas',
+      }));
+      valid = false;
+    }
+    if (!valid) {
       setLoading(false);
-      setIsAuthenticated(true);
-      setuserID(user.user.id.toString());
-      navigation.navigate(redirectTo);
+      return;
+    }
+    try {
+      if (userID) {
+        await updateUserProfile(
+          userID,
+          formData,
+          'Le mot de passe a été réinitialisé avec succès.',
+          navigation,
+        );
+        setLoading(false);
+        setFormData({
+          oldPassword: '',
+          password: '',
+          confirmPassword: '',
+        });
+        navigation.goBack();
+      }
     } catch (error) {
       setLoading(false);
+      setFormData({
+        oldPassword: '',
+        password: '',
+        confirmPassword: '',
+      });
       setErrorMessage(error.message);
     }
   };
@@ -100,33 +132,35 @@ const Login = () => {
     <Container isScrollable paddingVerticalDisabled>
       <View style={styles.container}>
         <Image
-          source={require('../../assets/img/logo-color.png')}
+          source={require('../../../assets/icons/PasswordBook1.png')}
           style={styles.logo}
         />
-        {text && <Text style={styles.subtitle}>{text}</Text>}
+        <Text style={styles.subtitle}>Réinitialiser mon mot de passe</Text>
 
         <View
           style={[
             styles.inputContainer,
-            formErrors.email
+            formErrors.oldPassword
               ? {borderColor: 'red'}
               : {borderColor: 'transparent'},
           ]}>
           <Image
-            source={require('../../assets/icons/User.png')}
+            source={require('../../../assets/icons/Lock.png')}
             style={styles.icon}
           />
           <TextInput
-            placeholder="Pseudo ou email"
+            placeholder="Ancien mot de passe"
             placeholderTextColor={colors.darkGrey}
+            secureTextEntry={true}
             style={styles.input}
-            value={formData.email}
-            onChangeText={text => handleInputChange('email', text)}
+            value={formData.oldPassword}
+            onChangeText={text => handleInputChange('oldPassword', text)}
           />
         </View>
-        {formErrors.email ? (
-          <Text style={styles.errorText}>{formErrors.email}</Text>
+        {formErrors.oldPassword ? (
+          <Text style={styles.errorText}>{formErrors.oldPassword}</Text>
         ) : null}
+
         <View
           style={[
             styles.inputContainer,
@@ -135,20 +169,43 @@ const Login = () => {
               : {borderColor: 'transparent'},
           ]}>
           <Image
-            source={require('../../assets/icons/Lock.png')}
+            source={require('../../../assets/icons/Lock.png')}
             style={styles.icon}
           />
           <TextInput
-            placeholder="Mot de passe"
+            placeholder="Nouveau mot de passe"
             placeholderTextColor={colors.darkGrey}
-            secureTextEntry={true}
             style={styles.input}
+            secureTextEntry={true}
             value={formData.password}
             onChangeText={text => handleInputChange('password', text)}
           />
         </View>
         {formErrors.password ? (
           <Text style={styles.errorText}>{formErrors.password}</Text>
+        ) : null}
+        <View
+          style={[
+            styles.inputContainer,
+            formErrors.confirmPassword
+              ? {borderColor: 'red'}
+              : {borderColor: 'transparent'},
+          ]}>
+          <Image
+            source={require('../../../assets/icons/Lock.png')}
+            style={styles.icon}
+          />
+          <TextInput
+            placeholder="Confirmation mot de passe"
+            placeholderTextColor={colors.darkGrey}
+            secureTextEntry={true}
+            style={styles.input}
+            value={formData.confirmPassword}
+            onChangeText={text => handleInputChange('confirmPassword', text)}
+          />
+        </View>
+        {formErrors.confirmPassword ? (
+          <Text style={styles.errorText}>{formErrors.confirmPassword}</Text>
         ) : null}
         {errorMessage ? (
           <Text style={[styles.errorText, {textAlign: 'center'}]}>
@@ -165,28 +222,31 @@ const Login = () => {
                 justifyContent: 'center',
               },
             ]}
-            onPress={handleLogin}>
+            onPress={onSubmitRestPassword}>
             <ActivityIndicator
               animating={loading}
               size={25}
               color={colors.white}
             />
-            <Text style={[styles.buttonText, {marginLeft: 10}]}>
-              Se connecter
+            <Text style={[styles.buttonText, {marginLeft: scale(10)}]}>
+              Mettre à jour
             </Text>
           </View>
         ) : (
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Se connecter</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={onSubmitRestPassword}>
+            <Text style={styles.buttonText}> Mettre à jour</Text>
           </TouchableOpacity>
         )}
 
-        <Text style={styles.orText}>Ou</Text>
-
         <TouchableOpacity
-          onPress={goToSignup}
-          style={[styles.button, {backgroundColor: colors.black}]}>
-          <Text style={styles.buttonText}>S'inscrire</Text>
+          onPress={() => navigation.goBack()}
+          style={[
+            styles.button,
+            {backgroundColor: colors.black, marginVertical: scale(0)},
+          ]}>
+          <Text style={styles.buttonText}>Annuler</Text>
         </TouchableOpacity>
       </View>
     </Container>
@@ -202,15 +262,17 @@ const styles = StyleSheet.create({
     minHeight: Dimensions.get('window').height,
   },
   subtitle: {
-    marginBottom: scale(20),
-    fontSize: scale(16),
-    color: colors.darkGrey,
-    fontFamily: 'Asul-Bold',
+    marginBottom: scale(15),
+    fontSize: scale(18),
+    color: colors.textPrimary,
+    fontFamily: 'Asul',
     textAlign: 'center',
-    marginTop: scale(-30),
+    marginTop: scale(-28),
   },
   logo: {
-    marginBottom: scale(30),
+    marginBottom: scale(40),
+    width: scale(60),
+    height: scale(60),
   },
   inputContainer: {
     flexDirection: 'row',
@@ -266,4 +328,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default ChangePassword;

@@ -1,48 +1,48 @@
-import {Easing, Notifier, NotifierComponents} from 'react-native-notifier';
+import { Easing, Notifier, NotifierComponents } from 'react-native-notifier';
 import { API_URL } from '../constants/config';
 import { fetchWithAuth } from './ApiService';
+import colors from '../constants/color';
 
-export const getUser = async idUser => {
+export const updateUserProfile = async (id, data, successText, navigation) => {
     try {
-        const data = await fetchWithAuth(
-            `${API_URL}/user/${idUser}`,
-            {
-                method: 'GET',
-            },
-            null,
-        );
-        return data.user;
-    } catch (error) {
-        throw error;
-    }
-};
-
-export const updateUser = async user => {
-    try {
-        const data = await fetchWithAuth(
-            `${API_URL}/user/${user.id}`,
+        const response = await fetchWithAuth(
+            `${API_URL}/user/${id}`,
             {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(user),
+                body: JSON.stringify(data),
             },
-            null,
+            navigation,
         );
         Notifier.clearQueue(true);
         Notifier.showNotification({
             title: 'Succès ',
-            description:
-                'Votre profil a bien été modifié.',
+            description: successText,
             Component: NotifierComponents.Notification,
-            duration: 0,
+            duration: 6000,
             showAnimationDuration: 800,
             showEasing: Easing.bounce,
             onHidden: () => console.log('Hidden'),
+            hideOnPress: true,
+            componentProps: {
+                titleStyle: {
+                    color: colors.secondary,
+                    fontSize: 20,
+                    fontFamily: 'Asul-Bold',
+                },
+                descriptionStyle: {
+                    color: colors.textPrimary,
+                    fontSize: 16,
+                    fontFamily: 'Asul',
+                },
+            },
         });
-        return data;
+        return response;
     } catch (error) {
+        console.log('error', error);
+
         throw error;
     }
 };

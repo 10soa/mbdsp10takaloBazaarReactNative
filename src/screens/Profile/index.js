@@ -11,32 +11,35 @@ import ListItem from './components/ListItem';
 import { AuthContext } from '../../context/AuthContext';
 import ExchangeHistory from '../Exchanges';
 import { useNavigation } from '@react-navigation/native';
-import { getUser } from '../../service/UserService';
 
 const Profile = ({ navigation }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const { logoutUser } = useContext(AuthContext);
 
-  const fetchUser = async () => {
-    try {
-      let userData = await getUserFromToken();
-      if (userData) {
-        userData = await getUser(userData.id);
-      }
-      setUser(userData);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await getUserFromToken();
+        setUser(userData);
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchUser();
   }, []);
 
   const handleLogout = async () => {
-    await logoutUser(navigation);
+    setLoading(true);
+    try {
+      await logoutUser(navigation);
+    }
+    catch (error) {
+    } finally {
+      setLoading(false);
+    }
   }
   if (loading) {
     return <IsLoading />;
@@ -80,6 +83,7 @@ const Profile = ({ navigation }) => {
       <ListItem
         title="Changer mon mot de passe"
         iconSource={require('../../assets/icons/PasswordBook.png')}
+        onPress={() => navigation.navigate('ChangePassword')}
       />
     </Container>
   );

@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API_URL, TOKEN_NAME, USERID, USERNAME} from '../constants/config';
 import {removeToken} from './SessionService';
 import {fetchWithAuth} from './ApiService';
+import {Easing, Notifier, NotifierComponents} from 'react-native-notifier';
+import colors from '../constants/color';
 
 export const log = async (email, mdp) => {
   const url = `${API_URL}/auth/user/login`;
@@ -54,6 +56,29 @@ export const logout = async navigation => {
       navigation,
     );
     await removeToken();
+    Notifier.clearQueue(true);
+    Notifier.showNotification({
+      title: 'Succès ',
+      description: 'Vous êtes déconnecté',
+      Component: NotifierComponents.Notification,
+      duration: 5000,
+      showAnimationDuration: 800,
+      showEasing: Easing.bounce,
+      onHidden: () => console.log('Hidden'),
+      hideOnPress: true,
+      componentProps: {
+        titleStyle: {
+          color: colors.secondary,
+          fontSize: 20,
+          fontFamily: 'Asul-Bold',
+        },
+        descriptionStyle: {
+          color: colors.textPrimary,
+          fontSize: 16,
+          fontFamily: 'Asul',
+        },
+      },
+    });
     navigation.navigate('Home');
   } catch (error) {
     throw error;

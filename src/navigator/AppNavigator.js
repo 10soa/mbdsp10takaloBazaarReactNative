@@ -20,6 +20,7 @@ import UpdateObject from '../screens/Object/UpdateObject';
 import ProfileUser from '../screens/Profile/ProfileUser';
 import ExchangeDetails from '../screens/Exchange/Details';
 import QRCodeScannerComponent from '../components/scanQR/QRCodeScannerComponen';
+import ChangePassword from '../screens/Profile/ChangePassword';
 import EditUser from '../screens/Profile/editUser';
 const Tab = createBottomTabNavigator();
 

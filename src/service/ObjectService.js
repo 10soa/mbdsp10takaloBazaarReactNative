@@ -3,7 +3,13 @@ import {API_URL, TOKEN} from '../constants/config';
 import {fetchWithAuth} from './ApiService';
 import colors from '../constants/color';
 
-export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
+export const getObjects = async (
+  pageNo,
+  pageSize,
+  sortBy,
+  filters,
+  navigation,
+) => {
   try {
     let params = {
       page: pageNo,
@@ -18,11 +24,18 @@ export const getObjects = async (pageNo, pageSize, sortBy, filters) => {
       params.created_at_start = filters.created_at_start;
     if (filters.created_at_end) params.created_at_end = filters.created_at_end;
     const query = new URLSearchParams(params).toString();
-    const response = await fetch(`${API_URL}/objects?${query}`);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const result = await response.json();
+    const result = await fetchWithAuth(
+     `${API_URL}/objects?${query}`,
+      {
+        method: 'GET'
+      },
+      navigation,
+    );
+    // const response = await fetch(`${API_URL}/objects?${query}`);
+    // if (!response.ok) {
+    //   throw new Error('Network response was not ok');
+    // }
+    // const result = await response.json();
 
     return {
       objects: result.data.objects,
