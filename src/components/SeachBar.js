@@ -1,14 +1,20 @@
-import React ,{useState} from 'react';
-import {View, TextInput, StyleSheet, Image,TouchableOpacity} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigation = useNavigation();
 
   const handleSearch = () => {
-    if (searchQuery.trim()) {
-      navigation.navigate('SearchFilter', { name: searchQuery.trim() });
+    if (searchQuery) {
+      navigation.navigate('SearchFilter', {name: searchQuery});
     }
   };
 
@@ -49,7 +55,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: '#000',
-    fontFamily: 'Asul'
+    fontFamily: 'Asul',
   },
 });
 

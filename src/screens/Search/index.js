@@ -68,11 +68,16 @@ const SearchFilter = ({navigation}) => {
 
   useEffect(() => {
     if (isFocused) {
+      setFilters(prevFilters => ({
+        ...prevFilters,
+        name: route.params?.name || '',
+      }));
+      setData([]);
       setLoading(true);
       setHasMoreData(true);
       setLoadingMore(false);
       setPage(1);
-      fetchObjects(filters);
+      fetchObjects({...filters, name: route.params?.name || ''},1,false);
     }
   }, [isFocused]);
 

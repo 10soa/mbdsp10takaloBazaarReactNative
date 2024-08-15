@@ -26,6 +26,12 @@ const FilterComponent = ({
     setLoading(true);
     const fetchData = async () => {
       try {
+        setName(filters.name);
+        setOrder(filters.order);
+        setDateMin(filters.dateMin);
+        setDateMax(filters.dateMax);
+        setDescription(filters.description);
+        setCategory(filters.category_id);
         const result = await getCategories();
         setIsFilterVisible(visible);
         setDataCat(result);
@@ -35,7 +41,7 @@ const FilterComponent = ({
       }
     };
     fetchData();
-  }, []);
+  }, [filters]);
 
   const handleApplyFilters = () => {
     const newFilters = {
