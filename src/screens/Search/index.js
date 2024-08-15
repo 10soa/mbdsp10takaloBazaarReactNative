@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, FlatList} from 'react-native';
+import {StyleSheet, View, Text, FlatList, Platform} from 'react-native';
 import {useIsFocused, useRoute} from '@react-navigation/native';
 import Container from '../../components/Container';
 import colors from '../../constants/color';
@@ -109,10 +109,6 @@ const SearchFilter = ({navigation}) => {
     fetchObjects(defaultFilters);
     setVisible(false);
   };
-
-  // if (loading) {
-  //   return <IsLoading />;
-  // }
 
   return (
     <>
