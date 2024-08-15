@@ -178,7 +178,7 @@ const ExchangeDetails = ({navigation, route}) => {
                     style={styles.details}
                   />
                   <CustomText
-                    text={'Raison: ' + exchange.notr}
+                    text={'Raison: ' + exchange.note}
                     style={styles.details}
                   />
                 </>
@@ -187,6 +187,10 @@ const ExchangeDetails = ({navigation, route}) => {
                 <>
                   <CustomText
                     text={'Annulé  le : ' + formatDate(exchange.date)}
+                    style={styles.details}
+                  />
+                  <CustomText
+                    text={'Raison: ' + exchange.note}
                     style={styles.details}
                   />
                 </>

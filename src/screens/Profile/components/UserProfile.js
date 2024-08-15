@@ -14,9 +14,14 @@ import colors from '../../../constants/color';
 import {scale} from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {getBase64Image} from '../../../service/Function';
+import IsLoading from '../../../components/IsLoading';
+import {updateUserProfile} from '../../../service/UserService';
+import {Notifier, NotifierComponents, Easing} from 'react-native-notifier';
 
-const UserProfile = ({user, disableTouchableImage}) => {
+const UserProfile = ({user, disableTouchableImage, navigation, fetchData}) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [load, setLoad] = useState(false);
 
   const handleOpenModal = () => {
     setModalVisible(true);
@@ -50,43 +55,88 @@ const UserProfile = ({user, disableTouchableImage}) => {
     }
   };
 
-  const updateProfilePicture = () => {};
+  const updateProfilePicture = async image => {
+    setLoad(true);
+    try {
+      await updateUserProfile(
+        user.id,
+        {image},
+        'Votre photo de profil a été mise à jour avec succès.',
+        navigation,
+      );
+    } catch (error) {
+      Notifier.clearQueue(true);
+      Notifier.showNotification({
+        title: 'Erreur',
+        description: error.message,
+        Component: NotifierComponents.Notification,
+        duration: 5000,
+        showAnimationDuration: 800,
+        showEasing: Easing.bounce,
+        onHidden: () => console.log('Hidden'),
+        hideOnPress: true,
+        componentProps: {
+          titleStyle: {
+            color: colors.textPrimary,
+            fontSize: 20,
+            fontFamily: 'Asul-Bold',
+          },
+          descriptionStyle: {
+            color: colors.textPrimary,
+            fontSize: 16,
+            fontFamily: 'Asul',
+          },
+          containerStyle: {
+            backgroundColor: colors.error,
+          },
+        },
+      });
+      setLoad(false);
+    } finally {
+      await fetchData();
+      setLoad(false);
+    }
+  };
 
-  const handleChoosePhoto = () => {
-    launchImageLibrary({mediaType: 'photo'}, response => {
+  const handleChoosePhoto = async () => {
+    try {
+      const response = await launchImageLibrary({mediaType: 'photo'});
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
         const source = {uri: response.assets[0].uri};
-        console.log('Selected image: ', source);
-        updateProfilePicture();
+        const base64 = await getBase64Image(source.uri);
+        handleCloseModal();
+        await updateProfilePicture(base64);
       }
-      handleCloseModal();
-    });
+    } catch (error) {
+      console.log('Error while picking image: ', error);
+    } finally {
+    }
   };
 
   const handleTakePhoto = async () => {
     await requestCameraPermission();
-    launchCamera({mediaType: 'photo'}, response => {
+    launchCamera({mediaType: 'photo'}, async response => {
       if (response.didCancel) {
         console.log('User cancelled camera');
       } else if (response.error) {
         console.log('Camera Error: ', response.error);
       } else {
         const source = {uri: response.assets[0].uri};
-        console.log('Captured image: ', source);
-        updateProfilePicture();
+        const base64 = await getBase64Image(source.uri);
+        handleCloseModal();
+        await updateProfilePicture(base64);
       }
-      handleCloseModal();
     });
   };
 
   return (
     <View style={styles.container}>
       {disableTouchableImage ? (
-        <View onPress={handleOpenModal}>
+        <View>
           {user.profile_picture ? (
             <Image
               source={{uri: user.profile_picture}}
@@ -98,6 +148,10 @@ const UserProfile = ({user, disableTouchableImage}) => {
               style={styles.profileImage}
             />
           )}
+        </View>
+      ) : load ? (
+        <View style={[styles.profileImage, {backgroundColor: colors.grey}]}>
+          <IsLoading />
         </View>
       ) : (
         <TouchableOpacity onPress={handleOpenModal}>

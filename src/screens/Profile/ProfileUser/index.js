@@ -8,17 +8,17 @@ import {
   Text,
 } from 'react-native';
 import colors from '../../../constants/color';
-import { useContext, useEffect, useState } from 'react';
-import { scale } from 'react-native-size-matters';
+import {useContext, useEffect, useState} from 'react';
+import {scale} from 'react-native-size-matters';
 import ProductCard from '../../../components/ProductCard';
-import { getUserObjects } from '../../../service/ObjectService';
+import {getUserObjects} from '../../../service/ObjectService';
 import Header from '../../../components/Header';
 import IsLoading from '../../../components/IsLoading';
 import ButtonPrimary from '../../../components/ButtonPrimary';
 import UserProfile from '../components/UserProfile';
-import { AuthContext } from '../../../context/AuthContext';
+import {AuthContext} from '../../../context/AuthContext';
 
-const ProfileUser = ({ navigation, route }) => {
+const ProfileUser = ({navigation, route}) => {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [myObjects, setMyObjects] = useState([]);
@@ -27,7 +27,7 @@ const ProfileUser = ({ navigation, route }) => {
   const [hasMore, setHasMore] = useState(true);
   const limit = 6;
   const user = route.params?.user;
-  const { isAuthenticated } = useContext(AuthContext);
+  const {isAuthenticated} = useContext(AuthContext);
 
   useEffect(() => {
     const prepareData = async () => {
@@ -52,7 +52,7 @@ const ProfileUser = ({ navigation, route }) => {
       });
       return;
     }
-    navigation.navigate('ProposeExchange', { user: user });
+    navigation.navigate('ProposeExchange', {user: user});
   };
 
   const getObjects = async (page = 1, name, append = false) => {
@@ -87,7 +87,7 @@ const ProfileUser = ({ navigation, route }) => {
     }
   };
 
-  const renderProductCard = ({ item }) => (
+  const renderProductCard = ({item}) => (
     <ProductCard
       product={item}
       onPress={() => {
@@ -124,7 +124,7 @@ const ProfileUser = ({ navigation, route }) => {
         {loading ? (
           <IsLoading />
         ) : (
-          <View style={{ marginBottom: scale(270) }}>
+          <View style={{marginBottom: scale(270)}}>
             <FlatList
               data={myObjects}
               renderItem={renderProductCard}
