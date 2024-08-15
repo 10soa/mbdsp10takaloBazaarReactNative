@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {TextInput} from 'react-native-paper';
 import {getCategories} from '../../../service/CategoryService';
 import colors from '../../../constants/color';
@@ -22,10 +23,18 @@ const FilterComponent = ({
   const [loading, setLoading] = useState(true);
   const [isFilterVisible, setIsFilterVisible] = useState(visible);
 
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isDatePickerVisibleMax, setDatePickerVisibilityMax] = useState(false);
+
   useEffect(() => {
-    setLoading(true);
     const fetchData = async () => {
       try {
+        setName(filters.name);
+        setOrder(filters.order);
+        setDateMin(filters.created_at_start);
+        setDateMax(filters.created_at_end);
+        setDescription(filters.description);
+        setCategory(filters.category_id);
         const result = await getCategories();
         setIsFilterVisible(visible);
         setDataCat(result);
@@ -35,7 +44,17 @@ const FilterComponent = ({
       }
     };
     fetchData();
-  }, []);
+  }, [filters]);
+
+  const handleConfirmMin = (date) => {
+    setDateMin(date.toISOString().split('T')[0]);
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirmMax = (date) => {
+    setDateMax(date.toISOString().split('T')[0]);
+    setDatePickerVisibilityMax(false);
+  };
 
   const handleApplyFilters = () => {
     const newFilters = {
@@ -70,11 +89,11 @@ const FilterComponent = ({
           source={require('../../../assets/icons/Funnel.png')}
           resizeMode="contain"
           style={{
-            width: 20,
-            height: 20,
+            width: scale(20),
+            height: scale(20),
             tintColor: colors.darkGrey,
-            marginRight: 5,
-            marginBottom: 10,
+            marginRight: scale(5),
+            marginBottom: scale(10),
           }}
         />
         <Text style={styles.title}>Filtres</Text>
@@ -83,8 +102,8 @@ const FilterComponent = ({
           resizeMode="contain"
           style={[
             {
-              width: 20,
-              height: 20,
+              width: scale(20),
+              height: scale(20),
               tintColor: colors.darkGrey,
               marginLeft: 'auto',
             },
@@ -131,22 +150,42 @@ const FilterComponent = ({
             </View>
           </View>
 
-          <TextInput
-            label="Date de création min"
-            value={dateMin}
-            onChangeText={setDateMin}
-            style={styles.input}
-            mode="outlined"
-            theme={{colors: {primary: 'grey', text: 'grey'}}}
+          <TouchableOpacity onPress={() => setDatePickerVisibility(true)}>
+            <TextInput
+              label="Date de création min"
+              value={dateMin}
+              style={styles.input}
+              mode="outlined"
+              theme={{colors: {primary: 'grey', text: 'grey'}}}
+              editable={false}
+              right={<TextInput.Icon name="calendar" />}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => setDatePickerVisibilityMax(true)}>
+            <TextInput
+              label="Date de création max"
+              value={dateMax}
+              style={styles.input}
+              mode="outlined"
+              theme={{colors: {primary: 'grey', text: 'grey'}}}
+              editable={false}
+              right={<TextInput.Icon name="calendar" />}
+            />
+          </TouchableOpacity>
+
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleConfirmMin}
+            onCancel={() => setDatePickerVisibility(false)}
           />
 
-          <TextInput
-            label="Date de création max"
-            value={dateMax}
-            onChangeText={setDateMax}
-            style={styles.input}
-            mode="outlined"
-            theme={{colors: {primary: 'grey', text: 'grey'}}}
+          <DateTimePickerModal
+            isVisible={isDatePickerVisibleMax}
+            mode="date"
+            onConfirm={handleConfirmMax}
+            onCancel={() => setDatePickerVisibilityMax(false)}
           />
 
           <View style={styles.pickerContainer}>
@@ -168,7 +207,7 @@ const FilterComponent = ({
               <Image
                 source={require('../../../assets/icons/Search.png')}
                 resizeMode="contain"
-                style={{width: 25, height: 25, tintColor: '#fff'}}
+                style={{width: scale(25), height: scale(25), tintColor: '#fff'}}
               />
               <Text style={styles.buttonText}>Filtrer</Text>
             </TouchableOpacity>
@@ -178,7 +217,7 @@ const FilterComponent = ({
               <Image
                 source={require('../../../assets/icons/Reboot.png')}
                 resizeMode="contain"
-                style={{width: 15, height: 15, tintColor: '#fff'}}
+                style={{width: scale(15), height: scale(15), tintColor: '#fff'}}
               />
               <Text style={styles.buttonText}>Réinitialiser</Text>
             </TouchableOpacity>
@@ -191,71 +230,70 @@ const FilterComponent = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: scale(20),
     backgroundColor: colors.white,
   },
   title: {
     fontSize: scale(18),
-    marginBottom: 10,
+    marginBottom: scale(10),
     color: colors.darkGrey,
     fontFamily: 'Asul-Bold',
   },
   filtre: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: scale(10),
   },
   input: {
-    marginBottom: 10,
+    marginBottom: scale(10),
     fontFamily: 'Asul',
   },
   pickerContainer: {
-    marginBottom: 10,
+    marginBottom: scale(10),
   },
   pickerWrapper: {
-    borderWidth: 1,
+    borderWidth: scale(1),
     borderColor: 'grey',
-    borderRadius: 5,
-    marginTop: 6,
+    borderRadius: scale(5),
+    marginTop: scale(6),
   },
   textInput: {
     fontFamily: 'Asul',
   },
   picker: {
-    height: 50,
-    // color: 'grey',
+    height: scale(50),
     fontFamily: 'Asul',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
+    marginTop: scale(10),
   },
   buttonFind: {
     flex: 1,
-    height: 50,
+    height: scale(50),
     flexDirection: 'row',
     backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
-    marginHorizontal: 5,
+    borderRadius: scale(5),
+    marginHorizontal: scale(5),
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
-    marginLeft: 2,
+    fontSize: scale(16),
+    marginLeft: scale(2),
     fontFamily: 'Asul-Bold',
   },
   buttonRest: {
     flex: 1,
-    height: 50,
+    height: scale(50),
     flexDirection: 'row',
     backgroundColor: colors.textPrimary,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
-    marginHorizontal: 5,
+    borderRadius: scale(5),
+    marginHorizontal: scale(5),
   },
 });
 

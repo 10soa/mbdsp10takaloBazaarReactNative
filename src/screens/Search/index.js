@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, FlatList} from 'react-native';
+import {StyleSheet, View, Text, FlatList, Platform} from 'react-native';
 import {useIsFocused, useRoute} from '@react-navigation/native';
 import Container from '../../components/Container';
 import colors from '../../constants/color';
@@ -68,11 +68,16 @@ const SearchFilter = ({navigation}) => {
 
   useEffect(() => {
     if (isFocused) {
+      setFilters(prevFilters => ({
+        ...prevFilters,
+        name: route.params?.name || '',
+      }));
+      setData([]);
       setLoading(true);
       setHasMoreData(true);
       setLoadingMore(false);
       setPage(1);
-      fetchObjects(filters);
+      fetchObjects({...filters, name: route.params?.name || ''},1,false);
     }
   }, [isFocused]);
 
@@ -104,10 +109,6 @@ const SearchFilter = ({navigation}) => {
     fetchObjects(defaultFilters);
     setVisible(false);
   };
-
-  // if (loading) {
-  //   return <IsLoading />;
-  // }
 
   return (
     <>
