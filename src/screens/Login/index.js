@@ -9,22 +9,22 @@ import {
   Dimensions,
 } from 'react-native';
 import colors from '../../constants/color';
-import {useCallback, useContext, useState} from 'react';
-import {log} from '../../service/AuthService';
-import {AuthContext} from '../../context/AuthContext';
-import {validateForm} from '../../service/Function';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { log } from '../../service/AuthService';
+import { AuthContext } from '../../context/AuthContext';
+import { validateForm } from '../../service/Function';
 import Container from '../../components/Container';
 import {
   useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import {scale} from 'react-native-size-matters';
+import { scale } from 'react-native-size-matters';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const {setIsAuthenticated, setuserID} = useContext(AuthContext);
+  const { setIsAuthenticated, setuserID } = useContext(AuthContext);
   const route = useRoute();
   const navigation = useNavigation();
   let text = route?.params?.text || '';
@@ -35,6 +35,7 @@ const Login = () => {
         email: '',
         password: '',
       });
+      setErrorMessage('');
       return () => {};
     }, []),
   );
@@ -71,7 +72,7 @@ const Login = () => {
 
   const redirectTo = route?.params?.routeName || 'Home';
   const goToSignup = () => {
-    navigation.navigate('Signup', {routeName: redirectTo, textLogin: text});
+    navigation.navigate('Signup', { routeName: redirectTo, textLogin: text });
   };
   const handleLogin = async () => {
     try {
@@ -109,8 +110,8 @@ const Login = () => {
           style={[
             styles.inputContainer,
             formErrors.email
-              ? {borderColor: 'red'}
-              : {borderColor: 'transparent'},
+              ? { borderColor: 'red' }
+              : { borderColor: 'transparent' },
           ]}>
           <Image
             source={require('../../assets/icons/User.png')}
@@ -131,8 +132,8 @@ const Login = () => {
           style={[
             styles.inputContainer,
             formErrors.password
-              ? {borderColor: 'red'}
-              : {borderColor: 'transparent'},
+              ? { borderColor: 'red' }
+              : { borderColor: 'transparent' },
           ]}>
           <Image
             source={require('../../assets/icons/Lock.png')}
@@ -151,7 +152,7 @@ const Login = () => {
           <Text style={styles.errorText}>{formErrors.password}</Text>
         ) : null}
         {errorMessage ? (
-          <Text style={[styles.errorText, {textAlign: 'center'}]}>
+          <Text style={[styles.errorText, { textAlign: 'center' }]}>
             {errorMessage}
           </Text>
         ) : null}
@@ -171,7 +172,7 @@ const Login = () => {
               size={25}
               color={colors.white}
             />
-            <Text style={[styles.buttonText, {marginLeft: 10}]}>
+            <Text style={[styles.buttonText, { marginLeft: 10 }]}>
               Se connecter
             </Text>
           </View>
@@ -185,7 +186,7 @@ const Login = () => {
 
         <TouchableOpacity
           onPress={goToSignup}
-          style={[styles.button, {backgroundColor: colors.black}]}>
+          style={[styles.button, { backgroundColor: colors.black }]}>
           <Text style={styles.buttonText}>S'inscrire</Text>
         </TouchableOpacity>
       </View>
