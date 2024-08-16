@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../../../constants/color';
+import { scale } from 'react-native-size-matters';
 
 const HomeHeader = ({ navigation, style }) => {
   const navigate = useNavigation();
@@ -39,24 +40,26 @@ const HomeHeader = ({ navigation, style }) => {
 const Styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 15,
-    height: 60,
+    paddingVertical: scale(15),
+    paddingHorizontal: scale(15),
+    justifyContent: 'space-between',
+    height: scale(60),
+    backgroundColor: colors.white,
   },
   rightContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   iconScan: {
-    width: 25,
-    height: 25,
-    marginLeft: 15,
+    width: scale(25),
+    height: scale(25),
+    marginLeft: scale(15),
   },
   iconNotif: {
-    width: 25,
-    height: 25,
-    marginLeft: 15,
+    width: scale(25),
+    height: scale(25),
+    marginLeft: scale(15),
   },
 });
 

@@ -14,6 +14,7 @@ import {getUserObjects} from '../../../service/ObjectService';
 import {getUserFromToken} from '../../../service/SessionService';
 import Header from '../../../components/Header';
 import IsLoading from '../../../components/IsLoading';
+import {useIsFocused} from '@react-navigation/native';
 
 const MyObject = ({navigation}) => {
   const [loading, setLoading] = useState(true);
@@ -22,6 +23,8 @@ const MyObject = ({navigation}) => {
   const [page, setPage] = useState(1);
   const [name, setName] = useState('');
   const [hasMore, setHasMore] = useState(true);
+  const isFocused = useIsFocused();
+  
   const limit = 6;
 
   useEffect(() => {
@@ -33,12 +36,14 @@ const MyObject = ({navigation}) => {
         setLoading(false);
       }
     };
-    setName('');
-    setLoadingMore(false);
-    setHasMore(true);
-    setPage(1);
-    prepareData();
-  }, []);
+    if(isFocused){
+      setName('');
+      setLoadingMore(false);
+      setHasMore(true);
+      setPage(1);
+      prepareData();
+    }
+  }, [isFocused]);
 
   const getObjects = async (page = 1, name, append = false) => {
     try {

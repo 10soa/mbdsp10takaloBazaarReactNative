@@ -61,7 +61,7 @@ export const logout = async navigation => {
       title: 'Succès ',
       description: 'Vous êtes déconnecté',
       Component: NotifierComponents.Notification,
-      duration: 5000,
+      duration: 10000,
       showAnimationDuration: 800,
       showEasing: Easing.bounce,
       onHidden: () => console.log('Hidden'),

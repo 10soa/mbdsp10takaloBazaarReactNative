@@ -103,32 +103,18 @@ const AppNavigator = () => {
         component={isAuthenticated ? Profile : Login}
         options={{
           tabBarStyle: { display: isAuthenticated ? 'flex' : 'none' },
-          tabBarIcon: props => {
-            const { onPress, ...rest } = props;
-            const navigation = useNavigation();
+          tabBarIcon: ({ focused }) => {
             return (
-              <TouchableOpacity
-                {...rest}
-                onPress={() => {
-                  if (!isAuthenticated) {
-                    navigation.navigate('Login', { text: '' });
-                  } else {
-                    navigation.navigate('Profile');
-                  }
-                }}>
-                <View style={style.navView}>
-                  <Image
-                    source={require('../assets/icons/User.png')}
-                    resizeMode="contain"
-                    style={{
-                      tintColor: props.focused
-                        ? colors.primary
-                        : colors.darkGrey,
-                      ...style.navImage,
-                    }}
-                  />
-                </View>
-              </TouchableOpacity>
+              <View style={style.navView}>
+                <Image
+                  source={require('../assets/icons/User.png')}
+                  resizeMode="contain"
+                  style={{
+                    tintColor: focused ? colors.primary : colors.darkGrey,
+                    ...style.navImage,
+                  }}
+                />
+              </View>
             );
           },
         }}
@@ -294,7 +280,7 @@ const AppNavigator = () => {
           tabBarButton: props => null,
           tabBarVisible: false,
           tabBarLabel: 'ChangePassword',
-          tabBarStyle: {display: 'none'},
+          tabBarStyle: { display: 'none' },
         }}
       />
     </Tab.Navigator>
