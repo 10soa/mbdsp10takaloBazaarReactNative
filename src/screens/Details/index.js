@@ -30,7 +30,6 @@ const Details = ({navigation, route}) => {
 
   useEffect(() => {
     const fetchObject = async () => {
-      // setLoading(true);
       try {
         const data = await getObject(objectId ? objectId : object.id);
         setObject(data);
@@ -42,8 +41,6 @@ const Details = ({navigation, route}) => {
       }
     };
     if (isFocused) {
-      console.log('euuuh');
-
       fetchObject();
     }
   }, [isFocused]);
@@ -90,10 +87,6 @@ const Details = ({navigation, route}) => {
     }
     navigation.navigate('ProposeExchange', {user: object.user, object: object});
   };
-
-  // if (loading) {
-  //   return <IsLoading />;
-  // }
   return (
     <View style={{flex: 1}}>
       <Header title={"Details de l'objet"} navigation={navigation} />

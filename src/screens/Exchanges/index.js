@@ -108,7 +108,7 @@ const ExchangeHistory = ({navigation}) => {
             </View>
           </View>
           {exchanges.length === 0 ? (
-            <Text style={styles.noResultsText}>Aucun résultat!</Text>
+            <Text style={styles.noResultsText}>Aucun échange!</Text>
           ) : (
             <FlatList
               data={exchanges}

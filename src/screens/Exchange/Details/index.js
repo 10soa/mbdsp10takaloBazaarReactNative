@@ -76,10 +76,11 @@ const ExchangeDetails = ({ navigation, route }) => {
     }
   };
 
-  const formatDate = isoString => {
+  const formatDate = (isoString, hasHour) => {
     const date = new Date(isoString);
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('fr-FR', options);
+    const heure = hasHour ? ' à '+isoString.split('T')[1].split('.')[0] : '';
+    return date.toLocaleDateString('fr-FR', options)+heure;
   };
 
   const handleAccept = async () => {
@@ -186,7 +187,7 @@ const ExchangeDetails = ({ navigation, route }) => {
                   <CustomText
                     text={
                       'Date du rendez-vous: ' +
-                      formatDate(exchange.appointment_date)
+                      formatDate(exchange.appointment_date, true)
                     }
                     style={styles.details}
                   />

@@ -1,13 +1,32 @@
 import React from 'react';
-import { View, Text, StyleSheet,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import colors from '../../../constants/color';
 
-const CardExchange = ({exchange, onPress}) => {
+const CardExchange = ({ exchange, onPress }) => {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <Text style={styles.text}>Echange ID : {exchange.id}</Text>
-      <Text style={styles.textBold}>Proposeur : {exchange.proposer_user_name || exchange.proposer.username}</Text>
-      <Text style={styles.textBold}>Receveur : {exchange.receiver_user_name || exchange.receiver.username}</Text>
-      <Text style={styles.text}>Status : {translateStatus(exchange.status)}</Text>
+      <Text style={styles.textBold}>
+        Proposeur : {exchange.proposer_user_name || exchange.proposer.username}
+      </Text>
+      <Text style={styles.textBold}>
+        Receveur : {exchange.receiver_user_name || exchange.receiver.username}
+      </Text>
+      <Text style={styles.text}>
+        Status :{' '}
+        <Text
+          style={{
+            color:
+              exchange.status == 'Refused'
+                ? colors.error
+                : exchange.status == 'Accepted'
+                ? colors.secondary
+                : colors.primary,
+            fontFamily: 'Asul-Bold',
+          }}>
+          {translateStatus(exchange.status)}
+        </Text>
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -42,12 +61,14 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     marginBottom: 5,
-    fontFamily : 'Asul'
+    fontFamily: 'Asul',
+    color: colors.darkGrey,
   },
   textBold: {
     fontSize: 16,
     marginBottom: 5,
-    fontFamily : 'Asul-Bold'
+    fontFamily: 'Asul-Bold',
+    color: colors.darkGrey,
   },
 });
 

@@ -372,9 +372,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Asul-Bold',
   },
   label: {
-    fontSize: scale(18),
+    fontSize: scale(16),
     marginBottom: scale(10),
     fontFamily: 'Asul',
+    color: colors.darkGrey
   },
   input: {
     height: scale(50),

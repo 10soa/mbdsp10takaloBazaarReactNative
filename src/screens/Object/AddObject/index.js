@@ -507,6 +507,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 10,
     fontFamily: 'Asul',
+    color: colors.darkGrey
   },
   input: {
     height: 50,
@@ -659,6 +660,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Asul-Bold',
     width: 250,
+    color: colors.darkGrey
   },
   trashButton: {
     marginLeft: 10,

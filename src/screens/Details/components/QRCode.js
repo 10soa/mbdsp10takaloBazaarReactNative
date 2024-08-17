@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
+import colors from '../../../constants/color';
 
 const QRCodeGen = ({ id, objectName }) => {
   return (
@@ -19,7 +20,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily : 'Asul-Bold',
     marginBottom: 20,
-    textAlign : 'center'
+    textAlign : 'center',
+    color: colors.darkGrey
   },
 });
 

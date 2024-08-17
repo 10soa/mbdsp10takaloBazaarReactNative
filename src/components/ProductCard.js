@@ -1,5 +1,6 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import colors from '../constants/color';
 
 const ProductCard = ({
@@ -23,7 +24,7 @@ const ProductCard = ({
         <View
           style={[
             styles.badge,
-            backgroundBadge && {backgroundColor: backgroundBadge},
+            backgroundBadge && { backgroundColor: backgroundBadge },
           ]}>
           <Text style={styles.name}>{badgeText}</Text>
         </View>
@@ -49,11 +50,11 @@ const ProductCard = ({
                     })
                   : isOwner
                   ? navigation.navigate('User')
-                  : navigation.navigate('ProfileUser', {user: user})
+                  : navigation.navigate('ProfileUser', { user: user })
               }>
               {user.profile_picture && (
                 <Image
-                  source={{uri: user.profile_picture}}
+                  source={{ uri: user.profile_picture }}
                   style={styles.userImage}
                 />
               )}
@@ -66,7 +67,9 @@ const ProductCard = ({
               <Text style={styles.userName}>{user.username}</Text>
             </TouchableOpacity>
           )}
-          <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{product.name}</Text>
+          <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
+            {product.name}
+          </Text>
           {!disableCategory && (
             <Text style={styles.cat}>{product.category.name}</Text>
           )}
@@ -75,7 +78,7 @@ const ProductCard = ({
           <TouchableOpacity style={styles.cartIcon}>
             <Image
               source={require('../assets/icons/Share1.png')}
-              style={{width: 20, height: 20, tintColor: colors.grey}}
+              style={{ width: 20, height: 20, tintColor: colors.grey }}
             />
           </TouchableOpacity>
         )}
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 10,
-    shadowOffset: {width: 0, height: 5},
+    shadowOffset: { width: 0, height: 5 },
     elevation: 5,
     marginBottom: 20,
   },
@@ -123,6 +126,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: 'Asul-Bold',
+    color: colors.darkGrey
   },
   name: {
     fontSize: 14,
