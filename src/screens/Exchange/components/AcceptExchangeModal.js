@@ -20,6 +20,7 @@ const AcceptExchangeModal = ({ idExchange, visible, onClose, onConfirm, navigati
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const [meetingPlaceError, setMeetingPlaceError] = useState('');
     const [appointmentDateError, setAppointmentDateError] = useState('');
@@ -55,6 +56,7 @@ const AcceptExchangeModal = ({ idExchange, visible, onClose, onConfirm, navigati
 
         if (!hasError) {
             setLoading(true);
+            setErrorMessage('');
             try {
                 const formattedDate = formatValueDate(appointmentDate);
                 const body = {
@@ -64,7 +66,7 @@ const AcceptExchangeModal = ({ idExchange, visible, onClose, onConfirm, navigati
                 await accepterExchange(idExchange, body, navigation);
                 onConfirm();
             } catch (error) {
-                console.error('Failed to accept exchange:', error);
+                setErrorMessage(error.message);
             } finally {
                 setLoading(false);
             }
@@ -145,6 +147,10 @@ const AcceptExchangeModal = ({ idExchange, visible, onClose, onConfirm, navigati
                             onChange={onTimeChange}
                         />
                     )}
+
+                    {errorMessage ? (
+                        <Text style={styles.errorMessage}>{errorMessage}</Text>
+                    ) : null}
 
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
@@ -227,6 +233,13 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         marginTop: -15,
         fontFamily: 'Asul',
+    },
+    errorMessage: {
+        color: colors.error,
+        fontSize: 16,
+        marginBottom: 10,
+        textAlign: 'center',
+        fontFamily: 'Asul-Bold',
     },
     buttonContainer: {
         flexDirection: 'row',

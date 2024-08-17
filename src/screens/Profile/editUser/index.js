@@ -201,8 +201,8 @@ const EditUser = ({ navigation }) => {
             setGenderError('');
           }}
           style={styles.picker}>
-          <Picker.Item label="Masculin" value="Male" />
-          <Picker.Item label="Féminin" value="Female" />
+          <Picker.Item label="Homme" value="Male" />
+          <Picker.Item label="Femme" value="Female" />
         </Picker>
       </View>
       {genderError ? <Text style={styles.error}>{genderError}</Text> : null}
