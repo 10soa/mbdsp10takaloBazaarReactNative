@@ -14,6 +14,7 @@ import CustomText from '../../../components/CustomText';
 import IsLoading from '../../../components/IsLoading';
 import { getUserFromToken } from '../../../service/SessionService';
 import AcceptExchangeModal from '../components/AcceptExchangeModal';
+import RejectExchangeModal from '../components/RejectExchangeModal'; // Import the RejectExchangeModal
 
 const ExchangeDetails = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,8 @@ const ExchangeDetails = ({ navigation, route }) => {
   const [propositionObjects, setPropositionObjects] = useState([]);
   const [receiverObjects, setReceiverObjects] = useState([]);
   const [user, setUser] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [acceptModalVisible, setAcceptModalVisible] = useState(false);
+  const [rejectModalVisible, setRejectModalVisible] = useState(false);
 
   useEffect(() => {
     const prepareData = async id => {
@@ -82,10 +84,19 @@ const ExchangeDetails = ({ navigation, route }) => {
 
   const handleAccept = async () => {
     try {
-      setModalVisible(false);
+      setAcceptModalVisible(false);
       getExchange(exchange.id);
     } catch (error) {
       Alert.alert('Erreur', "Une erreur s'est produite lors de l'acceptation de l'échange.");
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      setRejectModalVisible(false);
+      getExchange(exchange.id);
+    } catch (error) {
+      Alert.alert('Erreur', "Une erreur s'est produite lors du refus de l'échange.");
     }
   };
 
@@ -215,7 +226,7 @@ const ExchangeDetails = ({ navigation, route }) => {
                   text="Accepter"
                   style={{ width: '45%', justifyContent: 'center' }}
                   textStyle={{ fontSize: scale(16) }}
-                  onPress={() => setModalVisible(true)}
+                  onPress={() => setAcceptModalVisible(true)}
                 />
                 <ButtonPrimary
                   image={require('../../../assets/icons/Close.png')}
@@ -226,13 +237,21 @@ const ExchangeDetails = ({ navigation, route }) => {
                     justifyContent: 'center',
                   }}
                   textStyle={{ fontSize: scale(16) }}
+                  onPress={() => setRejectModalVisible(true)}
                 />
               </View>
             )}
           <AcceptExchangeModal
-            visible={modalVisible}
-            onClose={() => setModalVisible(false)}
+            visible={acceptModalVisible}
+            onClose={() => setAcceptModalVisible(false)}
             onConfirm={handleAccept}
+            idExchange={exchange.id}
+            navigation={navigation}
+          />
+          <RejectExchangeModal
+            visible={rejectModalVisible}
+            onClose={() => setRejectModalVisible(false)}
+            onConfirm={handleReject}
             idExchange={exchange.id}
             navigation={navigation}
           />

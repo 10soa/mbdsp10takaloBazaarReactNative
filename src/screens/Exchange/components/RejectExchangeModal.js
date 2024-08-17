@@ -10,86 +10,40 @@ import {
     Image,
     ActivityIndicator,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import colors from '../../../constants/color';
-import { accepterExchange } from '../../../service/ExchangeService';
+import { rejectExchange } from '../../../service/ExchangeService';
 
-const AcceptExchangeModal = ({ idExchange, visible, onClose, onConfirm, navigation }) => {
-    const [meetingPlace, setMeetingPlace] = useState('');
-    const [appointmentDate, setAppointmentDate] = useState(new Date());
-    const [showDatePicker, setShowDatePicker] = useState(false);
-    const [showTimePicker, setShowTimePicker] = useState(false);
+const RejectExchangeModal = ({ idExchange, visible, onClose, onConfirm, navigation }) => {
+    const [note, setNote] = useState('');
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const [meetingPlaceError, setMeetingPlaceError] = useState('');
-    const [appointmentDateError, setAppointmentDateError] = useState('');
-
-    const formatDisplayDate = (date) => {
-        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        const datePart = date.toLocaleDateString('fr-FR', options);
-        const timePart = date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-        return `${datePart} ${timePart}`;
-    };
-
-    const formatValueDate = (date) => {
-        const pad = (n) => (n < 10 ? `0${n}` : n);
-        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-    };
+    const [noteError, setNoteError] = useState('');
 
     const handleConfirm = async () => {
         let hasError = false;
 
-        if (!meetingPlace) {
-            setMeetingPlaceError('Le lieu de rendez-vous est requis.');
+        if (!note) {
+            setNoteError('La raison du refus est requise.');
             hasError = true;
         } else {
-            setMeetingPlaceError('');
-        }
-
-        if (!appointmentDate) {
-            setAppointmentDateError('La date de rendez-vous est requise.');
-            hasError = true;
-        } else {
-            setAppointmentDateError('');
+            setNoteError('');
         }
 
         if (!hasError) {
             setLoading(true);
             setErrorMessage('');
             try {
-                const formattedDate = formatValueDate(appointmentDate);
                 const body = {
-                    meeting_place: meetingPlace,
-                    appointment_date: formattedDate,
+                    note,
                 };
-                await accepterExchange(idExchange, body, navigation);
+                await rejectExchange(idExchange, body, navigation);
                 onConfirm();
             } catch (error) {
                 setErrorMessage(error.message);
             } finally {
                 setLoading(false);
             }
-        }
-    };
-
-    const onDateChange = (event, selectedDate) => {
-        setShowDatePicker(false);
-        if (selectedDate) {
-            setAppointmentDate(selectedDate);
-            setAppointmentDateError('');
-            setShowTimePicker(true);
-        }
-    };
-
-    const onTimeChange = (event, selectedTime) => {
-        setShowTimePicker(false);
-        if (selectedTime) {
-            const newDate = new Date(appointmentDate);
-            newDate.setHours(selectedTime.getHours());
-            newDate.setMinutes(selectedTime.getMinutes());
-            setAppointmentDate(newDate);
-            setAppointmentDateError('');
         }
     };
 
@@ -102,58 +56,29 @@ const AcceptExchangeModal = ({ idExchange, visible, onClose, onConfirm, navigati
         >
             <View style={styles.modalBackground}>
                 <View style={styles.modalContainer}>
-                    <Text style={styles.title}>Accepter l'échange</Text>
+                    <Text style={styles.title}>Refuser l'échange</Text>
 
-                    <Text style={styles.label}>Lieu de rendez-vous</Text>
+                    <Text style={styles.label}>Pourquoi refuseriez-vous cette offre ?</Text>
                     <TextInput
-                        style={[styles.input, meetingPlaceError && styles.borderError]}
-                        value={meetingPlace}
+                        style={[styles.textarea, noteError && styles.borderError]}
+                        value={note}
                         onChangeText={text => {
-                            setMeetingPlace(text);
-                            setMeetingPlaceError('');
+                            setNote(text);
+                            setNoteError('');
                         }}
+                        multiline
+                        numberOfLines={4}
                     />
-                    {meetingPlaceError ? (
-                        <Text style={styles.error}>{meetingPlaceError}</Text>
+                    {noteError ? (
+                        <Text style={styles.error}>{noteError}</Text>
                     ) : null}
-
-                    <Text style={styles.label}>Date de rendez-vous</Text>
-                    <TouchableOpacity
-                        style={[styles.input, appointmentDateError && styles.borderError]}
-                        onPress={() => setShowDatePicker(true)}
-                    >
-                        <Text style={[styles.dateText, appointmentDateError && styles.error]}>
-                            {formatDisplayDate(appointmentDate)}
-                        </Text>
-                    </TouchableOpacity>
-                    {appointmentDateError ? (
-                        <Text style={styles.error}>{appointmentDateError}</Text>
-                    ) : null}
-
-                    {showDatePicker && (
-                        <DateTimePicker
-                            value={appointmentDate}
-                            mode="date"
-                            display="default"
-                            onChange={onDateChange}
-                        />
-                    )}
-
-                    {showTimePicker && (
-                        <DateTimePicker
-                            value={appointmentDate}
-                            mode="time"
-                            display="default"
-                            onChange={onTimeChange}
-                        />
-                    )}
 
                     {errorMessage ? (
                         <Text style={styles.errorMessage}>{errorMessage}</Text>
                     ) : null}
 
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity
+                    <TouchableOpacity
                             style={styles.confirmButton}
                             onPress={handleConfirm}
                             disabled={loading}
@@ -211,18 +136,17 @@ const styles = StyleSheet.create({
         color: colors.textPrimary,
         marginBottom: 10,
     },
-    input: {
-        height: 40,
+    textarea: {
+        height: 100,
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 5,
         paddingHorizontal: 10,
+        paddingTop: 10,
         marginBottom: 20,
         justifyContent: 'center',
         color: colors.textPrimary,
-    },
-    dateText: {
-        color: colors.textPrimary,
+        textAlignVertical: 'top',
     },
     borderError: {
         borderColor: colors.error,
@@ -272,4 +196,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AcceptExchangeModal;
+export default RejectExchangeModal;
