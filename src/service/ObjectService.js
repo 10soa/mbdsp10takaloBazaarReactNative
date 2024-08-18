@@ -3,6 +3,67 @@ import {API_URL, TOKEN} from '../constants/config';
 import {fetchWithAuth} from './ApiService';
 import colors from '../constants/color';
 
+// Fonction pour signaler un objet
+export const reportObject = async (objectId, reason, navigation) => {
+  try {
+    const response = await fetchWithAuth(
+      `${API_URL}/reports`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ object_id: objectId, reason }),
+      },
+      navigation,
+    );
+    Notifier.clearQueue(true);
+    Notifier.showNotification({
+      title: 'Succès',
+      description: "L'objet a été signalé avec succès.",
+      Component: NotifierComponents.Notification,
+      duration: 5000,
+      showAnimationDuration: 800,
+      showEasing: Easing.bounce,
+      onHidden: () => console.log('Hidden'),
+      hideOnPress: true,
+      componentProps: {
+        titleStyle: {
+          color: colors.secondary,
+          fontSize: 20,
+          fontFamily: 'Asul-Bold',
+        },
+        descriptionStyle: {
+          color: colors.textPrimary,
+          fontSize: 16,
+          fontFamily: 'Asul',
+        },
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Fonction pour récupérer les raisons de signalement depuis l'API
+export const fetchReportReasons = async () => {
+  try {
+    const response = await fetchWithAuth(
+      `${API_URL}/typeReports`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return response.data; 
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getObjects = async (
   pageNo,
   pageSize,
@@ -271,3 +332,6 @@ export const restoreObject = async (objectId, navigation) => {
     throw error;
   }
 };
+
+
+
