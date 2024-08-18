@@ -78,7 +78,7 @@ const ProductCard = ({
           <TouchableOpacity style={styles.cartIcon}>
             <Image
               source={require('../assets/icons/Share1.png')}
-              style={{ width: 20, height: 20, tintColor: colors.grey }}
+              style={{width: 20, height: 20, tintColor: colors.black}}
             />
           </TouchableOpacity>
         )}
