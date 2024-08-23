@@ -151,6 +151,7 @@ const Details = ({navigation, route}) => {
               removeObject={remove}
               repostObject={repost}
               status={object.status}
+              isAuthenticated={isAuthenticated}
             />
             <InformationLine
               title={object.name}

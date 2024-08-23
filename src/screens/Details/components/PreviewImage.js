@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,15 +11,18 @@ import {
   Platform,
   Alert,
   TextInput,
-  ActivityIndicator, 
+  ActivityIndicator,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import colors from '../../../constants/color';
 import QRCodeGen from './QRCode';
 import RNFS from 'react-native-fs';
-import {useNavigation} from '@react-navigation/native';
-import {captureRef} from 'react-native-view-shot';
-import { reportObject, fetchReportReasons } from '../../../service/ObjectService';
+import { useNavigation } from '@react-navigation/native';
+import { captureRef } from 'react-native-view-shot';
+import {
+  reportObject,
+  fetchReportReasons,
+} from '../../../service/ObjectService';
 
 const PreviewImage = ({
   image,
@@ -30,6 +33,7 @@ const PreviewImage = ({
   removeObject,
   status,
   repostObject,
+  isAuthenticated,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [reportModalVisible, setReportModalVisible] = useState(false);
@@ -37,7 +41,7 @@ const PreviewImage = ({
   const [customReason, setCustomReason] = useState('');
   const [loading, setLoading] = useState(false);
   const [reasons, setReasons] = useState([]);
-  const [reasonError, setReasonError] = useState(false); 
+  const [reasonError, setReasonError] = useState(false);
   const qrCodeRef = useRef();
   const navigation = useNavigation();
 
@@ -47,7 +51,11 @@ const PreviewImage = ({
         const fetchedReasons = await fetchReportReasons();
         setReasons(fetchedReasons.typeReports);
       } catch (error) {
-        console.log('Erreur', "Impossible de récupérer les raisons de signalement.", error);
+        console.log(
+          'Erreur',
+          'Impossible de récupérer les raisons de signalement.',
+          error,
+        );
       }
     };
 
@@ -57,7 +65,18 @@ const PreviewImage = ({
   const resetReportForm = () => {
     setSelectedReason('');
     setCustomReason('');
-    setReasonError(false); 
+    setReasonError(false);
+  };
+
+  const objectReport = () => {
+    if (!isAuthenticated) {
+      navigation.navigate('User', {
+        text: 'Vous devez être connecté pour signaler un objet.',
+      });
+    } else {
+      resetReportForm();
+      setReportModalVisible(true);
+    }
   };
 
   const toggleModal = () => {
@@ -66,7 +85,7 @@ const PreviewImage = ({
 
   const goEditPage = () => {
     if (idObject) {
-      navigation.navigate('UpdateObject', {idObject: idObject});
+      navigation.navigate('UpdateObject', { idObject: idObject });
     }
   };
 
@@ -97,7 +116,9 @@ const PreviewImage = ({
         quality: 1.0,
       });
 
-      const path = `${RNFS.PicturesDirectoryPath}/${objectName}_qr_${Date.now()}.png`;
+      const path = `${
+        RNFS.PicturesDirectoryPath
+      }/${objectName}_qr_${Date.now()}.png`;
       await RNFS.moveFile(uri, path);
       Alert.alert('Succès', `QR code sauvegardé dans ${path}`);
     } catch (error) {
@@ -109,7 +130,10 @@ const PreviewImage = ({
   };
 
   const submitReport = async () => {
-    if (!selectedReason || (selectedReason === 'Autre' && customReason.trim() === '')) {
+    if (
+      !selectedReason ||
+      (selectedReason === 'Autre' && customReason.trim() === '')
+    ) {
       setReasonError(true);
       setLoading(false);
       return;
@@ -123,7 +147,7 @@ const PreviewImage = ({
       setReportModalVisible(false);
     } catch (error) {
       setLoading(false);
-      Alert.alert('Erreur', "Une erreur est survenue lors du signalement");
+      Alert.alert('Erreur', 'Une erreur est survenue lors du signalement');
     }
   };
 
@@ -140,7 +164,7 @@ const PreviewImage = ({
             <Image
               source={require('../../../assets/icons/Edit.png')}
               resizeMode="contain"
-              style={{width: 30, height: 30, tintColor: colors.black}}
+              style={{ width: 30, height: 30, tintColor: colors.black }}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -156,7 +180,8 @@ const PreviewImage = ({
               style={{
                 width: 30,
                 height: 30,
-                tintColor: status == 'Removed' ? colors.error : colors.secondary,
+                tintColor:
+                  status == 'Removed' ? colors.error : colors.secondary,
               }}
             />
           </TouchableOpacity>
@@ -168,22 +193,16 @@ const PreviewImage = ({
             <Image
               source={require('../../../assets/icons/Share1.png')}
               resizeMode="contain"
-              style={{width: 30, height: 30, tintColor: colors.black}}
+              style={{ width: 30, height: 30, tintColor: colors.black }}
             />
           </TouchableOpacity>
         )}
-       {!isOwner && (
-          <TouchableOpacity
-            style={styles.remove}
-            onPress={() => {
-              resetReportForm();
-              setReportModalVisible(true);
-            }} 
-          >
+        {!isOwner && (
+          <TouchableOpacity style={styles.remove} onPress={objectReport}>
             <Image
               source={require('../../../assets/icons/Unflag.png')}
               resizeMode="contain"
-              style={{width: 30, height: 30, tintColor: colors.error}}
+              style={{ width: 30, height: 30, tintColor: colors.error }}
             />
           </TouchableOpacity>
         )}
@@ -200,20 +219,42 @@ const PreviewImage = ({
             <Text style={styles.modalTitle}>Signaler un objet</Text>
             <Picker
               selectedValue={selectedReason}
-              onValueChange={(itemValue) => {
+              onValueChange={itemValue => {
                 setSelectedReason(itemValue);
                 setReasonError(false);
               }}
-              style={[styles.picker, reasonError && !selectedReason && { borderColor: 'red', borderWidth: 1 }]}
-              enabled={!loading}
-            >
-              <Picker.Item label="Sélectionnez une raison" value="" />
+              style={[
+                styles.picker,
+                reasonError &&
+                  !selectedReason && { borderColor: 'red', borderWidth: 1 },
+              ]}
+              enabled={!loading}>
+              <Picker.Item
+                label="Sélectionnez une raison"
+                value=""
+                style={{
+                  fontFamily: 'Asul',
+                  fontSize: 17,
+                  color: colors.textPrimary,
+                }}
+              />
               {reasons.map(reason => (
-                <Picker.Item key={reason.id} label={reason.name} value={reason.name} />
+                <Picker.Item
+                  key={reason.id}
+                  label={reason.name}
+                  value={reason.name}
+                  style={{
+                    fontFamily: 'Asul',
+                    fontSize: 17,
+                    color: colors.textPrimary,
+                  }}
+                />
               ))}
             </Picker>
             {reasonError && !selectedReason && (
-              <Text style={styles.errorText}>Veuillez sélectionner une raison.</Text>
+              <Text style={styles.errorText}>
+                Veuillez sélectionner une raison.
+              </Text>
             )}
             {selectedReason === 'Autre' && (
               <TextInput
@@ -221,47 +262,50 @@ const PreviewImage = ({
                   styles.textArea,
                   reasonError && { borderColor: 'red', borderWidth: 1 },
                 ]}
+                placeholderTextColor={colors.textPrimary}
                 placeholder="Entrez une raison"
                 value={customReason}
                 onChangeText={text => {
                   setCustomReason(text);
-                  setReasonError(false); 
+                  setReasonError(false);
                 }}
                 editable={!loading}
                 multiline={true}
-                numberOfLines={4} 
+                numberOfLines={4}
               />
             )}
-            {reasonError && selectedReason === 'Autre' && customReason.trim() === '' && (
-              <Text style={styles.errorText}>Veuillez entrer une raison.</Text>
-            )}
+            {reasonError &&
+              selectedReason === 'Autre' &&
+              customReason.trim() === '' && (
+                <Text style={styles.errorText}>
+                  Veuillez entrer une raison.
+                </Text>
+              )}
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 onPress={() => {
                   resetReportForm();
                   setReportModalVisible(false);
                 }}
-                style={[styles.cancelButton, { marginRight: 30 }]} 
-              >
+                style={[styles.cancelButton, { marginRight: 30 }]}>
                 <Image
                   source={require('../../../assets/icons/Close.png')}
                   resizeMode="contain"
-                  style={{width: 20, height: 20, tintColor: '#fff'}}
+                  style={{ width: 20, height: 20, tintColor: '#fff' }}
                 />
                 <Text style={styles.saveButtonText}>Annuler</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={submitReport}
-                style={[styles.saveButton, { marginLeft: 30 }]} 
-                disabled={loading}
-              >
+                style={[styles.saveButton, { marginLeft: 30 }]}
+                disabled={loading}>
                 {loading ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
                   <Image
-                    source={require('../../../assets/icons/Save.png')}
+                    source={require('../../../assets/icons/Sent.png')}
                     resizeMode="contain"
-                    style={{width: 20, height: 20, tintColor: '#fff'}}
+                    style={{ width: 20, height: 20, tintColor: '#fff' }}
                   />
                 )}
                 <Text style={styles.saveButtonText}>
@@ -291,7 +335,7 @@ const PreviewImage = ({
                 <Image
                   source={require('../../../assets/icons/Save.png')}
                   resizeMode="contain"
-                  style={{width: 20, height: 20, tintColor: '#fff'}}
+                  style={{ width: 20, height: 20, tintColor: '#fff' }}
                 />
                 <Text style={styles.saveButtonText}>Sauvegarder</Text>
               </TouchableOpacity>
@@ -301,7 +345,7 @@ const PreviewImage = ({
                 <Image
                   source={require('../../../assets/icons/Close.png')}
                   resizeMode="contain"
-                  style={{width: 15, height: 23, tintColor: '#fff'}}
+                  style={{ width: 15, height: 23, tintColor: '#fff' }}
                 />
                 <Text style={styles.closeButtonText}>Fermer</Text>
               </TouchableOpacity>
@@ -404,6 +448,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
     textAlignVertical: 'top',
+    fontFamily: 'Asul',
+    fontSize: 17,
   },
   errorText: {
     color: 'red',
