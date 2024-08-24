@@ -2,6 +2,8 @@
 #import "RNSplashScreen.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import <Firebase.h>
+#import "RNFBMessagingModule.h" // Pour Firebase Messaging
 
 @implementation AppDelegate
 
@@ -12,14 +14,19 @@
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
+  // Configuration de Firebase
+  if ([FIRApp defaultApp] == nil) {
+      [FIRApp configure];
+  }
+
   BOOL result = [super application:application didFinishLaunchingWithOptions:launchOptions];
 
-  [RNSplashScreen show]; 
-
-  return result;
+  [RNSplashScreen show];
 
   return result;
 }
+
+
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {

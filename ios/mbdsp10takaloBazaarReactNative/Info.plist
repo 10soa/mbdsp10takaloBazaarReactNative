@@ -41,9 +41,9 @@
 	<string>LaunchScreen</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Fonts/Asul-Bold.ttf</string>
-		<string>Fonts/Asul-Regular.ttf</string>
-		<string>Fonts/Asul.ttf</string>
+		<string>Asul-Bold.ttf</string>
+		<string>Asul-Regular.ttf</string>
+		<string>Asul.ttf</string>
 	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
@@ -57,5 +57,12 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

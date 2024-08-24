@@ -14,6 +14,16 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-mbdsp10takaloBazaarReactNative-mbdsp10takaloBazaarReactNativeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-mbdsp10takaloBazaarReactNative-mbdsp10takaloBazaarReactNativeTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		E520E6662C7A76DB0093CB7E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E520E6652C7A76DB0093CB7E /* GoogleService-Info.plist */; };
+		E520E6672C7A76DB0093CB7E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E520E6652C7A76DB0093CB7E /* GoogleService-Info.plist */; };
+		E520E66F2C7A77B00093CB7E /* Asul-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E520E66C2C7A77AF0093CB7E /* Asul-Regular.ttf */; };
+		E520E6702C7A77B00093CB7E /* Asul-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E520E66C2C7A77AF0093CB7E /* Asul-Regular.ttf */; };
+		E520E6732C7A77B00093CB7E /* Asul-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E520E66E2C7A77B00093CB7E /* Asul-Bold.ttf */; };
+		E520E6742C7A77B00093CB7E /* Asul-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E520E66E2C7A77B00093CB7E /* Asul-Bold.ttf */; };
+		E520E6792C7A7A210093CB7E /* LaunchImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E520E6782C7A7A200093CB7E /* LaunchImage@2x.png */; };
+		E520E67A2C7A7A210093CB7E /* LaunchImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E520E6782C7A7A200093CB7E /* LaunchImage@2x.png */; };
+		E520E67C2C7A7B3C0093CB7E /* Asul.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E520E67B2C7A7B3C0093CB7E /* Asul.ttf */; };
+		E520E67D2C7A7B3C0093CB7E /* Asul.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E520E67B2C7A7B3C0093CB7E /* Asul.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +53,11 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-mbdsp10takaloBazaarReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mbdsp10takaloBazaarReactNative.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = mbdsp10takaloBazaarReactNative/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-mbdsp10takaloBazaarReactNative-mbdsp10takaloBazaarReactNativeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mbdsp10takaloBazaarReactNative-mbdsp10takaloBazaarReactNativeTests.release.xcconfig"; path = "Target Support Files/Pods-mbdsp10takaloBazaarReactNative-mbdsp10takaloBazaarReactNativeTests/Pods-mbdsp10takaloBazaarReactNative-mbdsp10takaloBazaarReactNativeTests.release.xcconfig"; sourceTree = "<group>"; };
+		E520E6652C7A76DB0093CB7E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E520E66C2C7A77AF0093CB7E /* Asul-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Asul-Regular.ttf"; path = "newsreader/Fonts/Asul-Regular.ttf"; sourceTree = "<group>"; };
+		E520E66E2C7A77B00093CB7E /* Asul-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Asul-Bold.ttf"; path = "newsreader/Fonts/Asul-Bold.ttf"; sourceTree = "<group>"; };
+		E520E6782C7A7A200093CB7E /* LaunchImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "LaunchImage@2x.png"; path = "newsreader/Images.xcassets/LaunchImage.imageset/LaunchImage@2x.png"; sourceTree = "<group>"; };
+		E520E67B2C7A7B3C0093CB7E /* Asul.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Asul.ttf; path = newsreader/Fonts/Asul.ttf; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -86,6 +101,11 @@
 		13B07FAE1A68108700A75B9A /* mbdsp10takaloBazaarReactNative */ = {
 			isa = PBXGroup;
 			children = (
+				E520E6782C7A7A200093CB7E /* LaunchImage@2x.png */,
+				E520E66E2C7A77B00093CB7E /* Asul-Bold.ttf */,
+				E520E67B2C7A7B3C0093CB7E /* Asul.ttf */,
+				E520E66C2C7A77AF0093CB7E /* Asul-Regular.ttf */,
+				E520E6652C7A76DB0093CB7E /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -236,6 +256,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E520E6742C7A77B00093CB7E /* Asul-Bold.ttf in Resources */,
+				E520E67D2C7A7B3C0093CB7E /* Asul.ttf in Resources */,
+				E520E67A2C7A7A210093CB7E /* LaunchImage@2x.png in Resources */,
+				E520E6702C7A77B00093CB7E /* Asul-Regular.ttf in Resources */,
+				E520E6672C7A76DB0093CB7E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,8 +268,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E520E67C2C7A7B3C0093CB7E /* Asul.ttf in Resources */,
+				E520E66F2C7A77B00093CB7E /* Asul-Regular.ttf in Resources */,
+				E520E6732C7A77B00093CB7E /* Asul-Bold.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				E520E6792C7A7A210093CB7E /* LaunchImage@2x.png in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				E520E6662C7A76DB0093CB7E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
