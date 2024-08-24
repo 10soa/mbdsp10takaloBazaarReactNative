@@ -1,14 +1,26 @@
 import React from 'react';
 import { useEffect } from 'react';
 import AppNavigator from './src/navigator/AppNavigator';
-import { NavigationContainer } from '@react-navigation/native';
+import {
+  createNavigationContainerRef,
+  NavigationContainer,
+  useNavigation,
+} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AuthProvider } from './src/context/AuthContext';
-import { NotifierWrapper } from 'react-native-notifier';
+import {
+  Notifier,
+  NotifierComponents,
+  NotifierWrapper,
+} from 'react-native-notifier';
 import messaging from '@react-native-firebase/messaging';
 import { requestUserPermission } from './src/service/Function';
-import { Alert } from 'react-native';
+import { Easing } from 'react-native';
+import colors from './src/constants/color';
+
+import { navigationRef } from './src/config/navigationService';
+
 export default function App() {
   useEffect(() => {
     SplashScreen.hide();
@@ -19,10 +31,33 @@ export default function App() {
 
     const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
       try {
-        Alert.alert(
-          'Une nouvelle notification FCM est arrivée !',
-          JSON.stringify(remoteMessage),
-        );
+        Notifier.clearQueue(true);
+        Notifier.showNotification({
+          title: remoteMessage.notification.title,
+          description: remoteMessage.notification.body,
+          Component: NotifierComponents.Notification,
+          duration: 0,
+          showAnimationDuration: 800,
+          showEasing: Easing.bounce,
+          onHidden: () => console.log('Hidden'),
+          onPress: () =>
+            navigationRef.current?.navigate('ExchangeDetails', {
+              exchangeId: remoteMessage.data.id,
+            }),
+          hideOnPress: true,
+          componentProps: {
+            titleStyle: {
+              color: colors.secondary,
+              fontSize: 20,
+              fontFamily: 'Asul-Bold',
+            },
+            descriptionStyle: {
+              color: colors.textPrimary,
+              fontSize: 16,
+              fontFamily: 'Asul',
+            },
+          },
+        });
       } catch (error) {
         console.error('Erreur lors de la gestion de la notification:', error);
       }
@@ -63,7 +98,7 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AuthProvider>
         <NotifierWrapper>
-          <NavigationContainer>
+          <NavigationContainer ref={navigationRef}>
             <AppNavigator />
           </NavigationContainer>
         </NotifierWrapper>

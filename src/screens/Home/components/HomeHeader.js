@@ -27,11 +27,6 @@ const HomeHeader = ({ navigation, style }) => {
             style={[Styles.iconScan, { tintColor: colors.textPrimary }]}
           />
         </TouchableOpacity>
-        <Image
-          source={require('../../../assets/icons/Notification.png')}
-          resizeMode="contain"
-          style={[Styles.iconNotif, { tintColor: colors.textPrimary }]}
-        />
       </View>
     </View>
   );
