@@ -16,6 +16,7 @@ import colors from '../../../constants/color';
 import { getUserFromToken } from '../../../service/SessionService';
 import { getUser, updateUserProfile } from '../../../service/UserService';
 import { useRoute } from '@react-navigation/native';
+import Container from '../../../components/Container';
 
 const EditUser = ({ navigation }) => {
   const route = useRoute();
@@ -140,7 +141,7 @@ const EditUser = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <Container isScrollable>
       <Image
         source={require('../../../assets/icons/User2.png')}
         resizeMode="contain"
@@ -215,7 +216,7 @@ const EditUser = ({ navigation }) => {
         />
         <Text style={styles.saveButtonText}>Enregistrer les modifications</Text>
       </TouchableOpacity>
-    </View>
+    </Container>
   );
 };
 

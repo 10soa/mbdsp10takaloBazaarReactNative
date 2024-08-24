@@ -9,6 +9,7 @@ import IsLoading from '../../components/IsLoading';
 import FilterComponent from './Filtre/filtre';
 import Header from '../../components/Header';
 import { scale } from 'react-native-size-matters';
+import GlobalSafeAreaView from '../../components/GlobalSafeAreaView';
 
 const SearchFilter = ({navigation}) => {
   const route = useRoute();
@@ -111,7 +112,7 @@ const SearchFilter = ({navigation}) => {
   };
 
   return (
-    <>
+    <GlobalSafeAreaView>
       <Header
         haveLine
         title="Liste des objets"
@@ -167,7 +168,7 @@ const SearchFilter = ({navigation}) => {
           )}
         </Container>
       )}
-    </>
+    </GlobalSafeAreaView>
   );
 };
 

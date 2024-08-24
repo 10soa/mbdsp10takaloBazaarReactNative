@@ -27,6 +27,7 @@ import ProductCard from '../../../components/ProductCard';
 import {getUserObjects} from '../../../service/ObjectService';
 import {Notifier, NotifierComponents} from 'react-native-notifier';
 import CustomText from '../../../components/CustomText';
+import GlobalSafeAreaView from '../../../components/GlobalSafeAreaView';
 
 const Propose = ({navigation, route}) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -221,7 +222,7 @@ const Propose = ({navigation, route}) => {
   );
 
   return (
-    <>
+    <GlobalSafeAreaView>
       <Header navigation={navigation} title="Proposer un échange" />
       <Container isScrollable>
         <View style={styles.container}>
@@ -381,7 +382,7 @@ const Propose = ({navigation, route}) => {
           </View>
         </View>
       </Modal>
-    </>
+    </GlobalSafeAreaView>
   );
 };
 

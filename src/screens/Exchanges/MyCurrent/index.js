@@ -13,6 +13,7 @@ import {getUserFromToken} from '../../../service/SessionService';
 import {useIsFocused, useRoute} from '@react-navigation/native';
 import Header from '../../../components/Header';
 import {scale} from 'react-native-size-matters';
+import GlobalSafeAreaView from '../../../components/GlobalSafeAreaView';
 
 const CurrentExchange = ({navigation}) => {
   const [exchanges, setExchanges] = useState([]);
@@ -48,7 +49,7 @@ const CurrentExchange = ({navigation}) => {
   }
 
   return (
-    <>
+    <GlobalSafeAreaView>
       <Header
         backgroundColor={colors.secondary}
         title="Négociations en cours"
@@ -85,7 +86,7 @@ const CurrentExchange = ({navigation}) => {
           )}
         </Container>
       )}
-    </>
+    </GlobalSafeAreaView>
   );
 };
 

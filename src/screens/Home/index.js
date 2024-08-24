@@ -6,25 +6,26 @@ import {
   ActivityIndicator,
   Dimensions,
 } from 'react-native';
-import {useIsFocused} from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import HomeHeader from './components/HomeHeader';
 import Container from '../../components/Container';
 import SearchBar from '../../components/SeachBar';
 import Banner from './components/Banner';
 import colors from '../../constants/color';
 import ProductCard from '../../components/ProductCard';
-import {getObjects} from '../../service/ObjectService';
-import React, {useContext, useEffect, useState} from 'react';
+import { getObjects } from '../../service/ObjectService';
+import React, { useContext, useEffect, useState } from 'react';
 import IsLoading from '../../components/IsLoading';
-import {AuthContext} from '../../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 import ButtonPrimary from '../../components/ButtonPrimary';
+import GlobalSafeAreaView from '../../components/GlobalSafeAreaView';
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const isFocused = useIsFocused();
-  const {userID, isAuthenticated} = useContext(AuthContext);
+  const { userID, isAuthenticated } = useContext(AuthContext);
   useEffect(() => {
     if (isFocused) {
       const fetchData = async () => {
@@ -49,8 +50,8 @@ const Home = ({navigation}) => {
   }, [isFocused]);
 
   return (
-    <>
-      <HomeHeader  />
+    <GlobalSafeAreaView>
+      <HomeHeader />
       <Container isScrollable paddingVerticalDisabled>
         <SearchBar />
         <Banner navigation={navigation} />
@@ -80,18 +81,18 @@ const Home = ({navigation}) => {
             ))}
             <ButtonPrimary
               text={'Voir plus'}
-              style={{width: '100%'}}
+              style={{ width: '100%' }}
               imageRight={require('../../assets/icons/Forward.png')}
               onPress={() => navigation.navigate('SearchFilter')}
             />
           </View>
         ) : (
-          <View style={{height: Dimensions.get('screen').height * 0.4}}>
+          <View style={{ height: Dimensions.get('screen').height * 0.4 }}>
             <IsLoading />
           </View>
         )}
       </Container>
-    </>
+    </GlobalSafeAreaView>
   );
 };
 const styles = StyleSheet.create({

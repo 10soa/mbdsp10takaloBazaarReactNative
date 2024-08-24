@@ -17,6 +17,7 @@ import IsLoading from '../../../components/IsLoading';
 import ButtonPrimary from '../../../components/ButtonPrimary';
 import UserProfile from '../components/UserProfile';
 import {AuthContext} from '../../../context/AuthContext';
+import GlobalSafeAreaView from '../../../components/GlobalSafeAreaView';
 
 const ProfileUser = ({navigation, route}) => {
   const [loading, setLoading] = useState(true);
@@ -99,7 +100,7 @@ const ProfileUser = ({navigation, route}) => {
   );
 
   return (
-    <>
+    <GlobalSafeAreaView>
       <Header navigation={navigation} title="Profile utilisateur" />
       <View style={styles.container}>
         <UserProfile user={user} disableTouchableImage />
@@ -150,7 +151,7 @@ const ProfileUser = ({navigation, route}) => {
           onPress={proposeExchange}
         />
       </View>
-    </>
+    </GlobalSafeAreaView>
   );
 };
 

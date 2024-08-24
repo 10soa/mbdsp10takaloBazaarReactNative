@@ -15,6 +15,7 @@ import {getUserFromToken} from '../../../service/SessionService';
 import Header from '../../../components/Header';
 import IsLoading from '../../../components/IsLoading';
 import {useIsFocused} from '@react-navigation/native';
+import GlobalSafeAreaView from '../../../components/GlobalSafeAreaView';
 
 const MyObject = ({navigation}) => {
   const [loading, setLoading] = useState(true);
@@ -91,7 +92,7 @@ const MyObject = ({navigation}) => {
   );
 
   return (
-    <>
+    <GlobalSafeAreaView>
       <Header navigation={navigation} title="Mes objets" />
       <View style={styles.container}>
         <View style={styles.inputContainer}>
@@ -125,7 +126,7 @@ const MyObject = ({navigation}) => {
           />
         )}
       </View>
-    </>
+    </GlobalSafeAreaView>
   );
 };
 

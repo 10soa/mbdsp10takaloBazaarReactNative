@@ -17,6 +17,7 @@ import {AuthContext} from '../../context/AuthContext';
 import {getUserFromToken} from '../../service/SessionService';
 import Header from '../../components/Header';
 import {useIsFocused} from '@react-navigation/native';
+import GlobalSafeAreaView from '../../components/GlobalSafeAreaView';
 
 const Details = ({navigation, route}) => {
   const [object, setObject] = useState(null);
@@ -88,7 +89,7 @@ const Details = ({navigation, route}) => {
     navigation.navigate('ProposeExchange', {user: object.user, object: object});
   };
   return (
-    <View style={{flex: 1}}>
+    <GlobalSafeAreaView>
       <Header title={"Details de l'objet"} navigation={navigation} />
       {loading ? (
         <IsLoading />
@@ -172,7 +173,7 @@ const Details = ({navigation, route}) => {
           )}
         </>
       )}
-    </View>
+    </GlobalSafeAreaView>
   );
 };
 const styles = StyleSheet.create({

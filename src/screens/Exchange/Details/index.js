@@ -15,6 +15,7 @@ import IsLoading from '../../../components/IsLoading';
 import { getUserFromToken } from '../../../service/SessionService';
 import AcceptExchangeModal from '../components/AcceptExchangeModal';
 import RejectExchangeModal from '../components/RejectExchangeModal'; // Import the RejectExchangeModal
+import GlobalSafeAreaView from '../../../components/GlobalSafeAreaView';
 
 const ExchangeDetails = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
@@ -102,7 +103,7 @@ const ExchangeDetails = ({ navigation, route }) => {
   };
 
   return (
-    <>
+    <GlobalSafeAreaView>
       <Header navigation={navigation} title="Détails de l'échange" />
       {loading ? (
         <IsLoading />
@@ -258,7 +259,7 @@ const ExchangeDetails = ({ navigation, route }) => {
           />
         </>
       )}
-    </>
+    </GlobalSafeAreaView>
   );
 };
 

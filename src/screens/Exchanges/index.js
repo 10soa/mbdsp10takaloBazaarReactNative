@@ -10,6 +10,7 @@ import {getUserFromToken} from '../../service/SessionService';
 import {useIsFocused} from '@react-navigation/native';
 import Header from '../../components/Header';
 import {scale} from 'react-native-size-matters';
+import GlobalSafeAreaView from '../../components/GlobalSafeAreaView';
 
 const ExchangeHistory = ({navigation}) => {
   const [exchanges, setExchanges] = useState([]);
@@ -44,7 +45,7 @@ const ExchangeHistory = ({navigation}) => {
   }
 
   return (
-    <>
+    <GlobalSafeAreaView>
       <Header
         backgroundColor={colors.secondary}
         title="Historique des échanges"
@@ -129,7 +130,7 @@ const ExchangeHistory = ({navigation}) => {
           )}
         </Container>
       )}
-    </>
+    </GlobalSafeAreaView>
   );
 };
 
