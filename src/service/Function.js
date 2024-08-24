@@ -1,3 +1,6 @@
+import messaging from '@react-native-firebase/messaging';
+
+import DeviceInfo from 'react-native-device-info';
 export const validateForm = (
   fieldsToValidate,
   formData,
@@ -24,7 +27,7 @@ export const validateForm = (
 
   setFormErrors(newErrors);
   return valid;
-  };
+};
 
 export const getBase64Image = async uri => {
   try {
@@ -44,5 +47,37 @@ export const getBase64Image = async uri => {
     });
   } catch (error) {
     throw error;
+  }
+};
+
+export const requestUserPermission = async () => {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log('Authorization status:', authStatus);
+  }
+};
+
+export const getFcmToken = async () => {
+  try {
+    const newFcmToken = await messaging().getToken();
+    console.log('getFcmToken', newFcmToken);
+    return newFcmToken;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const getAndroidId = async () => {
+  try {
+    const androidId = await DeviceInfo.getAndroidId();
+    console.log('Android ID:', androidId);
+    return androidId;
+  } catch (error) {
+    console.error('Unable to get Android ID:', error);
   }
 };

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "687285776333",
-    "project_id": "lecteur-journal",
-    "storage_bucket": "lecteur-journal.appspot.com"
+    "project_number": "577045974044",
+    "project_id": "takalobazaar",
+    "storage_bucket": "takalobazaar.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:687285776333:android:bf3dcae4c9c17834749e84",
+        "mobilesdk_app_id": "1:577045974044:android:fb79350b55b210741923d9",
         "android_client_info": {
           "package_name": "com.mbdsp10takaloBazaarReactNative"
         }
@@ -15,7 +15,26 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB1v3IZ-HtEPhtvypeQngr_BXRKeoRYAu8"
+          "current_key": "AIzaSyB9qMU17Y5O3PL0-21kXVo-6k8GjlaGXOU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:577045974044:android:8b0b0907ade3e7e41923d9",
+        "android_client_info": {
+          "package_name": "com.tpt.takalobazaar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9qMU17Y5O3PL0-21kXVo-6k8GjlaGXOU"
         }
       ],
       "services": {

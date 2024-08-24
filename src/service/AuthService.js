@@ -1,9 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {API_URL, TOKEN_NAME, USERID, USERNAME} from '../constants/config';
-import {removeToken} from './SessionService';
-import {fetchWithAuth} from './ApiService';
-import {Easing, Notifier, NotifierComponents} from 'react-native-notifier';
+import { API_URL, TOKEN_NAME, USERID, USERNAME } from '../constants/config';
+import { removeToken } from './SessionService';
+import { fetchWithAuth } from './ApiService';
+import { Easing, Notifier, NotifierComponents } from 'react-native-notifier';
 import colors from '../constants/color';
+import { getAndroidId, getFcmToken } from './Function';
 
 export const log = async (email, mdp) => {
   const url = `${API_URL}/auth/user/login`;
@@ -11,6 +12,8 @@ export const log = async (email, mdp) => {
   const body = {
     username: email,
     password: mdp,
+    tokken: await getFcmToken(),
+    serialNumber: await getAndroidId()
   };
   try {
     const response = await fetch(url, {
