@@ -12,7 +12,9 @@ const formatDate = isoString => {
 const InformationLine = ({title, description, date, cat}) => {
   return (
     <View style={styles.Content}>
+      <View style={styles.viewcat}>
       <Text style={styles.cat}> {cat}</Text>
+      </View>
       <Text style={styles.Title}> {title}</Text>
       <Text style={styles.description}>{description}</Text>
       <View style={styles.dateContent}>
@@ -28,17 +30,20 @@ const InformationLine = ({title, description, date, cat}) => {
 };
 
 const styles = StyleSheet.create({
-  cat: {
+  viewcat:{
     backgroundColor: colors.primary,
-    color: colors.white,
-    paddingBottom: 3,
-    paddingHorizontal: 10,
-    fontSize: 16,
-    fontFamily: 'Asul',
     alignSelf: 'flex-start',
     borderRadius: 5,
     justifyContent: 'center',
     marginVertical: 5,
+    paddingBottom: 3,
+    paddingHorizontal: 10,
+
+  },
+  cat: {
+    color: colors.white,
+    fontSize: 16,
+    fontFamily: 'Asul',
   },
   Content: {
     marginVertical: 10,

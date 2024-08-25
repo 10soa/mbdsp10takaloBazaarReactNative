@@ -129,7 +129,15 @@ const Details = ({navigation, route}) => {
 
                 <Text style={styles.userName}>{object.user.username}</Text>
               </TouchableOpacity>
-              <View style={{justifyContent: 'center'}}>
+              <View style={[
+                    styles.statusView,
+                    {
+                      backgroundColor:
+                        object.status === 'Available'
+                          ? colors.success
+                          : colors.error,
+                    },
+                  ]}>
                 <Text
                   style={[
                     styles.status,
@@ -153,6 +161,7 @@ const Details = ({navigation, route}) => {
               repostObject={repost}
               status={object.status}
               isAuthenticated={isAuthenticated}
+              style={{backgroundColor: colors.grey, borderRadius: scale(8), padding: scale(5)}}
             />
             <InformationLine
               title={object.name}
@@ -208,10 +217,12 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     fontFamily: 'Asul',
   },
-  status: {
+  statusView: {
     alignSelf: 'flex-start',
+    borderRadius: scale(10),
     paddingHorizontal: 10,
-    borderRadius: 5,
+  },
+  status: {
     color: colors.white,
     fontSize: 15,
     paddingBottom: 3,

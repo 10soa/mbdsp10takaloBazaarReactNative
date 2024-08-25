@@ -326,10 +326,13 @@ const Propose = ({navigation, route}) => {
                 marginBottom: scale(20),
                 justifyContent: 'space-between',
               }}>
-              <CustomText
+                <View style={styles.titleModalView}>
+
+                <CustomText
                 text={myModalVisible ? currentUser.username : user.username}
                 style={styles.titleModal}
               />
+                </View>
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => {
@@ -455,14 +458,16 @@ const styles = StyleSheet.create({
     marginBottom: scale(10),
     fontSize: scale(16),
   },
-  titleModal: {
-    color: colors.white,
-    fontSize: scale(16),
+  titleModalView: {
     backgroundColor: colors.primary,
     paddingHorizontal: scale(20),
     paddingVertical: scale(5),
     alignSelf: 'flex-start',
     borderRadius: scale(10),
+  },
+  titleModal: {
+    color: colors.white,
+    fontSize: scale(16),
   },
   input: {
     flex: 1,
