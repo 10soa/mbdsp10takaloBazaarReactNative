@@ -8,18 +8,19 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import colors from '../../constants/color';
-import {useCallback, useContext, useState} from 'react';
-import {log, register} from '../../service/AuthService';
-import {AuthContext} from '../../context/AuthContext';
-import {useFocusEffect, useRoute} from '@react-navigation/native';
-import {validateForm} from '../../service/Function';
+import { useCallback, useContext, useState } from 'react';
+import { log, register } from '../../service/AuthService';
+import { AuthContext } from '../../context/AuthContext';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { validateForm } from '../../service/Function';
 import Container from '../../components/Container';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 
-const Signup = ({navigation, route}) => {
+const Signup = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const {setIsAuthenticated, setuserID} = useContext(AuthContext);
+  const { setIsAuthenticated, setuserID } = useContext(AuthContext);
   const textLogin = route.params?.textLogin || '';
   const [formData, setFormData] = useState({
     email: '',
@@ -39,13 +40,17 @@ const Signup = ({navigation, route}) => {
     sexe: '',
   });
 
-  const gender = [
-    {name: 'Selectionnez votre sexe', value: ''},
-    {name: 'Homme', value: 'Male'},
-    {name: 'Femme', value: 'Female'},
-  ];
+  const [open, setOpen] = useState(false);
+
+  const [gender, setGender] = useState([
+    { label: 'Selectionnez votre sexe', value: '' },
+    { label: 'Homme', value: 'Male' },
+    { label: 'Femme', value: 'Female' },
+  ]);
 
   const handleInputChange = (name, value) => {
+    console.log('value', name, value);
+
     setErrorMessage('');
     setFormData({
       ...formData,
@@ -77,13 +82,12 @@ const Signup = ({navigation, route}) => {
         prenom: '',
         sexe: '',
       });
-      return () => {
-      };
-    }, [])
+      return () => {};
+    }, []),
   );
 
   const goToLogin = () => {
-    navigation.navigate('User', {routeName: redirectTo, text: textLogin});
+    navigation.navigate('User', { routeName: redirectTo, text: textLogin });
   };
 
   const handleSignup = async () => {
@@ -137,8 +141,8 @@ const Signup = ({navigation, route}) => {
           style={[
             styles.inputContainer,
             formErrors.nom
-              ? {borderColor: 'red'}
-              : {borderColor: 'transparent'},
+              ? { borderColor: 'red' }
+              : { borderColor: 'transparent' },
           ]}>
           <Image
             source={require('../../assets/icons/Name.png')}
@@ -159,8 +163,8 @@ const Signup = ({navigation, route}) => {
           style={[
             styles.inputContainer,
             formErrors.prenom
-              ? {borderColor: 'red'}
-              : {borderColor: 'transparent'},
+              ? { borderColor: 'red' }
+              : { borderColor: 'transparent' },
           ]}>
           <Image
             source={require('../../assets/icons/Name.png')}
@@ -182,8 +186,8 @@ const Signup = ({navigation, route}) => {
           style={[
             styles.inputContainer,
             formErrors.pseudo
-              ? {borderColor: 'red'}
-              : {borderColor: 'transparent'},
+              ? { borderColor: 'red' }
+              : { borderColor: 'transparent' },
           ]}>
           <Image
             source={require('../../assets/icons/Username.png')}
@@ -204,15 +208,15 @@ const Signup = ({navigation, route}) => {
           style={[
             styles.inputContainer,
             formErrors.sexe
-              ? {borderColor: 'red'}
-              : {borderColor: 'transparent'},
-            {paddingLeft: 30, paddingRight: 20},
+              ? { borderColor: 'red' }
+              : { borderColor: 'transparent' },
+            { paddingLeft: 30, paddingRight: 20 },
           ]}>
           <Image
             source={require('../../assets/icons/Gender.png')}
-            style={[styles.icon, {marginRight: 0}]}
+            style={[styles.icon, { marginRight: 0 }]}
           />
-          <Picker
+          {/* <Picker
             selectedValue={formData.sexe}
             style={[styles.picker]}
             onValueChange={itemValue => handleInputChange('sexe', itemValue)}>
@@ -228,7 +232,27 @@ const Signup = ({navigation, route}) => {
                 }}
               />
             ))}
-          </Picker>
+          </Picker> */}
+          <DropDownPicker
+            open={open}
+            value={formData.sexe}
+            items={gender}
+            setOpen={setOpen}
+            setValue={callback => {
+              const selectedValue = callback();
+              handleInputChange('sexe', selectedValue);
+            }}
+            setItems={setGender}
+            dropDownDirection="TOP"
+            placeholder="Selectionnez votre sexe"
+            style={[styles.picker]}
+            dropDownContainerStyle={[styles.picker]}
+            textStyle={{
+              fontFamily: 'Asul',
+              fontSize: 17,
+              color: colors.darkGrey,
+            }}
+          />
         </View>
         {formErrors.sexe ? (
           <Text style={styles.errorText}>{formErrors.sexe}</Text>
@@ -237,8 +261,8 @@ const Signup = ({navigation, route}) => {
           style={[
             styles.inputContainer,
             formErrors.email
-              ? {borderColor: 'red'}
-              : {borderColor: 'transparent'},
+              ? { borderColor: 'red' }
+              : { borderColor: 'transparent' },
           ]}>
           <Image
             source={require('../../assets/icons/Email.png')}
@@ -259,8 +283,8 @@ const Signup = ({navigation, route}) => {
           style={[
             styles.inputContainer,
             formErrors.password
-              ? {borderColor: 'red'}
-              : {borderColor: 'transparent'},
+              ? { borderColor: 'red' }
+              : { borderColor: 'transparent' },
           ]}>
           <Image
             source={require('../../assets/icons/Lock.png')}
@@ -279,7 +303,7 @@ const Signup = ({navigation, route}) => {
           <Text style={styles.errorText}>{formErrors.password}</Text>
         ) : null}
         {errorMessage ? (
-          <Text style={[styles.errorText, {textAlign: 'center'}]}>
+          <Text style={[styles.errorText, { textAlign: 'center' }]}>
             {errorMessage}
           </Text>
         ) : null}
@@ -298,7 +322,7 @@ const Signup = ({navigation, route}) => {
               size={25}
               color={colors.white}
             />
-            <Text style={[styles.buttonText, {marginLeft: 10}]}>
+            <Text style={[styles.buttonText, { marginLeft: 10 }]}>
               S'inscrire
             </Text>
           </View>
@@ -312,7 +336,7 @@ const Signup = ({navigation, route}) => {
 
         <TouchableOpacity
           onPress={goToLogin}
-          style={[styles.button, {backgroundColor: colors.textPrimary}]}>
+          style={[styles.button, { backgroundColor: colors.textPrimary }]}>
           <Text style={styles.buttonText}>Se connecter</Text>
         </TouchableOpacity>
       </View>
@@ -396,6 +420,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Asul',
     fontSize: 17,
     color: colors.darkGrey,
+    borderColor: 'transparent',
+    backgroundColor: '#f1f1f1',
+    zIndex: 1000,
   },
 });
 
