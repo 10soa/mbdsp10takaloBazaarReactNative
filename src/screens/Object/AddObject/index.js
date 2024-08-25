@@ -31,6 +31,7 @@ import {Notifier, NotifierComponents} from 'react-native-notifier';
 import {getUserId} from '../../../service/SessionService';
 import CustomText from '../../../components/CustomText';
 import {getBase64Image} from '../../../service/Function';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const checkAndRequestPermission = async () => {
   const result = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
@@ -59,6 +60,7 @@ const AddObject = ({navigation}) => {
   const [error, setError] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [drafts, setDrafts] = useState([]);
+  const [open, setOpen] = useState(false);
 
   const clearForm = () => {
     setCategorie('');
@@ -268,7 +270,11 @@ const AddObject = ({navigation}) => {
     const fetchData = async () => {
       try {
         const result = await getCategories();
-        setData(result);
+        const dropdownData = result.map(item => ({
+          label: item.name,
+          value: item.id,
+        }));
+        setData(dropdownData);
       } catch (error) {
         setError(error);
       } finally {
@@ -336,7 +342,7 @@ const AddObject = ({navigation}) => {
       <Text style={styles.label}>Catégorie</Text>
       <View
         style={[styles.pickerContainer, categorieError && styles.borderError]}>
-        <Picker
+        {/* <Picker
           selectedValue={categorie}
           style={[styles.picker]}
           onValueChange={itemValue => setCategorie(itemValue)}>
@@ -349,7 +355,26 @@ const AddObject = ({navigation}) => {
               style={{fontFamily: 'Asul', fontSize: 17}}
             />
           ))}
-        </Picker>
+        </Picker> */}
+        <DropDownPicker
+            open={open}
+            value={categorie}
+            items={data}
+            setOpen={setOpen}
+            setValue={callback => {
+              const selectedValue = callback();
+              setCategorie(selectedValue);
+            }}
+            dropDownDirection="TOP"
+            placeholder="..."
+            style={[styles.picker]}
+            dropDownContainerStyle={[styles.picker]}
+            textStyle={{
+              fontFamily: 'Asul',
+              fontSize: 17,
+              color: colors.darkGrey,
+            }}
+          />
       </View>
       {categorieError && (
         <CustomText text={categorieError} style={styles.error} />
@@ -526,7 +551,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Asul',
   },
   pickerContainer: {
-    height: 50,
+    height: 60,
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ccc',
@@ -538,6 +563,10 @@ const styles = StyleSheet.create({
     width: '100%',
     fontFamily: 'Asul',
     fontSize: 17,
+    color: colors.darkGrey,
+    borderColor: 'transparent',
+    backgroundColor: colors.white,
+    // zIndex: 1000,
   },
   photoContainer: {
     width: '100%',

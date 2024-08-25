@@ -11,6 +11,7 @@ import {useIsFocused} from '@react-navigation/native';
 import Header from '../../components/Header';
 import {scale} from 'react-native-size-matters';
 import GlobalSafeAreaView from '../../components/GlobalSafeAreaView';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const ExchangeHistory = ({navigation}) => {
   const [exchanges, setExchanges] = useState([]);
@@ -19,6 +20,13 @@ const ExchangeHistory = ({navigation}) => {
   const [userID, setUserID] = useState(0);
   const [selectedStatus, setSelectedStatus] = useState('');
   const isFocused = useIsFocused();
+  const [open, setOpen] = useState(false);
+  const [status, setStatus] = useState([
+    { label: 'Tous les statuts', value: 'All' },
+  { label: 'Accepté', value: 'Accepted' },
+  { label: 'Annulé', value: 'Cancelled' },
+  { label: 'Refusé', value: 'Refused' },
+  ]);
 
   const fetchData = async () => {
     try {
@@ -65,7 +73,28 @@ const ExchangeHistory = ({navigation}) => {
                 source={require('../../assets/icons/state.png')}
                 style={[styles.icon, {marginRight: 0}]}
               />
-              <Picker
+              <DropDownPicker
+            open={open}
+            value={selectedStatus}
+            items={status}
+            setOpen={setOpen}
+            setValue={callback => {
+              const selectedValue = callback();
+              setSelectedStatus(selectedValue);
+            }}
+            setItems={setStatus}
+            listMode="FLATLIST" 
+            dropDownDirection="BOTTOM"
+            placeholder="Selectionnez votre sexe"
+            style={[styles.picker]}
+            dropDownContainerStyle={[styles.picker]}
+            textStyle={{
+              fontFamily: 'Asul',
+              fontSize: 17,
+              color: colors.darkGrey,
+            }}
+          />
+              {/* <Picker
                 selectedValue={selectedStatus}
                 style={[styles.picker]}
                 onValueChange={itemValue => setSelectedStatus(itemValue)}>
@@ -105,7 +134,7 @@ const ExchangeHistory = ({navigation}) => {
                     color: colors.darkGrey,
                   }}
                 />
-              </Picker>
+              </Picker> */}
             </View>
           </View>
           {exchanges.length === 0 ? (
@@ -124,7 +153,7 @@ const ExchangeHistory = ({navigation}) => {
                 />
               )}
               keyExtractor={item => item.id.toString()}
-              contentContainerStyle={{flexGrow: 1}}
+              contentContainerStyle={{flexGrow: 1,marginTop: open ? scale(150) : scale(0)}}
               ListFooterComponent={<View style={{height: 0}} />}
             />
           )}
@@ -187,6 +216,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Asul',
     fontSize: 17,
     color: colors.darkGrey,
+    borderColor: 'transparent',
+    backgroundColor: '#f1f1f1',
+    zIndex: 1000,
   },
   inputContainer: {
     flexDirection: 'row',

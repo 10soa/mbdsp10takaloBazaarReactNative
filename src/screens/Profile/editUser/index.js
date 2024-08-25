@@ -17,6 +17,7 @@ import { getUserFromToken } from '../../../service/SessionService';
 import { getUser, updateUserProfile } from '../../../service/UserService';
 import { useRoute } from '@react-navigation/native';
 import Container from '../../../components/Container';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const EditUser = ({ navigation }) => {
   const route = useRoute();
@@ -27,7 +28,7 @@ const EditUser = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [loading, setLoading] = useState(true);
-
+const [open, setOpen] = useState(true);
   const [lastNameError, setLastNameError] = useState('');
   const [firstNameError, setFirstNameError] = useState('');
   const [usernameError, setUsernameError] = useState('');
@@ -56,6 +57,11 @@ const EditUser = ({ navigation }) => {
     }
   };
 
+  const [data, setData] = useState([
+    { label: 'Homme', value: 'Male' },
+    { label: 'Femme', value: 'Female' },
+  ]);
+
   const refreshError = () => {
     setLastNameError('');
     setFirstNameError('');
@@ -70,6 +76,7 @@ const EditUser = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      setOpen(false);
       fetchUserData();
       refreshError();
     }, [])
@@ -195,7 +202,7 @@ const EditUser = ({ navigation }) => {
 
       <Text style={styles.label}>Sexe</Text>
       <View style={[styles.pickerContainer, genderError && styles.borderError]}>
-        <Picker
+        {/* <Picker
           selectedValue={gender}
           onValueChange={itemValue => {
             setGender(itemValue);
@@ -204,7 +211,28 @@ const EditUser = ({ navigation }) => {
           style={styles.picker}>
           <Picker.Item label="Homme" value="Male" />
           <Picker.Item label="Femme" value="Female" />
-        </Picker>
+        </Picker> */}
+         <DropDownPicker
+            open={open}
+            value={gender}
+            items={data}
+            setOpen={setOpen}
+            setValue={callback => {
+              const selectedValue = callback();
+              setGender(selectedValue);
+              setGenderError('');
+            }}
+            setItems={setData}
+            dropDownDirection="TOP"
+            placeholder="..."
+            style={[styles.picker]}
+            dropDownContainerStyle={[styles.picker]}
+            textStyle={{
+              fontFamily: 'Asul',
+              fontSize: 17,
+              color: colors.darkGrey,
+            }}
+          />
       </View>
       {genderError ? <Text style={styles.error}>{genderError}</Text> : null}
 
@@ -266,10 +294,13 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   picker: {
-    height: 50,
+    width: '100%',
     fontFamily: 'Asul',
     fontSize: 17,
-    color: colors.textPrimary,
+    color: colors.darkGrey,
+    borderColor: 'transparent',
+    backgroundColor: colors.white,
+    // zIndex: 1000,
   },
   saveButton: {
     flexDirection: 'row',

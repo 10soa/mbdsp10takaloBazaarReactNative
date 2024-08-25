@@ -14,7 +14,6 @@ import { AuthContext } from '../../context/AuthContext';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { validateForm } from '../../service/Function';
 import Container from '../../components/Container';
-import { Picker } from '@react-native-picker/picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const Signup = ({ navigation, route }) => {

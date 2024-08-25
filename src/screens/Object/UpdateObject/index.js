@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,19 +9,20 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import Container from '../../../components/Container';
 import colors from '../../../constants/color';
-import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import {getCategories} from '../../../service/CategoryService';
-import {getObject, updateObject} from '../../../service/ObjectService';
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { getCategories } from '../../../service/CategoryService';
+import { getObject, updateObject } from '../../../service/ObjectService';
 import IsLoading from '../../../components/IsLoading';
-import {NavigationActions} from 'react-navigation';
-import {useIsFocused, useRoute} from '@react-navigation/native';
+import { NavigationActions } from 'react-navigation';
+import { useIsFocused, useRoute } from '@react-navigation/native';
 import CustomText from '../../../components/CustomText';
-import {scale} from 'react-native-size-matters';
-const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
+import DropDownPicker from 'react-native-dropdown-picker';
+import { scale } from 'react-native-size-matters';
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const getBase64Image = async uri => {
   try {
@@ -80,7 +81,7 @@ const checkAndRequestPermission = async () => {
   return requestResult === RESULTS.GRANTED;
 };
 
-const UpdateObject = ({route, navigation}) => {
+const UpdateObject = ({ route, navigation }) => {
   const objectId = route.params?.idObject;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -93,14 +94,20 @@ const UpdateObject = ({route, navigation}) => {
   const [categorieError, setCategorieError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
   const [titleError, setTitleError] = useState('');
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     clearError();
     const fetchData = async () => {
       try {
         setLoading(true);
+        setOpen(false);
         const categories = await getCategories();
-        setData(categories);
+        const dropdownData = categories.map(item => ({
+          label: item.name,
+          value: item.id,
+        }));
+        setData(dropdownData);
 
         const objectData = await getObject(objectId);
         setTitle(objectData.name);
@@ -268,7 +275,26 @@ const UpdateObject = ({route, navigation}) => {
       )}
       <Text style={styles.label}>Catégorie</Text>
       <View style={styles.pickerContainer}>
-        <Picker
+        <DropDownPicker
+          open={open}
+          value={categorie}
+          items={data}
+          setOpen={setOpen}
+          setValue={callback => {
+            const selectedValue = callback();
+            setCategorie(selectedValue);
+          }}
+          dropDownDirection="TOP"
+          placeholder="..."
+          style={[styles.picker]}
+          dropDownContainerStyle={[styles.picker]}
+          textStyle={{
+            fontFamily: 'Asul',
+            fontSize: 17,
+            color: colors.darkGrey,
+          }}
+        />
+        {/* <Picker
           selectedValue={categorie}
           style={styles.picker}
           onValueChange={itemValue => setCategorie(itemValue)}>
@@ -281,7 +307,7 @@ const UpdateObject = ({route, navigation}) => {
               style={{fontSize: scale(15), fontFamily: 'Asul'}}
             />
           ))}
-        </Picker>
+        </Picker> */}
       </View>
       {categorieError && (
         <CustomText text={categorieError} style={styles.error} />
@@ -289,13 +315,13 @@ const UpdateObject = ({route, navigation}) => {
       <Text style={styles.label}>Image de l'objet</Text>
       <TouchableOpacity style={styles.photoContainer} onPress={selectPhoto}>
         {photo ? (
-          <Image source={{uri: photo}} style={styles.photo} />
+          <Image source={{ uri: photo }} style={styles.photo} />
         ) : (
           <View style={styles.placeholder}>
             <Image
               source={require('../../../assets/icons/clodes.png')}
               resizeMode="contain"
-              style={{width: 100, height: 100, tintColor: '#D6CDBD'}}
+              style={{ width: 100, height: 100, tintColor: '#D6CDBD' }}
             />
           </View>
         )}
@@ -306,7 +332,7 @@ const UpdateObject = ({route, navigation}) => {
           <Image
             source={require('../../../assets/icons/Picture.png')}
             resizeMode="contain"
-            style={{width: 50, height: 50, tintColor: colors.textPrimary}}
+            style={{ width: 50, height: 50, tintColor: colors.textPrimary }}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={takePhoto}>
@@ -325,17 +351,20 @@ const UpdateObject = ({route, navigation}) => {
       {error && (
         <CustomText
           text={error}
-          style={[styles.error, {textAlign: 'center'}]}
+          style={[styles.error, { textAlign: 'center' }]}
         />
       )}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={[styles.buttonAjouter, {backgroundColor: colors.textPrimary}]}
+          style={[
+            styles.buttonAjouter,
+            { backgroundColor: colors.textPrimary },
+          ]}
           onPress={() => navigation.goBack()}>
           <Image
             source={require('../../../assets/icons/Close.png')}
             resizeMode="contain"
-            style={{width: 25, height: 25, tintColor: '#fff'}}
+            style={{ width: 25, height: 25, tintColor: '#fff' }}
           />
           <Text style={styles.buttonText}>Annuler</Text>
         </TouchableOpacity>
@@ -343,7 +372,7 @@ const UpdateObject = ({route, navigation}) => {
           <Image
             source={require('../../../assets/icons/Edit.png')}
             resizeMode="contain"
-            style={{width: 25, height: 25, tintColor: '#fff'}}
+            style={{ width: 25, height: 25, tintColor: '#fff' }}
           />
           <Text style={styles.buttonText}>Modifier</Text>
         </TouchableOpacity>
@@ -375,7 +404,7 @@ const styles = StyleSheet.create({
     fontSize: scale(16),
     marginBottom: scale(10),
     fontFamily: 'Asul',
-    color: colors.darkGrey
+    color: colors.darkGrey,
   },
   input: {
     height: scale(50),
@@ -413,6 +442,11 @@ const styles = StyleSheet.create({
   picker: {
     width: '100%',
     fontFamily: 'Asul',
+    fontSize: 17,
+    color: colors.darkGrey,
+    borderColor: 'transparent',
+    backgroundColor: colors.white,
+    // zIndex: 1000,
   },
   photoContainer: {
     width: '100%',

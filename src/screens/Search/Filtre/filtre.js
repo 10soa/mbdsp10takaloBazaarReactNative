@@ -6,6 +6,7 @@ import {TextInput} from 'react-native-paper';
 import {getCategories} from '../../../service/CategoryService';
 import colors from '../../../constants/color';
 import {scale} from 'react-native-size-matters';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const FilterComponent = ({
   onApplyFilters,
@@ -21,14 +22,22 @@ const FilterComponent = ({
   const [order, setOrder] = useState(filters.order || 'desc');
   const [dataCat, setDataCat] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
   const [isFilterVisible, setIsFilterVisible] = useState(visible);
-
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDatePickerVisibleMax, setDatePickerVisibilityMax] = useState(false);
+  const sortingOptions = [
+    { label: 'Le plus récent', value: 'desc' },
+    { label: 'Le plus ancien', value: 'asc' },
+  ];
+  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setOpen(false);
+        setOpen1(false);
         setName(filters.name);
         setOrder(filters.order);
         setDateMin(filters.created_at_start);
@@ -37,7 +46,11 @@ const FilterComponent = ({
         setCategory(filters.category_id);
         const result = await getCategories();
         setIsFilterVisible(visible);
-        setDataCat(result);
+        const dropdownData = result.map(item => ({
+          label: item.name,
+          value: item.id,
+        }));
+        setDataCat(dropdownData);
       } catch (error) {
       } finally {
         setLoading(false);
@@ -134,7 +147,7 @@ const FilterComponent = ({
 
           <View style={styles.pickerContainer}>
             <View style={styles.pickerWrapper}>
-              <Picker
+              {/* <Picker
                 selectedValue={category}
                 style={styles.picker}
                 onValueChange={itemValue => setCategory(itemValue)}>
@@ -146,7 +159,26 @@ const FilterComponent = ({
                     value={item.id}
                   />
                 ))}
-              </Picker>
+              </Picker> */}
+               <DropDownPicker
+            open={open}
+            value={category}
+            items={dataCat}
+            setOpen={setOpen}
+            setValue={callback => {
+              const selectedValue = callback();
+              setCategory(selectedValue);
+            }}
+            dropDownDirection="TOP"
+            placeholder="Sélectionner une catégorie"
+            style={[styles.picker]}
+            dropDownContainerStyle={[styles.picker]}
+            textStyle={{
+              fontFamily: 'Asul',
+              fontSize: 17,
+              color: colors.darkGrey,
+            }}
+          />
             </View>
           </View>
 
@@ -190,13 +222,32 @@ const FilterComponent = ({
 
           <View style={styles.pickerContainer}>
             <View style={styles.pickerWrapper}>
-              <Picker
+            <DropDownPicker
+            open={open1}
+            value={order}
+            items={sortingOptions}
+            setOpen={setOpen1}
+            setValue={callback => {
+              const selectedValue = callback();
+              setOrder(selectedValue);
+            }}
+            dropDownDirection="TOP"
+            placeholder="..."
+            style={[styles.picker]}
+            dropDownContainerStyle={[styles.picker]}
+            textStyle={{
+              fontFamily: 'Asul',
+              fontSize: 17,
+              color: colors.darkGrey,
+            }}
+          />
+              {/* <Picker
                 selectedValue={order}
                 style={styles.picker}
                 onValueChange={itemValue => setOrder(itemValue)}>
                 <Picker.Item label="Le plus récent" value="desc" />
                 <Picker.Item label="Le plus ancien" value="asc" />
-              </Picker>
+              </Picker> */}
             </View>
           </View>
 
@@ -261,8 +312,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Asul',
   },
   picker: {
-    height: scale(50),
+    width: '100%',
     fontFamily: 'Asul',
+    fontSize: 17,
+    color: colors.darkGrey,
+    borderColor: 'transparent',
+    backgroundColor: colors.white,
+    // zIndex: 1000,
   },
   buttonContainer: {
     flexDirection: 'row',
