@@ -6,7 +6,7 @@ export const style = StyleSheet.create({
     bottom: 0,
     backgroundColor: '#F0F0F0',
     elevation: 0,
-    height: 50,
+    height: 30,
   },
   navImage: {
     width: 27,

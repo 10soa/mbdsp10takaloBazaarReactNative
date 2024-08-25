@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { style } from './Style';
 import Home from '../screens/Home';
 import colors from '../constants/color';
-import { TouchableOpacity, View, Image } from 'react-native';
+import { TouchableOpacity, View, Image, SafeAreaView } from 'react-native';
 import AddObject from '../screens/Object/AddObject';
 import Details from '../screens/Details';
 import Login from '../screens/Login';
@@ -22,6 +22,7 @@ import ExchangeDetails from '../screens/Exchange/Details';
 import QRCodeScannerComponent from '../components/scanQR/QRCodeScannerComponen';
 import ChangePassword from '../screens/Profile/ChangePassword';
 import EditUser from '../screens/Profile/editUser';
+import { scale } from 'react-native-size-matters';
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
@@ -46,9 +47,10 @@ const AppNavigator = () => {
         name="Home"
         component={Home}
         options={{
+          tabBarStyle: { display: 'flex',  backgroundColor: '#F0F0F0'},
           tabBarIcon: ({ focused }) => {
             return (
-              <View style={style.navView}>
+              <SafeAreaView style={style.navView}>
                 <Image
                   source={require('../assets/icons/home.png')}
                   resizeMode="contain"
@@ -57,7 +59,7 @@ const AppNavigator = () => {
                     ...style.navImage,
                   }}
                 />
-              </View>
+              </SafeAreaView>
             );
           },
         }}
@@ -66,9 +68,10 @@ const AppNavigator = () => {
         name="AjouterObjet"
         component={isAuthenticated ? AddObject : Login}
         options={{
+          tabBarStyle: { display: 'flex', backgroundColor: '#F0F0F0',},
           tabBarIcon: ({ focused }) => {
             return (
-              <View style={style.navView}>
+              <SafeAreaView style={style.navView}>
                 <Image
                   source={require('../assets/icons/plus.png')}
                   resizeMode="contain"
@@ -77,7 +80,7 @@ const AppNavigator = () => {
                     ...style.centerIcon,
                   }}
                 />
-              </View>
+              </SafeAreaView>
             );
           },
           tabBarButton: ({ children, onPress, accessibilityState }) => {
@@ -86,13 +89,13 @@ const AppNavigator = () => {
               <TouchableOpacity
                 style={style.centerButtonContainer}
                 onPress={handlePress}>
-                <View
+                <SafeAreaView
                   style={[
                     style.centerButton,
                     isFocused && { backgroundColor: colors.primary },
                   ]}>
                   {children}
-                </View>
+                </SafeAreaView>
               </TouchableOpacity>
             );
           },
@@ -102,10 +105,10 @@ const AppNavigator = () => {
         name="User"
         component={isAuthenticated ? Profile : Login}
         options={{
-          tabBarStyle: { display: isAuthenticated ? 'flex' : 'none' },
+          tabBarStyle: { display: isAuthenticated ? 'flex' : 'none', backgroundColor: '#F0F0F0', },
           tabBarIcon: ({ focused }) => {
             return (
-              <View style={style.navView}>
+              <SafeAreaView style={style.navView}>
                 <Image
                   source={require('../assets/icons/User.png')}
                   resizeMode="contain"
@@ -114,7 +117,7 @@ const AppNavigator = () => {
                     ...style.navImage,
                   }}
                 />
-              </View>
+              </SafeAreaView>
             );
           },
         }}
