@@ -102,6 +102,7 @@ const Details = ({navigation, route}) => {
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                paddingBottom: scale(10)
               }}>
               <TouchableOpacity
                 style={styles.userContainer}
@@ -203,7 +204,6 @@ const styles = StyleSheet.create({
   userContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 15,
   },
   userImage: {
     width: 30,
@@ -221,6 +221,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     borderRadius: scale(10),
     paddingHorizontal: 10,
+    alignItems: 'center'
   },
   status: {
     color: colors.white,

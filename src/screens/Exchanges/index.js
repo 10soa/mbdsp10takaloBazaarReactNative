@@ -63,7 +63,7 @@ const ExchangeHistory = ({navigation}) => {
         <IsLoading />
       ) : (
         <Container>
-          <View style={styles.pickerContainer}>
+          <View style={{...styles.pickerContainer, marginTop: open ? scale(150) : scale(0)}}>
             <View
               style={[
                 styles.inputContainer,
@@ -83,9 +83,8 @@ const ExchangeHistory = ({navigation}) => {
               setSelectedStatus(selectedValue);
             }}
             setItems={setStatus}
-            listMode="FLATLIST" 
-            dropDownDirection="BOTTOM"
-            placeholder="Selectionnez votre sexe"
+            dropDownDirection="TOP"
+            placeholder="Statut"
             style={[styles.picker]}
             dropDownContainerStyle={[styles.picker]}
             textStyle={{
@@ -153,7 +152,7 @@ const ExchangeHistory = ({navigation}) => {
                 />
               )}
               keyExtractor={item => item.id.toString()}
-              contentContainerStyle={{flexGrow: 1,marginTop: open ? scale(150) : scale(0)}}
+              contentContainerStyle={{flexGrow: 1}}
               ListFooterComponent={<View style={{height: 0}} />}
             />
           )}

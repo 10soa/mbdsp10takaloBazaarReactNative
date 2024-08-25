@@ -1,5 +1,6 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative '../node_modules/react-native-permissions/scripts/setup'
 
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
@@ -46,7 +47,8 @@ target 'mbdsp10takaloBazaarReactNative' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
- pod 'RNPermissions', :path => "../node_modules/react-native-permissions"
+  # Remplacez la ligne existante par celle-ci :
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
 
   target 'mbdsp10takaloBazaarReactNativeTests' do
     inherit! :complete
@@ -56,10 +58,21 @@ target 'mbdsp10takaloBazaarReactNative' do
   post_install do |installer|
     react_native_post_install(
       installer,
-      # Set `mac_catalyst_enabled` to `true` in order to apply patches
-      # necessary for Mac Catalyst builds
       :mac_catalyst_enabled => false
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
+
+    # Combine the second post_install block here
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
+      end
+    end
   end
+
+  setup_permissions([
+    'Camera',
+    'PhotoLibrary'
+    # Add other permissions if needed
+  ])
 end

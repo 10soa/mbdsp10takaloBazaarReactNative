@@ -23,6 +23,7 @@ import {
   reportObject,
   fetchReportReasons,
 } from '../../../service/ObjectService';
+import { PERMISSIONS } from 'react-native-permissions';
 
 const PreviewImage = ({
   image,
@@ -109,6 +110,20 @@ const PreviewImage = ({
             'Vous devez accorder la permission pour sauvegarder le QR code',
           );
           return;
+        }
+      }else if (Platform.OS === 'ios') {
+        const status = await check(PERMISSIONS.IOS.PHOTO_LIBRARY_ADD_ONLY);
+        console.log('status',status);
+        
+        if (status !== RESULTS.GRANTED) {
+          const result = await request(PERMISSIONS.IOS.PHOTO_LIBRARY_ADD_ONLY);
+          if (result !== RESULTS.GRANTED) {
+            Alert.alert(
+              'Permission refusée',
+              'Vous devez accorder la permission pour sauvegarder le QR code',
+            );
+            return;
+          }
         }
       }
       const uri = await captureRef(qrCodeRef, {

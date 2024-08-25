@@ -70,6 +70,21 @@ const getBase64ImageFiche = async url => {
 };
 
 const checkAndRequestPermission = async () => {
+  if (Platform.OS === 'ios') {
+    const cameraStatus = await check(PERMISSIONS.IOS.CAMERA);
+    console.log('photoLibraryStatus',cameraStatus);
+    
+    if (cameraStatus !== RESULTS.GRANTED) {
+      const cameraResult = await request(PERMISSIONS.IOS.CAMERA);
+      if (cameraResult !== RESULTS.GRANTED) {
+        return false;
+      }
+    }
+    
+    
+    
+    return true;
+  } else {
   const result = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
   if (result === RESULTS.GRANTED) {
     return true;
@@ -79,6 +94,7 @@ const checkAndRequestPermission = async () => {
     PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
   );
   return requestResult === RESULTS.GRANTED;
+}
 };
 
 const UpdateObject = ({ route, navigation }) => {
@@ -135,14 +151,14 @@ const UpdateObject = ({ route, navigation }) => {
   };
 
   const selectPhoto = async () => {
-    const hasPermission = await checkAndRequestPermission();
+  /*  const hasPermission = await checkAndRequestPermission();
     if (!hasPermission) {
       Alert.alert(
         'Permission refusée',
         'La permission de lire le stockage externe est requise.',
       );
       return;
-    }
+    }*/
 
     launchImageLibrary({}, async response => {
       if (response.didCancel) {

@@ -18,6 +18,7 @@ import {getBase64Image} from '../../../service/Function';
 import IsLoading from '../../../components/IsLoading';
 import {updateUserProfile} from '../../../service/UserService';
 import {Notifier, NotifierComponents, Easing} from 'react-native-notifier';
+import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 
 const UserProfile = ({user, disableTouchableImage, navigation, fetchData}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -52,7 +53,29 @@ const UserProfile = ({user, disableTouchableImage, navigation, fetchData}) => {
       } catch (err) {
         console.warn(err);
       }
-    }
+    }else if (Platform.OS === 'ios') {
+      try {
+          const cameraPermission = await check(PERMISSIONS.IOS.CAMERA);
+          console.log('Permission status:', cameraPermission);
+
+          if (cameraPermission === RESULTS.UNAVAILABLE) {
+              console.log('This feature is not available (on this device / in this context)');
+          } else if (cameraPermission === RESULTS.DENIED) {
+              const result = await request(PERMISSIONS.IOS.CAMERA);
+              if (result === RESULTS.GRANTED) {
+                  console.log('Camera permission given');
+              } else {
+                  console.log('Camera permission denied');
+              }
+          } else if (cameraPermission === RESULTS.GRANTED) {
+              console.log('Camera permission already granted');
+          } else if (cameraPermission === RESULTS.BLOCKED) {
+              console.log('Camera permission is blocked');
+          }
+      } catch (err) {
+          console.warn(err);
+      }
+  }
   };
 
   const updateProfilePicture = async image => {

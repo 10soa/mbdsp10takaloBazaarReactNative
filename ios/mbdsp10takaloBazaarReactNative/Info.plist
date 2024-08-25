@@ -45,6 +45,10 @@
 		<string>Asul-Regular.ttf</string>
 		<string>Asul.ttf</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+<string>Cette application nécessite l'accès à votre caméra pour prendre des photos.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Cette application nécessite l'accès à votre photothèque pour sélectionner des images.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -52,6 +56,11 @@
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+<string>Nous avons besoin de votre permission pour sauvegarder les QR codes dans votre bibliothèque de photos.</string>
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>Nous avons besoin de votre permission pour ajouter des QR codes à votre bibliothèque de photos.</string>
+
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

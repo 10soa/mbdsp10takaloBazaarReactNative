@@ -244,6 +244,14 @@ const [open, setOpen] = useState(true);
         />
         <Text style={styles.saveButtonText}>Enregistrer les modifications</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={{...styles.saveButton,backgroundColor: colors.textPrimary}} onPress={() => navigation.goBack()}>
+        <Image
+          source={require('../../../assets/icons/Close.png')}
+          resizeMode="contain"
+          style={{ width: 30, height: 30, tintColor: '#fff', marginRight: 10 }}
+        />
+        <Text style={styles.saveButtonText}>Annuler les modifications</Text>
+      </TouchableOpacity>
     </Container>
   );
 };
