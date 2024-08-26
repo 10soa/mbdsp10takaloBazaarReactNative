@@ -174,12 +174,19 @@ const PreviewImage = ({
   };
 
   return (
-    <View style={style}>
-      <Image
-        source={{ uri: image }}
-        resizeMode="contain"
-        style={styles.image}
-      />
+    <View>
+      <View
+        style={{
+          backgroundColor: colors.grey,
+          borderRadius: scale(8),
+          padding: scale(5),
+        }}>
+        <Image
+          source={{ uri: image }}
+          resizeMode="contain"
+          style={styles.image}
+        />
+      </View>
       {isOwner && (
         <View style={styles.isOwner}>
           <TouchableOpacity style={styles.remove} onPress={goEditPage}>
@@ -259,40 +266,6 @@ const PreviewImage = ({
                 color: colors.darkGrey,
               }}
             />
-            {/* <Picker
-              selectedValue={selectedReason}
-              onValueChange={itemValue => {
-                setSelectedReason(itemValue);
-                setReasonError(false);
-              }}
-              style={[
-                styles.picker,
-                reasonError &&
-                  !selectedReason && { borderColor: 'red', borderWidth: 1 },
-              ]}
-              enabled={!loading}>
-              <Picker.Item
-                label="Sélectionnez une raison"
-                value=""
-                style={{
-                  fontFamily: 'Asul',
-                  fontSize: 17,
-                  color: colors.textPrimary,
-                }}
-              />
-              {reasons.map(reason => (
-                <Picker.Item
-                  key={reason.id}
-                  label={reason.name}
-                  value={reason.name}
-                  style={{
-                    fontFamily: 'Asul',
-                    fontSize: 17,
-                    color: colors.textPrimary,
-                  }}
-                />
-              ))}
-            </Picker> */}
             {reasonError && !selectedReason && (
               <Text style={styles.errorText}>
                 Veuillez sélectionner une raison.
@@ -405,16 +378,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 7,
     position: 'absolute',
-    bottom: 0,
+    bottom: scale(5),
     left: 0,
   },
   buttons: {
     display: 'flex',
     flexDirection: 'row',
     gap: 7,
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
+    marginVertical: scale(5),
+    justifyContent: 'flex-end'
+    // position: 'absolute',
+    // bottom: 0,
+    // right: 0,
   },
   saveButton: {
     marginTop: 20,
@@ -484,7 +459,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
     backgroundColor: '#f1f1f1',
     zIndex: 1000,
-    marginBottom: scale(10)
+    marginBottom: scale(10),
   },
   textArea: {
     width: '100%',

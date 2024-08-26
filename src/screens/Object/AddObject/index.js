@@ -32,6 +32,7 @@ import {getUserId} from '../../../service/SessionService';
 import CustomText from '../../../components/CustomText';
 import {getBase64Image} from '../../../service/Function';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { scale } from 'react-native-size-matters';
 
 const checkAndRequestPermission = async () => {
   if (Platform.OS === 'ios') {
@@ -300,13 +301,12 @@ const AddObject = ({navigation}) => {
     fetchData();
   }, []);
 
-  // if (loading) {
-  //   return <IsLoading />;
-  // }
+  if (loading) {
+    return <IsLoading />;
+  }
 
   return (
     <Container isScrollable>
-      <Text style={styles.title}>Ajouter un nouvel objet</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.buttonBrouillon}
@@ -329,6 +329,7 @@ const AddObject = ({navigation}) => {
           <Text style={styles.buttonText}>Enregistrer</Text>
         </TouchableOpacity>
       </View>
+      <Text style={styles.title}>Nouvel objet</Text>
       <Text style={styles.label}>Libellé</Text>
       <TextInput
         style={[styles.input, titleError && styles.borderError]}
@@ -537,9 +538,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   title: {
-    marginTop: 40,
     fontSize: 24,
-    marginBottom: 30,
     fontFamily: 'Asul-Bold',
     textAlign: 'center',
     color: colors.primary,
@@ -608,7 +607,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
+    marginTop: scale(30),
     marginBottom: 30,
   },
   buttonContainerTake: {

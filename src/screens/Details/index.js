@@ -90,7 +90,7 @@ const Details = ({navigation, route}) => {
   };
   return (
     <GlobalSafeAreaView>
-      <Header title={"Details de l'objet"} navigation={navigation} />
+      <Header title={"Fiche objet"} navigation={navigation} color={ colors.textPrimary} backgroundColor={"#F0F0F0"}/>
       {loading ? (
         <IsLoading />
       ) : (
@@ -162,7 +162,6 @@ const Details = ({navigation, route}) => {
               repostObject={repost}
               status={object.status}
               isAuthenticated={isAuthenticated}
-              style={{backgroundColor: colors.grey, borderRadius: scale(8), padding: scale(5)}}
             />
             <InformationLine
               title={object.name}

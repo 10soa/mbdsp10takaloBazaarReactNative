@@ -52,7 +52,7 @@ const CurrentExchange = ({navigation}) => {
     <GlobalSafeAreaView>
       <Header
         backgroundColor={colors.secondary}
-        title="Négociations en cours"
+        title="Mes échanges en cours"
         navigation={navigation}
       />
       {loading ? (
