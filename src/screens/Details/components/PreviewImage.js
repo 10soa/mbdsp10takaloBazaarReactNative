@@ -188,7 +188,7 @@ const PreviewImage = ({
         />
       </View>
       {isOwner && (
-        <View style={styles.isOwner}>
+        <View style={[styles.isOwner , status == 'Removed' &&  styles.isOwnerRemoved] }>
           <TouchableOpacity style={styles.remove} onPress={goEditPage}>
             <Image
               source={require('../../../assets/icons/Edit.png')}
@@ -277,7 +277,7 @@ const PreviewImage = ({
                   styles.textArea,
                   reasonError && { borderColor: 'red', borderWidth: 1 },
                 ]}
-                placeholderTextColor={colors.textPrimary}
+                placeholderTextColor={colors.darkGrey}
                 placeholder="Entrez une raison"
                 value={customReason}
                 onChangeText={text => {
@@ -381,15 +381,21 @@ const styles = StyleSheet.create({
     bottom: scale(5),
     left: 0,
   },
+  isOwnerRemoved: {
+    position: 'relative',
+    justifyContent: 'flex-start',
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: scale(5),
+    bottom: 0
+  },
   buttons: {
     display: 'flex',
     flexDirection: 'row',
     gap: 7,
     marginVertical: scale(5),
-    justifyContent: 'flex-end'
-    // position: 'absolute',
-    // bottom: 0,
-    // right: 0,
+    justifyContent: 'flex-end',
+    alignSelf: 'flex-end',
   },
   saveButton: {
     marginTop: 20,
@@ -407,12 +413,13 @@ const styles = StyleSheet.create({
   modalButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: scale(10),
   },
   remove: {
     backgroundColor: colors.white,
     padding: 5,
     borderRadius: 10,
+    borderColor: colors.black,
     elevation: 10,
   },
   image: {
@@ -459,17 +466,18 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
     backgroundColor: '#f1f1f1',
     zIndex: 1000,
-    marginBottom: scale(10),
+    marginVertical: scale(10),
   },
   textArea: {
     width: '100%',
     backgroundColor: '#f2f2f2',
     borderRadius: 5,
     paddingHorizontal: 10,
-    marginBottom: 10,
     textAlignVertical: 'top',
     fontFamily: 'Asul',
     fontSize: 17,
+    height: scale(80),
+    color: colors.darkGrey,
   },
   errorText: {
     color: 'red',

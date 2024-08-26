@@ -266,7 +266,7 @@ const UpdateObject = ({ route, navigation }) => {
 
   return (
     <Container isScrollable>
-      <Text style={styles.title}>Modification d'un objet</Text>
+      <Text style={styles.title}>Modifier l'objet</Text>
       <Text style={styles.label}>Libellé</Text>
       <TextInput
         style={styles.input}
@@ -410,8 +410,8 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: scale(40),
-    fontSize: scale(24),
-    marginBottom: scale(30),
+    fontSize: scale(18),
+    marginBottom: scale(10),
     textAlign: 'center',
     color: colors.primary,
     fontFamily: 'Asul-Bold',

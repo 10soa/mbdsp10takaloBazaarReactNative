@@ -18,7 +18,7 @@ const ExchangeHistory = ({navigation}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userID, setUserID] = useState(0);
-  const [selectedStatus, setSelectedStatus] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('All');
   const isFocused = useIsFocused();
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState([
@@ -44,6 +44,7 @@ const ExchangeHistory = ({navigation}) => {
 
   useEffect(() => {
     if (isFocused) {
+      setSelectedStatus('All');
       fetchData();
     }
   }, [isFocused, userID, selectedStatus, navigation]);
@@ -69,10 +70,7 @@ const ExchangeHistory = ({navigation}) => {
                 styles.inputContainer,
                 {paddingLeft: 30, paddingRight: 20},
               ]}>
-              <Image
-                source={require('../../assets/icons/state.png')}
-                style={[styles.icon, {marginRight: 0}]}
-              />
+            
               <DropDownPicker
             open={open}
             value={selectedStatus}
@@ -88,9 +86,10 @@ const ExchangeHistory = ({navigation}) => {
             style={[styles.picker]}
             dropDownContainerStyle={[styles.picker]}
             textStyle={{
-              fontFamily: 'Asul',
+              fontFamily: 'Asul-Bold',
               fontSize: 17,
-              color: colors.darkGrey,
+              textAlign: 'center',
+              color: colors.primary,
             }}
           />
               {/* <Picker

@@ -101,7 +101,7 @@ const ProfileUser = ({navigation, route}) => {
 
   return (
     <GlobalSafeAreaView>
-      <Header navigation={navigation} title="Profile utilisateur" />
+      <Header navigation={navigation} title="Profil utilisateur" />
       <View style={styles.container}>
         <UserProfile user={user} disableTouchableImage />
         <View style={styles.Title}>

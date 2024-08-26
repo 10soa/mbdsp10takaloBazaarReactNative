@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
   },
   buttonFind: {
     flex: 1,
-    height: scale(50),
+    height: scale(35),
     flexDirection: 'row',
     backgroundColor: colors.primary,
     justifyContent: 'center',
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
   },
   buttonRest: {
     flex: 1,
-    height: scale(50),
+    height: scale(35),
     flexDirection: 'row',
     backgroundColor: colors.textPrimary,
     justifyContent: 'center',

@@ -5,6 +5,7 @@ import {
   PermissionsAndroid,
   Platform,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { useNavigation } from '@react-navigation/native';
@@ -49,17 +50,16 @@ const QRCodeScannerComponent = () => {
   }, [navigation]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <TouchableOpacity
         style={{
           position: 'absolute',
-          bottom: 20,
+          bottom: scale(28),
           zIndex: 1000,
           padding: 10,
           right: 0,
           left: 0,
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          borderRadius: 5,
         }}
         onPress={() => navigation.goBack()}>
         <Text
@@ -102,7 +102,7 @@ const QRCodeScannerComponent = () => {
         cameraStyle={{ height: '100%' }}
         markerStyle={{ borderColor: '#fff', borderRadius: 50 }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
