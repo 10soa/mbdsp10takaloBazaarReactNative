@@ -13,7 +13,7 @@ import {
   TextInput,
   ActivityIndicator,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 import colors from '../../../constants/color';
 import QRCodeGen from './QRCode';
 import RNFS from 'react-native-fs';
@@ -24,6 +24,7 @@ import {
   fetchReportReasons,
 } from '../../../service/ObjectService';
 import { PERMISSIONS } from 'react-native-permissions';
+import { scale } from 'react-native-size-matters';
 
 const PreviewImage = ({
   image,
@@ -45,12 +46,18 @@ const PreviewImage = ({
   const [reasonError, setReasonError] = useState(false);
   const qrCodeRef = useRef();
   const navigation = useNavigation();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const loadReasons = async () => {
       try {
+        setOpen(false);
         const fetchedReasons = await fetchReportReasons();
-        setReasons(fetchedReasons.typeReports);
+        const dropdownData = fetchedReasons.typeReports.map(item => ({
+          label: item.name,
+          value: item.name,
+        }));
+        setReasons(dropdownData);
       } catch (error) {
         console.log(
           'Erreur',
@@ -111,10 +118,10 @@ const PreviewImage = ({
           );
           return;
         }
-      }else if (Platform.OS === 'ios') {
+      } else if (Platform.OS === 'ios') {
         const status = await check(PERMISSIONS.IOS.PHOTO_LIBRARY_ADD_ONLY);
-        console.log('status',status);
-        
+        console.log('status', status);
+
         if (status !== RESULTS.GRANTED) {
           const result = await request(PERMISSIONS.IOS.PHOTO_LIBRARY_ADD_ONLY);
           if (result !== RESULTS.GRANTED) {
@@ -232,7 +239,27 @@ const PreviewImage = ({
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Signaler un objet</Text>
-            <Picker
+            <DropDownPicker
+              open={open}
+              value={selectedReason}
+              items={reasons}
+              setOpen={setOpen}
+              setValue={callback => {
+                const selectedValue = callback();
+                setSelectedReason(selectedValue);
+                setReasonError(false);
+              }}
+              dropDownDirection="TOP"
+              placeholder="Sélectionnez une raison"
+              style={[styles.picker]}
+              dropDownContainerStyle={[styles.picker]}
+              textStyle={{
+                fontFamily: 'Asul',
+                fontSize: 17,
+                color: colors.darkGrey,
+              }}
+            />
+            {/* <Picker
               selectedValue={selectedReason}
               onValueChange={itemValue => {
                 setSelectedReason(itemValue);
@@ -265,7 +292,7 @@ const PreviewImage = ({
                   }}
                 />
               ))}
-            </Picker>
+            </Picker> */}
             {reasonError && !selectedReason && (
               <Text style={styles.errorText}>
                 Veuillez sélectionner une raison.
@@ -446,15 +473,18 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Asul-Bold',
     marginBottom: 10,
   },
   picker: {
     width: '100%',
-    height: 50,
-    backgroundColor: '#f2f2f2',
-    borderRadius: 5,
-    marginBottom: 10,
+    fontFamily: 'Asul',
+    fontSize: 17,
+    color: colors.darkGrey,
+    borderColor: 'transparent',
+    backgroundColor: '#f1f1f1',
+    zIndex: 1000,
+    marginBottom: scale(10)
   },
   textArea: {
     width: '100%',
